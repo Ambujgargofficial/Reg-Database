@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle Data Extractor - Firebase Edition</title>
+    <title>Registration Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -18,7 +18,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col relative">
+<body class="text-slate-800 h-screen overflow-hidden flex flex-col relative bg-slate-50">
 
     <!-- WELCOME MODAL -->
     <div id="welcomeModal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-[100] backdrop-blur-sm transition-opacity duration-300 opacity-0">
@@ -116,7 +116,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
                     </svg>
                 </div>
-                <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Smart Data Extractor</h1>
+                <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Registration Database</h1>
                 <p class="text-sm text-slate-500 mt-2 font-medium">Please login to continue</p>
             </div>
             
@@ -154,46 +154,80 @@
     </div>
 
     <!-- MAIN APP SCREEN (Hidden by default) -->
-    <div id="mainApp" class="hidden flex-col min-h-screen">
-        <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="window.goHome()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div id="mainApp" class="hidden h-screen w-full flex-row overflow-hidden">
+        
+        <!-- SLEEK COLLAPSIBLE SIDEBAR -->
+        <aside id="appSidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 relative z-50 shadow-[4px_0_24px_rgba(0,0,0,0.02)] shrink-0">
+            <!-- Toggle Button -->
+            <button onclick="window.toggleSidebar()" class="absolute -right-3.5 top-8 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm text-slate-400 hover:text-indigo-600 transition-colors z-50">
+                <svg id="sidebarToggleIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <!-- Brand Logo -->
+            <div class="h-20 flex items-center gap-3 px-5 border-b border-slate-100 shrink-0 cursor-pointer" onclick="window.goHome()">
+                <div class="bg-indigo-100 p-2 rounded-xl shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <h1 class="text-xl font-bold text-slate-800">Smart Data Extractor</h1>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="text-sm flex flex-col text-right">
-                        <span id="currentUserDisplay" class="font-bold text-slate-800">Admin</span>
-                        <span id="currentUserRole" class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-full inline-block mt-0.5">Admin</span>
+                <h1 class="text-lg font-bold text-slate-800 leading-tight sidebar-text whitespace-nowrap overflow-hidden">Registration<br><span class="text-indigo-600">Database</span></h1>
+            </div>
+
+            <!-- User Profile Summary -->
+            <div class="px-5 py-4 border-b border-slate-100 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-slate-500 font-bold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
                     </div>
-                    
-                    <div class="h-8 w-px bg-slate-200"></div>
-                    
-                    <div class="flex items-center gap-2">
-                        <button onclick="window.openChangePinModal()" class="text-indigo-600 hover:bg-indigo-50 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1 border border-transparent">
-                            Change PIN
-                        </button>
-                        <button onclick="window.showAppSection('reportsSection')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1">
-                            Reports
-                        </button>
-                        <button id="navDataBtn" onclick="window.showAppSection('manageDataSection')" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm items-center gap-1">
-                            Manage Data
-                        </button>
-                        <button id="navManageUsersBtn" onclick="window.showAppSection('usersSection')" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm items-center gap-1">
-                            Users
-                        </button>
-                        <button onclick="window.handleLogout()" class="text-red-600 hover:bg-red-50 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1 border border-transparent hover:border-red-100">
-                            Logout
-                        </button>
+                    <div class="flex flex-col sidebar-text whitespace-nowrap overflow-hidden">
+                        <span id="currentUserDisplay" class="font-bold text-slate-800 text-sm">Admin</span>
+                        <span id="currentUserRole" class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-full w-max mt-0.5">Admin</span>
                     </div>
                 </div>
             </div>
-        </header>
 
-        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex flex-col gap-6 relative">
+            <!-- Navigation Links -->
+            <nav class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
+                <button id="navBtn_extractorSection" onclick="window.showAppSection('extractorSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Admin Extractor</span>
+                </button>
+                <button id="navBtn_extractorSectionUser" onclick="window.showAppSection('extractorSectionUser')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Reg Data (User)</span>
+                </button>
+                <button id="navBtn_manageDataSection" onclick="window.showAppSection('manageDataSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Manage Data</span>
+                </button>
+                <button id="navBtn_reportsSection" onclick="window.showAppSection('reportsSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Reports</span>
+                </button>
+                <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">User Settings</span>
+                </button>
+            </nav>
+
+            <!-- Bottom Actions -->
+            <div class="p-3 border-t border-slate-100 space-y-1 shrink-0 bg-slate-50/50">
+                <button onclick="window.openChangePinModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Change PIN</span>
+                </button>
+                <button onclick="window.handleLogout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar relative h-full w-full bg-slate-50/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
             
             <!-- EXTRACTOR SECTION (Admin) -->
             <section id="extractorSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col lg:flex-row gap-0 transition-all duration-300">
@@ -420,44 +454,44 @@
                     </div>
 
                     <div class="flex flex-wrap gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-200">
-                        <div>
-                            <label class="block text-xs font-medium mb-1">Filter by Date</label>
-                            <select id="reportDateFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border rounded-md text-sm"></select>
+                        <div class="flex gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Start Date</label>
+                                <input type="date" id="reportStartDate" onchange="window.renderReports()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">End Date</label>
+                                <input type="date" id="reportEndDate" onchange="window.renderReports()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                            </div>
                         </div>
                         <div id="reportUserFilterContainer" class="hidden">
-                            <label class="block text-xs font-medium mb-1">Filter by Dealer</label>
-                            <select id="reportUserFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border rounded-md text-sm"></select>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Filter by Dealer</label>
+                            <select id="reportUserFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></select>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="window.renderReports()" class="bg-white border border-slate-300 hover:bg-slate-50 py-1.5 px-3 rounded-md text-sm shadow-sm">Refresh</button>
-                            <button onclick="window.downloadPendingCSV()" class="bg-orange-500 hover:bg-orange-600 text-white py-1.5 px-3 rounded-md text-sm shadow-sm">Download Pending</button>
-                        </div>
-                    </div>
-
-                    <div id="reportSummaryView" class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm">
-                        <table class="w-full text-left border-collapse text-sm">
+                            <button onclick="window.renderReports()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm flex items-center gap-1 transition-colors">
                             <thead class="bg-slate-100 text-slate-700">
-                                <tr id="summaryTableHeadRow"></tr>
-                            </thead>
-                            <tbody id="summaryTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
-                        </table>
-                    </div>
-
-                    <div id="reportMergedView" class="hidden overflow-x-auto overflow-y-auto max-h-[500px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative">
-                        <div class="flex justify-between items-center p-3 bg-slate-50 border-b border-slate-200 sticky top-0 left-0 z-30 shadow-sm">
-                            <span class="font-semibold text-sm">Live Invoice + Registration Merged Match</span>
-                            <button onclick="window.downloadMergedCSV()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-1.5 px-3 rounded-md text-xs shadow-sm">Download Merged CSV</button>
+                            <button onclick="window.downloadMergedCSV()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-xs flex items-center gap-1 shadow-sm transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download Full Merged CSV
+                            </button>
                         </div>
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-100 text-slate-700 sticky top-[53px] shadow-sm z-20">
+                        <table class="w-full text-left border-collapse text-sm relative">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
                                 <tr id="mergedTableHead"></tr>
                             </thead>
                             <tbody id="mergedTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
                         </table>
+                        <div id="mergedTableLimitNotice" class="hidden p-3 bg-indigo-50 text-indigo-700 text-center text-xs font-medium border-t border-indigo-100">
+                            Showing top 100 preview records for speed. Download CSV to get all data.
+                        </div>
                     </div>
                 </div>
             </section>
 
+            </div> <!-- End max-w-7xl wrapper -->
         </main>
     </div>
 
@@ -516,6 +550,7 @@
         let extractedRegDataGlobal = [];
         let currentMergedExport = [];
         let currentPendingExport = [];
+        let isSidebarCollapsed = false;
 
         const extractBtn = document.getElementById('extractBtn');
         const downloadBtn = document.getElementById('downloadBtn');
@@ -545,10 +580,17 @@
             };
 
             app = initializeApp(firebaseConfig);
-            // Explicitly pass URL to prevent routing hangups
-            db = getDatabase(app, "https://regdata-f08a2-default-rtdb.firebaseio.com");
+            // Automatically determine URL from config to prevent silent connection hangups
+            db = getDatabase(app);
 
             loginBtn.textContent = "Checking Connection...";
+
+            // Timeout Failsafe: Agar connection ghoomta reh gaya toh error batayega instead of waiting forever
+            setTimeout(() => {
+                if (usersDB.length === 0 && !currentUser) {
+                    showFatalError("Network Timeout: Connection block ho raha hai. Please check your internet or Firebase Rules.");
+                }
+            }, 8000);
 
             // Monitor real-time connection status
             const connectedRef = ref(db, ".info/connected");
@@ -802,18 +844,26 @@
                 document.getElementById('currentUserDisplay').textContent = user.name;
                 document.getElementById('currentUserRole').textContent = user.role;
                 
-                const manageBtn = document.getElementById('navManageUsersBtn');
-                const dataBtn = document.getElementById('navDataBtn');
+                const navAdmin1 = document.getElementById('navBtn_extractorSection');
+                const navAdmin2 = document.getElementById('navBtn_manageDataSection');
+                const navAdmin3 = document.getElementById('navBtn_usersSection');
+                const navUser1 = document.getElementById('navBtn_extractorSectionUser');
                 
                 if (user.role === 'Admin') {
-                    manageBtn.classList.remove('hidden'); manageBtn.classList.add('flex');
-                    dataBtn.classList.remove('hidden'); dataBtn.classList.add('flex');
+                    navAdmin1.classList.remove('hidden'); 
+                    navAdmin2.classList.remove('hidden'); 
+                    navAdmin3.classList.remove('hidden'); 
+                    navUser1.classList.add('hidden'); 
+                    
                     extractBtn.disabled = false; extractBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     document.getElementById('tabMerged').classList.remove('hidden');
                     document.getElementById('reportUserFilterContainer').classList.remove('hidden');
                 } else {
-                    manageBtn.classList.add('hidden'); manageBtn.classList.remove('flex');
-                    dataBtn.classList.add('hidden'); dataBtn.classList.remove('flex');
+                    navAdmin1.classList.add('hidden'); 
+                    navAdmin2.classList.add('hidden'); 
+                    navAdmin3.classList.add('hidden'); 
+                    navUser1.classList.remove('hidden');
+                    
                     document.getElementById('tabMerged').classList.add('hidden');
                     document.getElementById('reportUserFilterContainer').classList.add('hidden');
                     window.switchReportTab('summary');
@@ -825,13 +875,14 @@
                     extractBtnUser.disabled = false; extractBtnUser.classList.remove('opacity-50');
                 }
 
+                // Set Default Dates for Reports immediately on login
+                window.initDefaultDates();
+
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('flex');
                 
                 window.goHome();
                 
-                // Show animated Welcome Modal
                 window.showWelcomeModal(user.name);
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
@@ -885,6 +936,36 @@
             else window.showAppSection('extractorSectionUser');
         };
 
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('appSidebar');
+            const icon = document.getElementById('sidebarToggleIcon');
+            const texts = document.querySelectorAll('.sidebar-text');
+            
+            isSidebarCollapsed = !isSidebarCollapsed;
+            
+            if (isSidebarCollapsed) {
+                sidebar.classList.remove('w-64'); sidebar.classList.add('w-20');
+                texts.forEach(t => t.classList.add('opacity-0', 'w-0', 'invisible'));
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />`;
+            } else {
+                sidebar.classList.remove('w-20'); sidebar.classList.add('w-64');
+                texts.forEach(t => t.classList.remove('opacity-0', 'w-0', 'invisible'));
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />`;
+            }
+        };
+
+        function updateActiveNav(sectionId) {
+            document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-50', 'text-indigo-600', 'border-indigo-600');
+                btn.classList.add('text-slate-600', 'border-transparent', 'hover:bg-slate-100');
+            });
+            const activeBtn = document.getElementById('navBtn_' + sectionId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-600', 'border-transparent', 'hover:bg-slate-100');
+                activeBtn.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-600');
+            }
+        }
+
         window.showAppSection = function(sectionId) {
             ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection'].forEach(id => {
                 const el = document.getElementById(id);
@@ -894,6 +975,9 @@
             if(target) {
                 target.classList.remove('hidden'); target.classList.add('flex');
             }
+            
+            updateActiveNav(sectionId);
+            
             if (sectionId === 'usersSection' && currentUser?.role === 'Admin') renderUsersTable();
             if (sectionId === 'reportsSection') window.renderReports();
             if (sectionId === 'manageDataSection' && currentUser?.role === 'Admin') window.renderManageData();
@@ -1084,51 +1168,52 @@
             }
 
             if(count > 0) {
-                extractBtnUser.textContent = "Syncing...";
-                update(ref(db), updates).then(() => {
-                    extractBtnUser.textContent = "Extract & Save to Cloud";
-                    document.getElementById('rawInputUser').value = ''; // Auto-clear text area
-                    showToast(`${count} valid registrations saved to Cloud DB`);
-                    renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
-                    downloadBtnUser.disabled = false; copyBtnUser.disabled = false;
-                    document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved.`;
-                }).catch(e => {
-                    extractBtnUser.textContent = "Extract & Save to Cloud";
-                    alert("Sync Error: " + e.message);
-                });
-            }
-        });
-
-        function renderPreviewTable(tableId, headId, bodyId, emptyId, data) {
-            const head = document.getElementById(headId);
-            const body = document.getElementById(bodyId);
-            head.innerHTML = ''; body.innerHTML = '';
-            
-            if (data.length < 1) return;
-            data[0].forEach(txt => {
-                const th = document.createElement('th');
-                th.className = 'px-4 py-3 font-semibold border-b bg-slate-50 whitespace-nowrap';
-                th.textContent = txt; head.appendChild(th);
-            });
-
-            const limit = Math.min(data.length - 1, 50); // display max 50 to avoid lag
-            for (let i = 1; i <= limit; i++) {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50';
-                data[i].forEach(cell => {
-                    const td = document.createElement('td');
-                    td.className = 'px-4 py-2 border-b whitespace-nowrap text-sm';
-                    td.textContent = cell; tr.appendChild(td);
-                });
-                body.appendChild(tr);
-            }
-            document.getElementById(emptyId).classList.add('hidden');
+            document.getElementById('emptyStateUser').classList.add('hidden');
             document.getElementById(tableId).classList.remove('hidden');
         }
 
         // ==========================================
-        // REPORTS LOGIC
+        // DATE PARSER & REPORTS LOGIC
         // ==========================================
+        
+        window.initDefaultDates = function() {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+            const formatDate = (d) => {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            document.getElementById('reportStartDate').value = formatDate(firstDay);
+            document.getElementById('reportEndDate').value = formatDate(lastDay);
+        };
+
+        function parseStandardDate(dateStr) {
+            if(!dateStr) return null;
+            let dStr = dateStr.split(' ')[0]; // Remove time if present
+            
+            // Check separator
+            let parts;
+            if (dStr.includes('/')) parts = dStr.split('/');
+            else if (dStr.includes('-')) parts = dStr.split('-');
+            else return new Date(dStr);
+
+            if (parts && parts.length === 3) {
+                if (parts[0].length === 4) { // YYYY-MM-DD
+                    return new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+                } else if (isNaN(parts[1])) { // DD-MMM-YYYY (15-Jan-2024)
+                    return new Date(dStr);
+                } else { // DD-MM-YYYY
+                    return new Date(parts[2], parseInt(parts[1])-1, parts[0]);
+                }
+            }
+            return new Date(dStr);
+        }
+
         window.switchReportTab = function(tab) {
             if(tab === 'summary') {
                 document.getElementById('tabSummary').classList.add('text-indigo-600', 'border-indigo-600');
@@ -1151,13 +1236,12 @@
         };
 
         window.renderReports = function() {
-            // Populate Filters
-            const dateSelect = document.getElementById('reportDateFilter');
-            const dates = new Set(masterInvoices.map(r => r[sanitizeKey('Invoice Date')] ? r[sanitizeKey('Invoice Date')].split(' ')[0] : '').filter(Boolean));
-            let currDate = dateSelect.value || "All";
-            dateSelect.innerHTML = '<option value="All">All Dates</option>';
-            Array.from(dates).sort().forEach(d => dateSelect.innerHTML += `<option value="${d}">${d}</option>`);
-            if (dates.has(currDate)) dateSelect.value = currDate;
+            // Get Current Dates
+            const startVal = document.getElementById('reportStartDate').value;
+            const endVal = document.getElementById('reportEndDate').value;
+            const startDate = startVal ? new Date(startVal) : null;
+            let endDate = endVal ? new Date(endVal) : null;
+            if (endDate) endDate.setHours(23, 59, 59, 999); // Include full end day
 
             let userFilter = currentUser.name;
             if (currentUser?.role === 'Admin') {
@@ -1188,7 +1272,13 @@
             
             filteredInvoices.forEach(inv => {
                 let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
-                if (dateSelect.value !== 'All' && dateVal !== dateSelect.value) return;
+                
+                // Smart Date Range Filtering
+                let parsedInvDate = parseStandardDate(dateVal);
+                if(parsedInvDate && !isNaN(parsedInvDate)) {
+                    if (startDate && parsedInvDate < startDate) return; // Skip if before start date
+                    if (endDate && parsedInvDate > endDate) return; // Skip if after end date
+                }
 
                 let key = currentUser.role === 'Admin' ? (inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer') : dateVal;
                 if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0 };
@@ -1239,15 +1329,25 @@
                 currentMergedExport = [displayCols];
                 const head = document.getElementById('mergedTableHead');
                 const body = document.getElementById('mergedTableBody');
+                const limitNotice = document.getElementById('mergedTableLimitNotice');
                 head.innerHTML = ''; body.innerHTML = '';
 
                 displayCols.forEach((c, i) => {
                     head.innerHTML += `<th class="px-4 py-2 text-xs font-semibold border-b ${i >= TARGET_COLUMNS.length ? 'bg-indigo-50 text-indigo-800' : 'bg-slate-100'} whitespace-nowrap">${c}</th>`;
                 });
 
+                let renderCount = 0;
+                const MAX_RENDER = 100; // Anti-lag rendering limit
+
                 filteredInvoices.forEach(inv => {
                     let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
-                    if (dateSelect.value !== 'All' && dateVal !== dateSelect.value) return;
+                    
+                    // Date Filter
+                    let parsedInvDate = parseStandardDate(dateVal);
+                    if(parsedInvDate && !isNaN(parsedInvDate)) {
+                        if (startDate && parsedInvDate < startDate) return; 
+                        if (endDate && parsedInvDate > endDate) return;
+                    }
 
                     let matched = masterRegistrations.find(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
                     let expRow = [];
@@ -1267,9 +1367,21 @@
                     });
 
                     trStr += `</tr>`;
-                    body.innerHTML += trStr;
+                    
+                    // Only append to DOM if under the limit to prevent Lag
+                    if (renderCount < MAX_RENDER) {
+                        body.innerHTML += trStr;
+                        renderCount++;
+                    }
+                    
                     currentMergedExport.push(expRow);
                 });
+                
+                if (currentMergedExport.length - 1 > MAX_RENDER) {
+                    limitNotice.classList.remove('hidden');
+                } else {
+                    limitNotice.classList.add('hidden');
+                }
             }
         };
 
@@ -1351,8 +1463,8 @@
                 return;
             }
 
-            // Render Rows (Limit rendering if huge to avoid freezing, e.g., max 500)
-            const limit = Math.min(filteredData.length, 500);
+            // Anti-Lag: Render Rows Limit to 100 max visually
+            const limit = Math.min(filteredData.length, 100);
             for (let i = 0; i < limit; i++) {
                 const item = filteredData[i];
                 const tr = document.createElement('tr');
