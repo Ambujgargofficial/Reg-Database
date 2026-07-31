@@ -22,17 +22,44 @@
 
     <!-- WELCOME MODAL -->
     <div id="welcomeModal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-[100] backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300" id="welcomeModalContent">
-            <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-sm w-full text-center transform scale-95 transition-all duration-500 relative overflow-hidden border border-slate-100" id="welcomeModalContent">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+            <div class="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] border border-indigo-100">
+                <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold text-slate-800 mb-1">Welcome back!</h2>
-            <p class="text-slate-500 mb-6 font-medium text-lg" id="welcomeModalName">Admin</p>
-            <button onclick="window.closeWelcomeModal()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors w-full font-semibold shadow-md hover:shadow-lg">
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-2 tracking-tight">Welcome back!</h2>
+            <p class="text-slate-500 mb-8 font-medium text-lg" id="welcomeModalName">Admin</p>
+            <button onclick="window.closeWelcomeModal()" class="bg-slate-900 text-white px-6 py-3 rounded-xl hover:bg-indigo-600 transition-all duration-300 w-full font-semibold shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-0.5">
                 Continue to Dashboard
             </button>
+        </div>
+    </div>
+
+    <!-- CHANGE PIN MODAL -->
+    <div id="changePinModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[200] backdrop-blur-sm transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full transform scale-95 transition-transform duration-200" id="changePinModalContent">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Change Login PIN</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Current PIN</label>
+                    <input type="password" id="currentPinInput" class="w-full px-3 py-2 border rounded-md" placeholder="Enter current PIN">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">New PIN</label>
+                    <input type="password" id="newPinInput" class="w-full px-3 py-2 border rounded-md" placeholder="Enter new PIN">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Confirm New PIN</label>
+                    <input type="password" id="confirmNewPinInput" class="w-full px-3 py-2 border rounded-md" placeholder="Re-enter new PIN">
+                </div>
+            </div>
+            <div id="pinErrorMsg" class="hidden text-xs text-red-600 mt-2 font-medium"></div>
+            <div class="flex gap-3 justify-end mt-6">
+                <button onclick="window.closeChangePinModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors">Cancel</button>
+                <button onclick="window.saveNewPin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm">Save & Logout</button>
+            </div>
         </div>
     </div>
 
@@ -78,44 +105,56 @@
     </div>
 
     <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="fixed inset-0 bg-slate-100 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 w-full max-w-md">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100 flex items-center justify-center z-50">
+        <div class="bg-white/70 backdrop-blur-xl p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 w-full max-w-md relative overflow-hidden">
+            <div class="absolute -top-16 -right-16 w-40 h-40 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 mb-5 shadow-lg transform rotate-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
                     </svg>
                 </div>
-                <h1 class="text-2xl font-bold text-slate-800">Smart Data Extractor</h1>
-                <p class="text-sm text-slate-500 mt-1">Please login to continue</p>
+                <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Smart Data Extractor</h1>
+                <p class="text-sm text-slate-500 mt-2 font-medium">Please login to continue</p>
             </div>
             
-            <form id="loginForm" class="space-y-4" onsubmit="event.preventDefault(); window.handleLogin();">
+            <form id="loginForm" class="space-y-5 relative z-10" onsubmit="event.preventDefault(); window.handleLogin();">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">User Name</label>
-                    <select id="loginUsername" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white" required>
-                        <option value="" disabled selected>Connecting to Database...</option>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">User Name</label>
+                    <select id="loginUsername" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white/80 backdrop-blur-sm shadow-sm" required>
+                        <option value="" disabled selected>System Initializing...</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Login PIN</label>
-                    <input type="password" id="loginPin" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Enter your PIN" required>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Login PIN</label>
+                    <input type="password" id="loginPin" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white/80 backdrop-blur-sm shadow-sm" placeholder="Enter your PIN" required>
                 </div>
                 
-                <div id="loginError" class="hidden text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
-                    Invalid username or PIN.
+                <div id="loginError" class="hidden text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100 font-medium text-center break-words">
+                    <!-- Error messages will appear here -->
                 </div>
                 
-                <button id="loginBtn" type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 mt-4 disabled:opacity-50 disabled:bg-slate-500" disabled>
-                    Loading...
+                <button id="loginBtn" type="submit" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 mt-6 shadow-md hover:shadow-indigo-500/30 disabled:opacity-50 disabled:bg-slate-500">
+                    Loading SDK...
                 </button>
             </form>
+        </div>
+        
+        <!-- Developer Signature -->
+        <div class="fixed bottom-4 text-center w-full z-10 pointer-events-none">
+            <p class="text-xs font-semibold text-slate-400 tracking-wider uppercase flex items-center justify-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                Developed by Ambuj Garg
+            </p>
         </div>
     </div>
 
     <!-- MAIN APP SCREEN (Hidden by default) -->
     <div id="mainApp" class="hidden flex-col min-h-screen">
-        
         <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-2 cursor-pointer" onclick="window.goHome()">
@@ -134,6 +173,9 @@
                     <div class="h-8 w-px bg-slate-200"></div>
                     
                     <div class="flex items-center gap-2">
+                        <button onclick="window.openChangePinModal()" class="text-indigo-600 hover:bg-indigo-50 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1 border border-transparent">
+                            Change PIN
+                        </button>
                         <button onclick="window.showAppSection('reportsSection')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1">
                             Reports
                         </button>
@@ -214,6 +256,7 @@
                     <div class="flex gap-4 border-b border-slate-200 pb-2">
                         <button id="manageTabInvoices" onclick="window.switchManageTab('invoices')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Admin Invoices</button>
                         <button id="manageTabRegs" onclick="window.switchManageTab('registrations')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">User Registrations</button>
+                        <button id="manageTabCancelled" onclick="window.switchManageTab('cancelled')" class="font-medium text-red-500 hover:text-red-700 px-2 pb-1 transition-colors">Cancelled Bills</button>
                     </div>
 
                     <!-- Filters & Bulk Actions -->
@@ -429,39 +472,35 @@
         import { getDatabase, ref, set, update, remove, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // ==========================================
-        // 🚨 IMPORTANT: ADD YOUR FIREBASE CONFIG HERE
+        // UI ERROR CAPTURE SYSTEM (ADVANCED DEBUGGER)
         // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyDummyKey-PleaseUpdateWithRealKey", // Usually required for prod, but RTDB often works with open rules
-            authDomain: "regdata-f08a2.firebaseapp.com",
-            databaseURL: "https://regdata-f08a2-default-rtdb.firebaseio.com/",
-            projectId: "regdata-f08a2",
-            storageBucket: "regdata-f08a2.appspot.com",
-            messagingSenderId: "1234567890", 
-            appId: "1:1234567890:web:1234567890abcdef"
-        };
-
-        // DOM Elements
         const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
         const loginUsernameInput = document.getElementById('loginUsername');
         
-        // CHECK IF CONFIG IS MISSING
-        if (!firebaseConfig.databaseURL || firebaseConfig.databaseURL.includes("YOUR_PROJECT_ID")) {
-            loginBtn.textContent = "⚠️ Firebase Config Missing!";
+        function showFatalError(msg) {
+            loginError.classList.remove('hidden');
+            loginError.innerHTML += `<div>❌ ${msg}</div>`;
+            loginBtn.textContent = "Connection Failed";
             loginBtn.classList.replace('bg-indigo-600', 'bg-red-600');
-            loginUsernameInput.innerHTML = '<option value="" disabled selected>Please update source code</option>';
-            alert("Configuration Error: Please update the firebaseConfig object.");
-            // Halt execution here so it doesn't throw Firebase errors
-            throw new Error("Firebase config is missing.");
+            loginBtn.classList.replace('bg-slate-900', 'bg-red-600');
+            loginBtn.disabled = true;
         }
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        window.onerror = function(msg, url, line) {
+            showFatalError(`System Error: ${msg} (Line ${line})`);
+            return false;
+        };
+
+        window.onunhandledrejection = function(event) {
+            showFatalError(`Network/Promise Error: ${event.reason}`);
+        };
 
         // State variables
         let usersDB = [];
         let masterInvoices = [];
         let masterRegistrations = [];
+        let cancelledInvoices = [];
         let currentUser = null;
         let currentManageTab = 'invoices';
         let currentEditRecord = null;
@@ -484,6 +523,95 @@
         const extractBtnUser = document.getElementById('extractBtnUser');
         const downloadBtnUser = document.getElementById('downloadBtnUser');
         const copyBtnUser = document.getElementById('copyBtnUser');
+
+        let app, db;
+
+        // ==========================================
+        // FIREBASE INITIALIZATION & CONNECTION FLOW
+        // ==========================================
+        try {
+            loginBtn.textContent = "Connecting to Servers...";
+            loginUsernameInput.innerHTML = '<option value="" disabled selected>Connecting to Servers...</option>';
+            
+            const firebaseConfig = {
+                apiKey: "AIzaSyCQWsazEh6FZyn8JtMBj8OjtwFH4UvYNs8",
+                authDomain: "regdata-f08a2.firebaseapp.com",
+                databaseURL: "https://regdata-f08a2-default-rtdb.firebaseio.com",
+                projectId: "regdata-f08a2",
+                storageBucket: "regdata-f08a2.firebasestorage.app",
+                messagingSenderId: "663347591536",
+                appId: "1:663347591536:web:152df1149b7ab4b83db7b5",
+                measurementId: "G-XGPY7NP28E"
+            };
+
+            app = initializeApp(firebaseConfig);
+            // Explicitly pass URL to prevent routing hangups
+            db = getDatabase(app, "https://regdata-f08a2-default-rtdb.firebaseio.com");
+
+            loginBtn.textContent = "Checking Connection...";
+
+            // Monitor real-time connection status
+            const connectedRef = ref(db, ".info/connected");
+            onValue(connectedRef, (snap) => {
+                if (snap.val() === true) {
+                    if(!currentUser) {
+                        loginBtn.textContent = "Fetching Database...";
+                        loginError.classList.add('hidden');
+                        loginError.innerHTML = '';
+                    }
+                } else {
+                    if(!currentUser) loginBtn.textContent = "Waiting for Network (WS)...";
+                }
+            });
+
+            // Fetch Users Data
+            onValue(ref(db, 'users'), (snapshot) => {
+                const data = snapshot.val();
+                
+                if (!data) {
+                    // DB is completely empty (First time run) - Auto Create Admin Instantly
+                    const defaultAdmin = { id: Date.now(), name: 'admin', mobile: '9999999999', pin: '7773', role: 'Admin' };
+                    usersDB = [defaultAdmin]; // Set local state instantly
+                    set(ref(db, 'users/' + defaultAdmin.id), defaultAdmin); // Push to cloud
+                } else {
+                    usersDB = Object.values(data);
+                }
+                
+                populateUserDropdown();
+                if (currentUser?.role === 'Admin') renderUsersTable();
+                
+                // ENABLE LOGIN BUTTON
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Sign In";
+                loginBtn.classList.replace('bg-slate-500', 'bg-slate-900');
+            }, (error) => {
+                showFatalError("Database Blocked: " + error.message);
+            });
+
+            // Fetch other data nodes silently
+            onValue(ref(db, 'invoices'), (snapshot) => {
+                const data = snapshot.val();
+                masterInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+                if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
+                if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+            });
+
+            onValue(ref(db, 'registrations'), (snapshot) => {
+                const data = snapshot.val();
+                masterRegistrations = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+                if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
+                if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+            });
+
+            onValue(ref(db, 'cancelled_invoices'), (snapshot) => {
+                const data = snapshot.val();
+                cancelledInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+                if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+            });
+
+        } catch(e) {
+            showFatalError("Initialization Error: " + e.message);
+        }
 
         // Utils
         function sanitizeKey(str) {
@@ -581,6 +709,7 @@
                 updatedData[input.getAttribute('data-key')] = input.value.trim();
             });
 
+            // The DB path can be invoices, registrations, or cancelled_invoices
             const dbPath = currentEditRecord.__type + '/' + currentEditRecord.__fbKey;
             update(ref(db, dbPath), updatedData).then(() => {
                 showToast("Record updated successfully!");
@@ -591,48 +720,58 @@
         };
 
         // ==========================================
-        // FIREBASE REAL-TIME LISTENERS
+        // PIN MANAGEMENT LOGIC
         // ==========================================
-        onValue(ref(db, 'users'), (snapshot) => {
-            const data = snapshot.val();
+        window.openChangePinModal = function() {
+            document.getElementById('currentPinInput').value = '';
+            document.getElementById('newPinInput').value = '';
+            document.getElementById('confirmNewPinInput').value = '';
+            document.getElementById('pinErrorMsg').classList.add('hidden');
             
-            if (!data) {
-                // DB is completely empty (First time run) - Auto Create Admin Instantly
-                const defaultAdmin = { id: Date.now(), name: 'admin', mobile: '9999999999', pin: '7773', role: 'Admin' };
-                usersDB = [defaultAdmin]; // Set local state instantly
-                set(ref(db, 'users/' + defaultAdmin.id), defaultAdmin); // Push to cloud in background
-            } else {
-                usersDB = Object.values(data);
+            const modal = document.getElementById('changePinModal');
+            const content = document.getElementById('changePinModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => {
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+            });
+        }
+
+        window.closeChangePinModal = function() {
+            const modal = document.getElementById('changePinModal');
+            const content = document.getElementById('changePinModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 200);
+        }
+
+        window.saveNewPin = function() {
+            const current = document.getElementById('currentPinInput').value;
+            const newPin = document.getElementById('newPinInput').value;
+            const confirmPin = document.getElementById('confirmNewPinInput').value;
+            const errorEl = document.getElementById('pinErrorMsg');
+
+            if (current !== String(currentUser.pin)) {
+                errorEl.textContent = "Current PIN is incorrect.";
+                errorEl.classList.remove('hidden');
+                return;
             }
-            
-            populateUserDropdown();
-            if (currentUser?.role === 'Admin') renderUsersTable();
-            
-            // Enable login button now that DB is connected
-            loginBtn.disabled = false;
-            loginBtn.textContent = "Sign In";
-            loginBtn.classList.replace('bg-slate-500', 'bg-indigo-600');
-        }, (error) => {
-            loginBtn.textContent = "Database Connection Failed";
-            loginBtn.classList.replace('bg-indigo-600', 'bg-red-600');
-            alert("Firebase Error: " + error.message + "\n\nPlease make sure your Realtime Database rules allow read/write and the Database URL is exactly correct.");
-        });
+            if (newPin.length < 4) {
+                errorEl.textContent = "New PIN must be at least 4 characters.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            if (newPin !== confirmPin) {
+                errorEl.textContent = "New PINs do not match.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
 
-        onValue(ref(db, 'invoices'), (snapshot) => {
-            const data = snapshot.val();
-            // Map the Firebase Push Key to the object so we can edit/delete it later
-            masterInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
-            if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
-            if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
-        });
-
-        onValue(ref(db, 'registrations'), (snapshot) => {
-            const data = snapshot.val();
-            // Map the Firebase Push Key to the object so we can edit/delete it later
-            masterRegistrations = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
-            if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
-            if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
-        });
+            // Update in Firebase
+            update(ref(db, `users/${currentUser.id}`), { pin: newPin }).then(() => {
+                window.closeChangePinModal();
+                alert("PIN changed successfully! You will now be logged out. Please log in with your new PIN.");
+                window.handleLogout();
+            }).catch(e => alert("Failed to update PIN: " + e.message));
+        }
 
 
         // ==========================================
@@ -696,6 +835,7 @@
                 window.showWelcomeModal(user.name);
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
+                document.getElementById('loginError').textContent = 'Invalid username or PIN.';
             }
         };
 
@@ -823,8 +963,16 @@
 
             let updates = {};
             let count = 0;
+            let cancelledCount = 0;
             
             extractedDataGlobal = [columnMapping.map(c => c.name)];
+            
+            // Build a quick lookup dictionary for existing frames to check for duplicates/cancellations
+            const existingFrames = {};
+            masterInvoices.forEach(inv => {
+                const f = inv[sanitizeKey('Frame #')];
+                if (f) existingFrames[f] = inv;
+            });
             
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
@@ -836,14 +984,37 @@
                     let val = rowData[col.index] !== undefined ? rowData[col.index].trim().replace(/^"|"$/g, '') : "";
                     if (col.name === "Permanent Reg No") {
                         val = val.replace(/\s+/g, '');
-                        if (val.length < 8) val = "";
+                        if (val.length < 5) val = "";
                     }
                     rowObj[sanitizeKey(col.name)] = val;
                     rowArr.push(val);
                 });
                 
                 extractedDataGlobal.push(rowArr);
-                let safeKey = sanitizeKey(rowObj[sanitizeKey('Invoice #')] || `INV_${Date.now()}_${count}`);
+                
+                const currentFrame = rowObj[sanitizeKey('Frame #')];
+                const currentDate = rowObj[sanitizeKey('Invoice Date')] ? rowObj[sanitizeKey('Invoice Date')].split(' ')[0] : '';
+                const currentInvNo = rowObj[sanitizeKey('Invoice #')];
+                
+                let safeKey = sanitizeKey(currentInvNo || `INV_${Date.now()}_${count}`);
+
+                // Cancelled Bill Logic (Same Frame, Different Date/Invoice Number)
+                if (currentFrame && existingFrames[currentFrame]) {
+                    let oldInv = existingFrames[currentFrame];
+                    let oldDate = oldInv[sanitizeKey('Invoice Date')] ? oldInv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
+                    
+                    if (oldDate !== currentDate && oldInv[sanitizeKey('Invoice #')] !== currentInvNo) {
+                        // Move old invoice to cancelled node
+                        let oldFbKey = oldInv.__fbKey;
+                        let cleanOld = {...oldInv};
+                        delete cleanOld.__fbKey; // remove internal tracker before uploading
+                        
+                        updates['/cancelled_invoices/' + oldFbKey] = cleanOld;
+                        updates['/invoices/' + oldFbKey] = null; // delete from active
+                        cancelledCount++;
+                    }
+                }
+
                 updates['/invoices/' + safeKey] = rowObj;
                 count++;
             }
@@ -852,10 +1023,15 @@
                 extractBtn.textContent = "Syncing...";
                 update(ref(db), updates).then(() => {
                     extractBtn.textContent = "Extract & Save to Cloud";
-                    showToast(`${count} records synced to Cloud DB`);
+                    document.getElementById('rawInput').value = ''; // Auto-clear text area
+                    
+                    let toastMsg = `${count} records synced to Cloud DB.`;
+                    if (cancelledCount > 0) toastMsg += ` (${cancelledCount} duplicate frames moved to Cancelled Bills)`;
+                    showToast(toastMsg);
+                    
                     renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
                     downloadBtn.disabled = false; copyBtn.disabled = false;
-                    document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> rows processed and saved.`;
+                    document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> rows processed.`;
                 }).catch((error) => {
                     extractBtn.textContent = "Extract & Save to Cloud";
                     alert("Firebase Error: " + error.message);
@@ -911,6 +1087,7 @@
                 extractBtnUser.textContent = "Syncing...";
                 update(ref(db), updates).then(() => {
                     extractBtnUser.textContent = "Extract & Save to Cloud";
+                    document.getElementById('rawInputUser').value = ''; // Auto-clear text area
                     showToast(`${count} valid registrations saved to Cloud DB`);
                     renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
                     downloadBtnUser.disabled = false; copyBtnUser.disabled = false;
@@ -1017,9 +1194,15 @@
                 if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0 };
                 
                 grouped[key].total++;
-                let isReg = masterRegistrations.some(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
-                if(isReg) grouped[key].reg++;
-                else {
+                
+                // Smart Registered vs Pending Logic
+                let hasRtoMatch = masterRegistrations.some(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
+                let permRegField = inv[sanitizeKey('Permanent Reg No')];
+                let hasPermRegInInvoice = permRegField && permRegField.trim().length >= 5; // Valid reg string length
+                
+                if(hasRtoMatch || hasPermRegInInvoice) {
+                    grouped[key].reg++;
+                } else {
                     grouped[key].pend++;
                     currentPendingExport.push(TARGET_COLUMNS.map(c => inv[sanitizeKey(c)] || ''));
                 }
@@ -1094,15 +1277,22 @@
             currentManageTab = tab;
             const btnInv = document.getElementById('manageTabInvoices');
             const btnReg = document.getElementById('manageTabRegs');
+            const btnCan = document.getElementById('manageTabCancelled');
             
+            // Reset all visually
+            btnInv.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+            btnReg.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+            btnCan.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+
             if (tab === 'invoices') {
                 btnInv.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
-                btnReg.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
                 document.getElementById('manageIdentifierHead').textContent = 'Invoice # | Frame #';
-            } else {
+            } else if (tab === 'registrations') {
                 btnReg.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
-                btnInv.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
                 document.getElementById('manageIdentifierHead').textContent = 'Reg No | Chasis No';
+            } else {
+                btnCan.className = "font-medium text-red-500 border-b-2 border-red-500 px-2 pb-1 transition-colors";
+                document.getElementById('manageIdentifierHead').textContent = 'Cancelled Inv # | Frame #';
             }
             window.renderManageData();
         };
@@ -1114,11 +1304,22 @@
             const dateSelect = document.getElementById('manageDateFilter');
             const userSelect = document.getElementById('manageUserFilter');
             
-            // Prepare dataset
-            const dataArray = currentManageTab === 'invoices' ? masterInvoices : masterRegistrations;
+            // Prepare dataset based on tab
+            let dataArray = [];
+            let dateKey = sanitizeKey('Invoice Date');
+            let userKey = sanitizeKey('Requesting Dealer');
+
+            if (currentManageTab === 'invoices') {
+                dataArray = masterInvoices;
+            } else if (currentManageTab === 'registrations') {
+                dataArray = masterRegistrations;
+                dateKey = sanitizeKey('Receipt Dt.');
+                userKey = sanitizeKey('Processed By');
+            } else if (currentManageTab === 'cancelled') {
+                dataArray = cancelledInvoices;
+            }
             
             // Get unique dates
-            const dateKey = currentManageTab === 'invoices' ? sanitizeKey('Invoice Date') : sanitizeKey('Receipt Dt.');
             const dates = new Set(dataArray.map(r => r[dateKey] ? r[dateKey].split(' ')[0] : '').filter(Boolean));
             let currDate = dateSelect.value || "All";
             dateSelect.innerHTML = '<option value="All">All Dates</option>';
@@ -1126,8 +1327,8 @@
             if (dates.has(currDate)) dateSelect.value = currDate;
 
             // Get unique users
-            const userKey = currentManageTab === 'invoices' ? sanitizeKey('Requesting Dealer') : sanitizeKey('Processed By');
-            const users = new Set(dataArray.map(r => r[userKey]).filter(Boolean));
+            const uKey = currentManageTab === 'invoices' ? sanitizeKey('Requesting Dealer') : sanitizeKey('Processed By');
+            const users = new Set(dataArray.map(r => r[uKey]).filter(Boolean));
             let currUser = userSelect.value || "All";
             userSelect.innerHTML = '<option value="All">All Users/Dealers</option>';
             Array.from(users).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
@@ -1139,7 +1340,7 @@
 
             const filteredData = dataArray.filter(item => {
                 const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : '';
-                const iUser = item[userKey] || '';
+                const iUser = item[uKey] || '';
                 if (dateSelect.value !== 'All' && iDate !== dateSelect.value) return false;
                 if (userSelect.value !== 'All' && iUser !== userSelect.value) return false;
                 return true;
@@ -1158,14 +1359,21 @@
                 tr.className = "hover:bg-slate-50";
                 
                 const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-';
-                const displayUser = item[userKey] || '-';
+                const displayUser = item[uKey] || '-';
                 
                 let displayIdentifier = '';
-                if (currentManageTab === 'invoices') {
+                if (currentManageTab === 'invoices' || currentManageTab === 'cancelled') {
                     displayIdentifier = `<span class="font-medium">${item[sanitizeKey('Invoice #')] || '-'}</span><br><span class="text-xs text-slate-400">${item[sanitizeKey('Frame #')] || '-'}</span>`;
                 } else {
                     displayIdentifier = `<span class="font-medium">${item[sanitizeKey('Registration No')] || '-'}</span><br><span class="text-xs text-slate-400">${item[sanitizeKey('Chasis No')] || '-'}</span>`;
                 }
+                
+                let actionsHtml = `<button onclick="window.openEditModal('${item.__fbKey}', '${currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab}')" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium mr-3">Edit</button>`;
+                
+                if (currentManageTab === 'cancelled') {
+                    actionsHtml += `<button onclick="window.restoreCancelledRecord('${item.__fbKey}')" class="text-emerald-600 hover:text-emerald-800 text-sm font-medium mr-3">Restore</button>`;
+                }
+                actionsHtml += `<button onclick="window.deleteSingleRecord('${item.__fbKey}', '${currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Delete</button>`;
 
                 tr.innerHTML = `
                     <td class="px-4 py-3 text-center border-b border-slate-100">
@@ -1175,8 +1383,7 @@
                     <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayUser}</td>
                     <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayIdentifier}</td>
                     <td class="px-4 py-3 text-right border-b border-slate-100 whitespace-nowrap">
-                        <button onclick="window.openEditModal('${item.__fbKey}', '${currentManageTab}')" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium mr-3">Edit</button>
-                        <button onclick="window.deleteSingleRecord('${item.__fbKey}', '${currentManageTab}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Delete</button>
+                        ${actionsHtml}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1197,15 +1404,33 @@
                 remove(ref(db, `${type}/${dbKey}`)).then(() => showToast("Record deleted."));
             });
         };
+        
+        window.restoreCancelledRecord = function(dbKey) {
+            window.showConfirmModal("Restore Invoice", "Move this invoice back to active status? (This will overwrite any active invoice with the same exact Key)", () => {
+                let cancelledItem = cancelledInvoices.find(c => c.__fbKey === dbKey);
+                if(cancelledItem) {
+                    let cleanItem = {...cancelledItem};
+                    delete cleanItem.__fbKey;
+                    
+                    let updates = {};
+                    updates['/invoices/' + dbKey] = cleanItem;
+                    updates['/cancelled_invoices/' + dbKey] = null;
+                    
+                    update(ref(db), updates).then(() => showToast("Invoice Restored!"));
+                }
+            });
+        };
 
         window.bulkDeleteSelected = function() {
             const checkboxes = document.querySelectorAll('.manage-cb:checked');
             if (checkboxes.length === 0) return showToast("No records selected.");
             
+            const dbType = currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab;
+
             window.showConfirmModal("Delete Selected", `Are you sure you want to delete the ${checkboxes.length} selected record(s)?`, () => {
                 let updates = {};
                 checkboxes.forEach(cb => {
-                    updates[`/${currentManageTab}/${cb.value}`] = null; // Set to null to delete multi-path
+                    updates[`/${dbType}/${cb.value}`] = null; // Set to null to delete multi-path
                 });
                 
                 update(ref(db), updates).then(() => {
@@ -1216,7 +1441,6 @@
         };
 
         window.bulkDeleteFiltered = function() {
-            // Re-run filter logic to ensure we delete EXACTLY what's matching the current dropdowns
             const dateSelect = document.getElementById('manageDateFilter').value;
             const userSelect = document.getElementById('manageUserFilter').value;
             
@@ -1227,13 +1451,15 @@
             executeBulkWipe();
             
             function executeBulkWipe() {
-                const dataArray = currentManageTab === 'invoices' ? masterInvoices : masterRegistrations;
-                const dateKey = currentManageTab === 'invoices' ? sanitizeKey('Invoice Date') : sanitizeKey('Receipt Dt.');
-                const userKey = currentManageTab === 'invoices' ? sanitizeKey('Requesting Dealer') : sanitizeKey('Processed By');
+                let dataArray = currentManageTab === 'invoices' ? masterInvoices : (currentManageTab === 'registrations' ? masterRegistrations : cancelledInvoices);
+                let dbType = currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab;
+                
+                const dateKey = currentManageTab === 'registrations' ? sanitizeKey('Receipt Dt.') : sanitizeKey('Invoice Date');
+                const uKey = currentManageTab === 'registrations' ? sanitizeKey('Processed By') : sanitizeKey('Requesting Dealer');
 
                 const toDelete = dataArray.filter(item => {
                     const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : '';
-                    const iUser = item[userKey] || '';
+                    const iUser = item[uKey] || '';
                     if (dateSelect !== 'All' && iDate !== dateSelect) return false;
                     if (userSelect !== 'All' && iUser !== userSelect) return false;
                     return true;
@@ -1244,7 +1470,7 @@
                 window.showConfirmModal("Delete All Filtered", `DANGER: You are about to permanently delete ${toDelete.length} records matching the current filters. Continue?`, () => {
                     let updates = {};
                     toDelete.forEach(item => {
-                        updates[`/${currentManageTab}/${item.__fbKey}`] = null;
+                        updates[`/${dbType}/${item.__fbKey}`] = null;
                     });
                     
                     update(ref(db), updates).then(() => {
