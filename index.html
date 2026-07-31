@@ -16,9 +16,27 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Sidebar Transitions */
+        #appSidebar {
+            transition: width 0.3s ease-in-out;
+            overflow-x: hidden;
+        }
+        .sidebar-expanded { width: 256px; }
+        .sidebar-collapsed { width: 80px; }
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            width: 0;
+            display: none;
+        }
+        .sidebar-expanded .sidebar-text {
+            opacity: 1;
+            width: auto;
+            display: inline-block;
+        }
     </style>
 </head>
-<body class="text-slate-800 h-screen overflow-hidden flex flex-col relative bg-slate-50">
+<body class="text-slate-800 h-screen overflow-hidden flex bg-slate-50 relative">
 
     <!-- WELCOME MODAL -->
     <div id="welcomeModal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-[100] backdrop-blur-sm transition-opacity duration-300 opacity-0">
@@ -75,7 +93,7 @@
             <p class="text-sm text-slate-600 mb-6" id="confirmMessage">This action cannot be undone.</p>
             <div class="flex gap-3 justify-end">
                 <button onclick="window.closeConfirmModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors">Cancel</button>
-                <button id="confirmExecuteBtn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors shadow-sm">Delete</button>
+                <button id="confirmExecuteBtn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors shadow-sm">Confirm</button>
             </div>
         </div>
     </div>
@@ -105,7 +123,7 @@
     </div>
 
     <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100 flex items-center justify-center z-50">
+    <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100 flex items-center justify-center z-[200]">
         <div class="bg-white/70 backdrop-blur-xl p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 w-full max-w-md relative overflow-hidden">
             <div class="absolute -top-16 -right-16 w-40 h-40 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
             <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -137,7 +155,7 @@
                 </div>
                 
                 <button id="loginBtn" type="submit" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 mt-6 shadow-md hover:shadow-indigo-500/30 disabled:opacity-50 disabled:bg-slate-500">
-                    Loading SDK...
+                    Connecting to Database...
                 </button>
             </form>
         </div>
@@ -153,100 +171,93 @@
         </div>
     </div>
 
-    <!-- MAIN APP SCREEN (Hidden by default) -->
-    <div id="mainApp" class="hidden h-screen w-full flex-row overflow-hidden">
-        
-        <!-- SLEEK COLLAPSIBLE SIDEBAR -->
-        <aside id="appSidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 relative z-50 shadow-[4px_0_24px_rgba(0,0,0,0.02)] shrink-0">
-            <!-- Toggle Button -->
-            <button onclick="window.toggleSidebar()" class="absolute -right-3.5 top-8 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm text-slate-400 hover:text-indigo-600 transition-colors z-50">
-                <svg id="sidebarToggleIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+    <!-- LEFT SIDEBAR -->
+    <aside id="appSidebar" class="bg-white border-r border-slate-200 flex flex-col transition-all duration-300 sidebar-expanded z-40 relative hidden h-full shrink-0">
+        <!-- Toggle Button -->
+        <button onclick="window.toggleSidebar()" class="absolute -right-3.5 top-8 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm text-slate-400 hover:text-indigo-600 transition-colors z-50">
+            <svg id="sidebarToggleIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <!-- Brand Logo -->
+        <div class="h-20 flex items-center gap-3 px-5 border-b border-slate-100 shrink-0 cursor-pointer overflow-hidden" onclick="window.goHome()">
+            <div class="bg-indigo-100 p-2 rounded-xl shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
+            </div>
+            <h1 class="text-lg font-bold text-slate-800 leading-tight sidebar-text whitespace-nowrap overflow-hidden transition-opacity duration-200">Registration<br><span class="text-indigo-600">Database</span></h1>
+        </div>
+
+        <!-- User Profile Summary -->
+        <div class="px-5 py-4 border-b border-slate-100 shrink-0 overflow-hidden">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-slate-500 font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+                </div>
+                <div class="flex flex-col sidebar-text whitespace-nowrap overflow-hidden transition-opacity duration-200">
+                    <span id="currentUserDisplay" class="font-bold text-slate-800 text-sm">Admin</span>
+                    <span id="currentUserRole" class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-full w-max mt-0.5">Admin</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
+            <button id="navBtn_extractorSection" onclick="window.showAppSection('extractorSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Admin Extractor</span>
             </button>
+            <button id="navBtn_extractorSectionUser" onclick="window.showAppSection('extractorSectionUser')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Reg Data (User)</span>
+            </button>
+            <button id="navBtn_manageDataSection" onclick="window.showAppSection('manageDataSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Data</span>
+            </button>
+            <button id="navBtn_reportsSection" onclick="window.showAppSection('reportsSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Reports</span>
+            </button>
+            <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">User Settings</span>
+            </button>
+        </nav>
 
-            <!-- Brand Logo -->
-            <div class="h-20 flex items-center gap-3 px-5 border-b border-slate-100 shrink-0 cursor-pointer" onclick="window.goHome()">
-                <div class="bg-indigo-100 p-2 rounded-xl shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                </div>
-                <h1 class="text-lg font-bold text-slate-800 leading-tight sidebar-text whitespace-nowrap overflow-hidden">Registration<br><span class="text-indigo-600">Database</span></h1>
-            </div>
+        <!-- Bottom Actions -->
+        <div class="p-3 border-t border-slate-100 space-y-1 shrink-0 bg-slate-50/50 overflow-hidden">
+            <button onclick="window.openChangePinModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-200 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Change PIN</span>
+            </button>
+            <button onclick="window.handleLogout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                <span class="font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Logout</span>
+            </button>
+        </div>
+    </aside>
 
-            <!-- User Profile Summary -->
-            <div class="px-5 py-4 border-b border-slate-100 shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-slate-500 font-bold">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
-                    </div>
-                    <div class="flex flex-col sidebar-text whitespace-nowrap overflow-hidden">
-                        <span id="currentUserDisplay" class="font-bold text-slate-800 text-sm">Admin</span>
-                        <span id="currentUserRole" class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-full w-max mt-0.5">Admin</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
-                <button id="navBtn_extractorSection" onclick="window.showAppSection('extractorSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Admin Extractor</span>
-                </button>
-                <button id="navBtn_extractorSectionUser" onclick="window.showAppSection('extractorSectionUser')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Reg Data (User)</span>
-                </button>
-                <button id="navBtn_manageDataSection" onclick="window.showAppSection('manageDataSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Manage Data</span>
-                </button>
-                <button id="navBtn_reportsSection" onclick="window.showAppSection('reportsSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Reports</span>
-                </button>
-                <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors border-l-4 border-transparent hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">User Settings</span>
-                </button>
-            </nav>
-
-            <!-- Bottom Actions -->
-            <div class="p-3 border-t border-slate-100 space-y-1 shrink-0 bg-slate-50/50">
-                <button onclick="window.openChangePinModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-200 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Change PIN</span>
-                </button>
-                <button onclick="window.handleLogout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors group">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                    <span class="font-medium text-sm sidebar-text whitespace-nowrap">Logout</span>
-                </button>
-            </div>
-        </aside>
-
-        <!-- MAIN SCROLLABLE CONTENT AREA -->
-        <main class="flex-1 overflow-y-auto custom-scrollbar relative h-full w-full bg-slate-50/50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
-            
+    <!-- MAIN SCROLLABLE CONTENT AREA -->
+    <main id="mainContentArea" class="flex-1 overflow-y-auto custom-scrollbar relative h-full w-full bg-slate-50/50 hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+        
             <!-- EXTRACTOR SECTION (Admin) -->
-            <section id="extractorSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col lg:flex-row gap-0 transition-all duration-300">
+            <section id="extractorSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col lg:flex-row gap-0 transition-all duration-300 hidden">
                 <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
                     <div class="flex justify-between items-center mb-2">
                         <h2 class="text-lg font-semibold">1. Paste Raw Data</h2>
                         <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">Target: 12 Cols</span>
                     </div>
                     <p class="text-sm text-slate-500 mb-4">Copy entire spreadsheet data and paste below. <span class="text-indigo-600 font-medium">(Syncs to Firebase)</span></p>
-                    
                     <textarea id="rawInput" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none" placeholder="Paste tab-separated data here..."></textarea>
-                    
                     <div id="errorMessage" class="hidden mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100"></div>
-                    
                     <button id="extractBtn" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm">
                         Extract & Save to Cloud
                     </button>
                 </div>
-
                 <div class="w-full lg:w-2/3 p-6 flex flex-col h-full min-h-[400px]">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                         <div>
@@ -258,16 +269,13 @@
                             <button id="downloadBtn" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm shadow-sm">Download</button>
                         </div>
                     </div>
-                    
                     <div class="flex-grow border border-slate-200 rounded-lg overflow-hidden bg-white shadow-inner flex flex-col relative h-[500px]">
                         <div id="emptyState" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10">
                             <p class="text-sm font-medium">Extracted invoice data will appear here</p>
                         </div>
                         <div class="overflow-x-auto overflow-y-auto w-full h-full custom-scrollbar">
                             <table id="previewTable" class="w-full text-left border-collapse text-sm hidden">
-                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
-                                    <tr id="tableHeadRow"></tr>
-                                </thead>
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20"><tr id="tableHeadRow"></tr></thead>
                                 <tbody id="tableBody" class="text-slate-600 divide-y divide-slate-200"></tbody>
                             </table>
                         </div>
@@ -275,29 +283,64 @@
                 </div>
             </section>
 
+            <!-- REGISTRATION EXTRACTOR (User) -->
+            <section id="extractorSectionUser" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col lg:flex-row gap-0 transition-all duration-300 hidden">
+                <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-semibold">1. Paste Reg Data</h2>
+                        <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">Target: Regs</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Paste Registration Data. Blank rows skipped. <span class="text-indigo-600 font-medium">(Syncs to Firebase)</span></p>
+                    <textarea id="rawInputUser" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none" placeholder="Paste data..."></textarea>
+                    <div id="errorMessageUser" class="hidden mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100"></div>
+                    <button id="extractBtnUser" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm">
+                        Extract & Save to Cloud
+                    </button>
+                </div>
+                <div class="w-full lg:w-2/3 p-6 flex flex-col h-full min-h-[400px]">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold">2. Preview & Export</h2>
+                            <p id="statsTextUser" class="text-sm text-slate-500">Awaiting data...</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="copyBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 px-4 rounded-lg text-sm">Copy</button>
+                            <button id="downloadBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg text-sm shadow-sm">Download</button>
+                        </div>
+                    </div>
+                    <div class="flex-grow border border-slate-200 rounded-lg overflow-hidden bg-white shadow-inner flex flex-col relative h-[500px]">
+                        <div id="emptyStateUser" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10">
+                            <p class="text-sm font-medium">Extracted reg data will appear here</p>
+                        </div>
+                        <div class="overflow-x-auto overflow-y-auto w-full h-full custom-scrollbar">
+                            <table id="previewTableUser" class="w-full text-left border-collapse text-sm hidden">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20"><tr id="tableHeadRowUser"></tr></thead>
+                                <tbody id="tableBodyUser" class="text-slate-600 divide-y divide-slate-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- MANAGE DATA SECTION (Admin Only) -->
-            <section id="manageDataSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+            <section id="manageDataSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300 hidden">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-800">Data Management</h2>
                         <p class="text-sm text-slate-500">Edit or delete invoices and registration records.</p>
                     </div>
-                    <button onclick="window.goHome()" class="text-slate-500 hover:text-slate-700 text-sm font-medium">Back to App</button>
                 </div>
-                
                 <div class="p-6 flex flex-col gap-6">
-                    <!-- Tabs -->
                     <div class="flex gap-4 border-b border-slate-200 pb-2">
                         <button id="manageTabInvoices" onclick="window.switchManageTab('invoices')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Admin Invoices</button>
                         <button id="manageTabRegs" onclick="window.switchManageTab('registrations')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">User Registrations</button>
                         <button id="manageTabCancelled" onclick="window.switchManageTab('cancelled')" class="font-medium text-red-500 hover:text-red-700 px-2 pb-1 transition-colors">Cancelled Bills</button>
                     </div>
-
-                    <!-- Filters & Bulk Actions -->
                     <div class="flex flex-wrap justify-between items-end gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div class="flex flex-wrap gap-4 items-end">
+                            <!-- Using standard select for specific date filtering in manage tab -->
                             <div>
-                                <label class="block text-xs font-medium mb-1">Filter by Date</label>
+                                <label class="block text-xs font-medium mb-1">Filter by Exact Date</label>
                                 <select id="manageDateFilter" onchange="window.renderManageData()" class="w-40 px-3 py-1.5 border rounded-md text-sm bg-white"></select>
                             </div>
                             <div>
@@ -307,16 +350,10 @@
                             <button onclick="window.renderManageData()" class="bg-white border border-slate-300 hover:bg-slate-50 py-1.5 px-3 rounded-md text-sm shadow-sm h-[34px]">Apply Filter</button>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="window.bulkDeleteSelected()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-1.5 px-3 rounded-md text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">
-                                Delete Selected
-                            </button>
-                            <button onclick="window.bulkDeleteFiltered()" class="bg-red-600 hover:bg-red-700 text-white py-1.5 px-3 rounded-md text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">
-                                Delete All Filtered
-                            </button>
+                            <button onclick="window.bulkDeleteSelected()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-1.5 px-3 rounded-md text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">Delete Selected</button>
+                            <button onclick="window.bulkDeleteFiltered()" class="bg-red-600 hover:bg-red-700 text-white py-1.5 px-3 rounded-md text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">Delete All Filtered</button>
                         </div>
                     </div>
-
-                    <!-- Data Table -->
                     <div class="overflow-x-auto overflow-y-auto max-h-[600px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative bg-white">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
@@ -334,101 +371,36 @@
                 </div>
             </section>
 
-            <!-- REGISTRATION EXTRACTOR (User) -->
-            <section id="extractorSectionUser" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col lg:flex-row gap-0 transition-all duration-300">
-                <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
-                    <div class="flex justify-between items-center mb-2">
-                        <h2 class="text-lg font-semibold">1. Paste Reg Data</h2>
-                        <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">Target: Regs</span>
-                    </div>
-                    <p class="text-sm text-slate-500 mb-4">Paste Registration Data. Blank rows skipped. <span class="text-indigo-600 font-medium">(Syncs to Firebase)</span></p>
-                    
-                    <textarea id="rawInputUser" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none" placeholder="Paste data..."></textarea>
-                    
-                    <div id="errorMessageUser" class="hidden mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100"></div>
-                    
-                    <button id="extractBtnUser" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm">
-                        Extract & Save to Cloud
-                    </button>
-                </div>
-
-                <div class="w-full lg:w-2/3 p-6 flex flex-col h-full min-h-[400px]">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-                        <div>
-                            <h2 class="text-lg font-semibold">2. Preview & Export</h2>
-                            <p id="statsTextUser" class="text-sm text-slate-500">Awaiting data...</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button id="copyBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 px-4 rounded-lg text-sm">Copy</button>
-                            <button id="downloadBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg text-sm shadow-sm">Download</button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-grow border border-slate-200 rounded-lg overflow-hidden bg-white shadow-inner flex flex-col relative h-[500px]">
-                        <div id="emptyStateUser" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10">
-                            <p class="text-sm font-medium">Extracted reg data will appear here</p>
-                        </div>
-                        <div class="overflow-x-auto overflow-y-auto w-full h-full custom-scrollbar">
-                            <table id="previewTableUser" class="w-full text-left border-collapse text-sm hidden">
-                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
-                                    <tr id="tableHeadRowUser"></tr>
-                                </thead>
-                                <tbody id="tableBodyUser" class="text-slate-600 divide-y divide-slate-200"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- USER MANAGEMENT (Admin only) -->
-            <section id="usersSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+            <section id="usersSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300 hidden">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-800">User Management</h2>
                         <p class="text-sm text-slate-500">Create and manage access for your team.</p>
                     </div>
-                    <button onclick="window.goHome()" class="text-slate-500 hover:text-slate-700 text-sm font-medium">Back to App</button>
                 </div>
-                
                 <div class="flex flex-col md:flex-row p-6 gap-8">
                     <div class="w-full md:w-1/3">
                         <h3 class="text-md font-semibold mb-4 text-slate-800">Add New User</h3>
                         <form id="addUserForm" class="space-y-4" onsubmit="event.preventDefault(); window.handleAddUser();">
-                            <div>
-                                <label class="block text-sm font-medium mb-1">User Name</label>
-                                <input type="text" id="newUserName" class="w-full px-3 py-2 border rounded-md" required>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Mobile No.</label>
-                                <input type="tel" id="newUserMobile" class="w-full px-3 py-2 border rounded-md">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Login PIN</label>
-                                <input type="text" id="newUserPin" class="w-full px-3 py-2 border rounded-md" required>
-                            </div>
+                            <div><label class="block text-sm font-medium mb-1">User Name</label><input type="text" id="newUserName" class="w-full px-3 py-2 border rounded-md" required></div>
+                            <div><label class="block text-sm font-medium mb-1">Mobile No.</label><input type="tel" id="newUserMobile" class="w-full px-3 py-2 border rounded-md"></div>
+                            <div><label class="block text-sm font-medium mb-1">Login PIN</label><input type="text" id="newUserPin" class="w-full px-3 py-2 border rounded-md" required></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1">User Type</label>
                                 <select id="newUserRole" class="w-full px-3 py-2 border rounded-md bg-white" required>
-                                    <option value="User">User</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Viewer">Viewer</option>
+                                    <option value="User">User</option><option value="Admin">Admin</option><option value="Viewer">Viewer</option>
                                 </select>
                             </div>
                             <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 px-4 rounded-md text-sm">Create User</button>
                         </form>
                     </div>
-                    
                     <div class="w-full md:w-2/3">
                         <h3 class="text-md font-semibold mb-4 text-slate-800">Existing Users</h3>
                         <div class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[400px] overflow-y-auto">
                             <table class="w-full text-left border-collapse text-sm">
                                 <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
-                                    <tr>
-                                        <th class="px-4 py-3 border-b">Name</th>
-                                        <th class="px-4 py-3 border-b">Mobile</th>
-                                        <th class="px-4 py-3 border-b">Role</th>
-                                        <th class="px-4 py-3 border-b text-right">Actions</th>
-                                    </tr>
+                                    <tr><th class="px-4 py-3 border-b">Name</th><th class="px-4 py-3 border-b">Mobile</th><th class="px-4 py-3 border-b">Role</th><th class="px-4 py-3 border-b text-right">Actions</th></tr>
                                 </thead>
                                 <tbody id="usersTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
                             </table>
@@ -438,15 +410,13 @@
             </section>
 
             <!-- REPORTS SECTION -->
-            <section id="reportsSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+            <section id="reportsSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300 hidden">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-800">Dashboard & Reports</h2>
                         <p class="text-sm text-slate-500">Live data fetched directly from Firebase.</p>
                     </div>
-                    <button onclick="window.goHome()" class="text-slate-500 hover:text-slate-700 text-sm font-medium">Back to App</button>
                 </div>
-                
                 <div class="p-6 flex flex-col gap-6">
                     <div class="flex gap-4 border-b border-slate-200 pb-2">
                         <button id="tabSummary" onclick="window.switchReportTab('summary')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Summary Report</button>
@@ -469,19 +439,27 @@
                             <select id="reportUserFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></select>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="window.renderReports()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm flex items-center gap-1 transition-colors">
-                            <thead class="bg-slate-100 text-slate-700">
+                            <button onclick="window.renderReports()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm flex items-center gap-1 transition-colors">Refresh</button>
+                            <button onclick="window.downloadPendingCSV()" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-1.5 px-3 rounded-md text-sm flex items-center gap-1 shadow-sm transition-colors">Download Pending</button>
+                        </div>
+                    </div>
+
+                    <div id="reportSummaryView" class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700"><tr id="summaryTableHeadRow"></tr></thead>
+                            <tbody id="summaryTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="reportMergedView" class="hidden overflow-x-auto overflow-y-auto max-h-[500px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative bg-white">
+                        <div class="flex justify-between items-center p-3 bg-slate-50 border-b border-slate-200 sticky top-0 left-0 z-30 shadow-sm">
+                            <span class="font-semibold text-sm text-slate-800">Live Invoice + Registration Merged Match</span>
                             <button onclick="window.downloadMergedCSV()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-xs flex items-center gap-1 shadow-sm transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
                                 Download Full Merged CSV
                             </button>
                         </div>
                         <table class="w-full text-left border-collapse text-sm relative">
-                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
-                                <tr id="mergedTableHead"></tr>
-                            </thead>
+                            <thead class="bg-slate-100 text-slate-700 sticky top-[53px] shadow-sm z-20"><tr id="mergedTableHead"></tr></thead>
                             <tbody id="mergedTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
                         </table>
                         <div id="mergedTableLimitNotice" class="hidden p-3 bg-indigo-50 text-indigo-700 text-center text-xs font-medium border-t border-indigo-100">
@@ -490,45 +468,31 @@
                     </div>
                 </div>
             </section>
-
-            </div> <!-- End max-w-7xl wrapper -->
-        </main>
-    </div>
+        </div>
+    </main>
 
     <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-3 rounded-lg shadow-lg transform translate-y-24 opacity-0 transition-all duration-300 flex items-center gap-2 z-50">
         <span id="toastMsg">Action successful!</span>
     </div>
 
-    <!-- FIREBASE AND APP LOGIC (Modular Setup) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, update, remove, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ==========================================
-        // UI ERROR CAPTURE SYSTEM (ADVANCED DEBUGGER)
-        // ==========================================
+        // UI ERROR CAPTURE
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
         const loginUsernameInput = document.getElementById('loginUsername');
         
         function showFatalError(msg) {
             loginError.classList.remove('hidden');
-            loginError.innerHTML += `<div>❌ ${msg}</div>`;
+            loginError.innerHTML = `<div>❌ ${msg}</div>`;
             loginBtn.textContent = "Connection Failed";
             loginBtn.classList.replace('bg-indigo-600', 'bg-red-600');
             loginBtn.classList.replace('bg-slate-900', 'bg-red-600');
             loginBtn.disabled = true;
         }
-
-        window.onerror = function(msg, url, line) {
-            showFatalError(`System Error: ${msg} (Line ${line})`);
-            return false;
-        };
-
-        window.onunhandledrejection = function(event) {
-            showFatalError(`Network/Promise Error: ${event.reason}`);
-        };
 
         // State variables
         let usersDB = [];
@@ -550,20 +514,11 @@
         let extractedRegDataGlobal = [];
         let currentMergedExport = [];
         let currentPendingExport = [];
-        let isSidebarCollapsed = false;
-
-        const extractBtn = document.getElementById('extractBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const extractBtnUser = document.getElementById('extractBtnUser');
-        const downloadBtnUser = document.getElementById('downloadBtnUser');
-        const copyBtnUser = document.getElementById('copyBtnUser');
 
         let app, db;
+        let connectionTimeout;
 
-        // ==========================================
-        // FIREBASE INITIALIZATION & CONNECTION FLOW
-        // ==========================================
+        // INIT
         try {
             loginBtn.textContent = "Connecting to Servers...";
             loginUsernameInput.innerHTML = '<option value="" disabled selected>Connecting to Servers...</option>';
@@ -575,46 +530,29 @@
                 projectId: "regdata-f08a2",
                 storageBucket: "regdata-f08a2.firebasestorage.app",
                 messagingSenderId: "663347591536",
-                appId: "1:663347591536:web:152df1149b7ab4b83db7b5",
-                measurementId: "G-XGPY7NP28E"
+                appId: "1:663347591536:web:152df1149b7ab4b83db7b5"
             };
 
             app = initializeApp(firebaseConfig);
-            // Automatically determine URL from config to prevent silent connection hangups
+            // Connect to DB directly without explicit URL parameter if config provides it
             db = getDatabase(app);
 
-            loginBtn.textContent = "Checking Connection...";
-
-            // Timeout Failsafe: Agar connection ghoomta reh gaya toh error batayega instead of waiting forever
-            setTimeout(() => {
+            // Timeout Failsafe
+            connectionTimeout = setTimeout(() => {
                 if (usersDB.length === 0 && !currentUser) {
-                    showFatalError("Network Timeout: Connection block ho raha hai. Please check your internet or Firebase Rules.");
+                    showFatalError("Network Timeout: Could not reach Firebase Database.");
                 }
             }, 8000);
 
-            // Monitor real-time connection status
-            const connectedRef = ref(db, ".info/connected");
-            onValue(connectedRef, (snap) => {
-                if (snap.val() === true) {
-                    if(!currentUser) {
-                        loginBtn.textContent = "Fetching Database...";
-                        loginError.classList.add('hidden');
-                        loginError.innerHTML = '';
-                    }
-                } else {
-                    if(!currentUser) loginBtn.textContent = "Waiting for Network (WS)...";
-                }
-            });
-
             // Fetch Users Data
             onValue(ref(db, 'users'), (snapshot) => {
+                clearTimeout(connectionTimeout); // Success
                 const data = snapshot.val();
                 
                 if (!data) {
-                    // DB is completely empty (First time run) - Auto Create Admin Instantly
                     const defaultAdmin = { id: Date.now(), name: 'admin', mobile: '9999999999', pin: '7773', role: 'Admin' };
-                    usersDB = [defaultAdmin]; // Set local state instantly
-                    set(ref(db, 'users/' + defaultAdmin.id), defaultAdmin); // Push to cloud
+                    usersDB = [defaultAdmin]; 
+                    set(ref(db, 'users/' + defaultAdmin.id), defaultAdmin); 
                 } else {
                     usersDB = Object.values(data);
                 }
@@ -622,12 +560,13 @@
                 populateUserDropdown();
                 if (currentUser?.role === 'Admin') renderUsersTable();
                 
-                // ENABLE LOGIN BUTTON
                 loginBtn.disabled = false;
                 loginBtn.textContent = "Sign In";
                 loginBtn.classList.replace('bg-slate-500', 'bg-slate-900');
+                loginError.classList.add('hidden');
             }, (error) => {
-                showFatalError("Database Blocked: " + error.message);
+                clearTimeout(connectionTimeout);
+                showFatalError("Database Error: " + error.message);
             });
 
             // Fetch other data nodes silently
@@ -652,13 +591,12 @@
             });
 
         } catch(e) {
+            clearTimeout(connectionTimeout);
             showFatalError("Initialization Error: " + e.message);
         }
 
         // Utils
-        function sanitizeKey(str) {
-            return String(str).replace(/[.#$\[\]\/]/g, '_');
-        }
+        function sanitizeKey(str) { return String(str).replace(/[.#$\[\]\/]/g, '_'); }
 
         let toastTimeout;
         function showToast(msg) {
@@ -666,32 +604,27 @@
             document.getElementById('toastMsg').textContent = msg;
             toast.classList.remove('translate-y-24', 'opacity-0');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3000);
+            toastTimeout = setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
         }
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('appSidebar');
+            sidebar.classList.toggle('sidebar-expanded');
+            sidebar.classList.toggle('sidebar-collapsed');
+        };
 
         window.showConfirmModal = function(title, message, actionCallback) {
             document.getElementById('confirmTitle').textContent = title;
             document.getElementById('confirmMessage').textContent = message;
             pendingConfirmAction = actionCallback;
-            
             const modal = document.getElementById('confirmModal');
             const content = document.getElementById('confirmModalContent');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            
-            // Handle execution
             document.getElementById('confirmExecuteBtn').onclick = () => {
                 if (pendingConfirmAction) pendingConfirmAction();
                 window.closeConfirmModal();
             };
-
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    content.classList.remove('scale-95');
-                }, 10);
-            });
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
         };
 
         window.closeConfirmModal = function() {
@@ -702,21 +635,15 @@
         };
 
         window.openEditModal = function(dbKey, type) {
-            const dataArray = type === 'invoices' ? masterInvoices : masterRegistrations;
+            const dataArray = type === 'invoices' ? masterInvoices : (type === 'cancelled_invoices' ? cancelledInvoices : masterRegistrations);
             currentEditRecord = dataArray.find(r => r.__fbKey === dbKey);
             if(!currentEditRecord) return;
-            
-            // Add identifying info to state
             currentEditRecord.__type = type;
-
             const form = document.getElementById('editRecordForm');
             form.innerHTML = '';
-            
             Object.keys(currentEditRecord).forEach(key => {
-                if (key === '__fbKey' || key === '__type') return; // Skip internal keys
-                const val = currentEditRecord[key];
-                
-                // Build input group
+                if (key === '__fbKey' || key === '__type') return;
+                const val = currentEditRecord[key] || '';
                 const div = document.createElement('div');
                 div.innerHTML = `
                     <label class="block text-xs font-medium text-slate-700 mb-1 truncate" title="${key}">${key}</label>
@@ -724,15 +651,10 @@
                 `;
                 form.appendChild(div);
             });
-
             const modal = document.getElementById('editModal');
             const content = document.getElementById('editModalContent');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0'); content.classList.remove('scale-95');
-                }, 10);
-            });
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
         };
 
         window.closeEditModal = function() {
@@ -746,36 +668,23 @@
             if(!currentEditRecord) return;
             const inputs = document.querySelectorAll('.edit-input');
             let updatedData = {};
-            
-            inputs.forEach(input => {
-                updatedData[input.getAttribute('data-key')] = input.value.trim();
-            });
-
-            // The DB path can be invoices, registrations, or cancelled_invoices
+            inputs.forEach(input => { updatedData[input.getAttribute('data-key')] = input.value.trim(); });
             const dbPath = currentEditRecord.__type + '/' + currentEditRecord.__fbKey;
             update(ref(db, dbPath), updatedData).then(() => {
                 showToast("Record updated successfully!");
                 window.closeEditModal();
-            }).catch(e => {
-                alert("Update failed: " + e.message);
-            });
+            }).catch(e => alert("Update failed: " + e.message));
         };
 
-        // ==========================================
-        // PIN MANAGEMENT LOGIC
-        // ==========================================
         window.openChangePinModal = function() {
             document.getElementById('currentPinInput').value = '';
             document.getElementById('newPinInput').value = '';
             document.getElementById('confirmNewPinInput').value = '';
             document.getElementById('pinErrorMsg').classList.add('hidden');
-            
             const modal = document.getElementById('changePinModal');
             const content = document.getElementById('changePinModalContent');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            requestAnimationFrame(() => {
-                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
-            });
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
         }
 
         window.closeChangePinModal = function() {
@@ -790,24 +699,9 @@
             const newPin = document.getElementById('newPinInput').value;
             const confirmPin = document.getElementById('confirmNewPinInput').value;
             const errorEl = document.getElementById('pinErrorMsg');
-
-            if (current !== String(currentUser.pin)) {
-                errorEl.textContent = "Current PIN is incorrect.";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-            if (newPin.length < 4) {
-                errorEl.textContent = "New PIN must be at least 4 characters.";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-            if (newPin !== confirmPin) {
-                errorEl.textContent = "New PINs do not match.";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-
-            // Update in Firebase
+            if (current !== String(currentUser.pin)) { errorEl.textContent = "Current PIN is incorrect."; errorEl.classList.remove('hidden'); return; }
+            if (newPin.length < 4) { errorEl.textContent = "New PIN must be at least 4 characters."; errorEl.classList.remove('hidden'); return; }
+            if (newPin !== confirmPin) { errorEl.textContent = "New PINs do not match."; errorEl.classList.remove('hidden'); return; }
             update(ref(db, `users/${currentUser.id}`), { pin: newPin }).then(() => {
                 window.closeChangePinModal();
                 alert("PIN changed successfully! You will now be logged out. Please log in with your new PIN.");
@@ -815,18 +709,13 @@
             }).catch(e => alert("Failed to update PIN: " + e.message));
         }
 
-
-        // ==========================================
-        // AUTHENTICATION & MODAL
-        // ==========================================
         function populateUserDropdown() {
             const select = loginUsernameInput;
             const currentValue = select.value;
             select.innerHTML = '<option value="" disabled selected>Select your username</option>';
             usersDB.forEach(user => {
                 const option = document.createElement('option');
-                option.value = user.name;
-                option.textContent = user.name;
+                option.value = user.name; option.textContent = user.name;
                 select.appendChild(option);
             });
             if (currentValue && usersDB.some(u => u.name === currentValue)) select.value = currentValue;
@@ -840,7 +729,6 @@
             if (user) {
                 document.getElementById('loginError').classList.add('hidden');
                 currentUser = user;
-                
                 document.getElementById('currentUserDisplay').textContent = user.name;
                 document.getElementById('currentUserRole').textContent = user.role;
                 
@@ -848,22 +736,18 @@
                 const navAdmin2 = document.getElementById('navBtn_manageDataSection');
                 const navAdmin3 = document.getElementById('navBtn_usersSection');
                 const navUser1 = document.getElementById('navBtn_extractorSectionUser');
+                const extractBtnUser = document.getElementById('extractBtnUser');
+                const extractBtn = document.getElementById('extractBtn');
                 
                 if (user.role === 'Admin') {
-                    navAdmin1.classList.remove('hidden'); 
-                    navAdmin2.classList.remove('hidden'); 
-                    navAdmin3.classList.remove('hidden'); 
+                    navAdmin1.classList.remove('hidden'); navAdmin2.classList.remove('hidden'); navAdmin3.classList.remove('hidden'); 
                     navUser1.classList.add('hidden'); 
-                    
                     extractBtn.disabled = false; extractBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     document.getElementById('tabMerged').classList.remove('hidden');
                     document.getElementById('reportUserFilterContainer').classList.remove('hidden');
                 } else {
-                    navAdmin1.classList.add('hidden'); 
-                    navAdmin2.classList.add('hidden'); 
-                    navAdmin3.classList.add('hidden'); 
+                    navAdmin1.classList.add('hidden'); navAdmin2.classList.add('hidden'); navAdmin3.classList.add('hidden'); 
                     navUser1.classList.remove('hidden');
-                    
                     document.getElementById('tabMerged').classList.add('hidden');
                     document.getElementById('reportUserFilterContainer').classList.add('hidden');
                     window.switchReportTab('summary');
@@ -875,14 +759,12 @@
                     extractBtnUser.disabled = false; extractBtnUser.classList.remove('opacity-50');
                 }
 
-                // Set Default Dates for Reports immediately on login
                 window.initDefaultDates();
-
                 document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('appSidebar').classList.remove('hidden');
+                document.getElementById('mainContentArea').classList.remove('hidden');
                 
                 window.goHome();
-                
                 window.showWelcomeModal(user.name);
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
@@ -894,64 +776,31 @@
             document.getElementById('welcomeModalName').textContent = name;
             const modal = document.getElementById('welcomeModal');
             const content = document.getElementById('welcomeModalContent');
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            // Trigger animations
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    content.classList.remove('scale-95');
-                }, 10);
-            });
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
         };
 
         window.closeWelcomeModal = function() {
             const modal = document.getElementById('welcomeModal');
             const content = document.getElementById('welcomeModalContent');
-            
-            modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300); // match duration
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
         };
 
         window.handleLogout = function() {
             currentUser = null;
-            document.getElementById('mainApp').classList.add('hidden', 'flex');
+            document.getElementById('appSidebar').classList.add('hidden');
+            document.getElementById('mainContentArea').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             loginUsernameInput.value = '';
             document.getElementById('loginPin').value = '';
-            extractedDataGlobal = [];
-            extractedRegDataGlobal = [];
+            extractedDataGlobal = []; extractedRegDataGlobal = [];
             showToast("Logged out successfully");
         };
 
         window.goHome = function() {
             if (currentUser?.role === 'Admin') window.showAppSection('extractorSection');
             else window.showAppSection('extractorSectionUser');
-        };
-
-        window.toggleSidebar = function() {
-            const sidebar = document.getElementById('appSidebar');
-            const icon = document.getElementById('sidebarToggleIcon');
-            const texts = document.querySelectorAll('.sidebar-text');
-            
-            isSidebarCollapsed = !isSidebarCollapsed;
-            
-            if (isSidebarCollapsed) {
-                sidebar.classList.remove('w-64'); sidebar.classList.add('w-20');
-                texts.forEach(t => t.classList.add('opacity-0', 'w-0', 'invisible'));
-                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />`;
-            } else {
-                sidebar.classList.remove('w-20'); sidebar.classList.add('w-64');
-                texts.forEach(t => t.classList.remove('opacity-0', 'w-0', 'invisible'));
-                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />`;
-            }
         };
 
         function updateActiveNav(sectionId) {
@@ -972,20 +821,13 @@
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
             });
             const target = document.getElementById(sectionId);
-            if(target) {
-                target.classList.remove('hidden'); target.classList.add('flex');
-            }
-            
+            if(target) { target.classList.remove('hidden'); target.classList.add('flex'); }
             updateActiveNav(sectionId);
-            
             if (sectionId === 'usersSection' && currentUser?.role === 'Admin') renderUsersTable();
             if (sectionId === 'reportsSection') window.renderReports();
             if (sectionId === 'manageDataSection' && currentUser?.role === 'Admin') window.renderManageData();
         };
 
-        // ==========================================
-        // USER MANAGEMENT
-        // ==========================================
         function renderUsersTable() {
             const tbody = document.getElementById('usersTableBody');
             tbody.innerHTML = '';
@@ -1006,9 +848,7 @@
 
         window.handleAddUser = function() {
             const name = document.getElementById('newUserName').value.trim();
-            if (usersDB.some(u => u.name.toLowerCase() === name.toLowerCase())) {
-                showToast("User already exists!"); return;
-            }
+            if (usersDB.some(u => u.name.toLowerCase() === name.toLowerCase())) { showToast("User already exists!"); return; }
             const newUser = {
                 id: Date.now(), name,
                 mobile: document.getElementById('newUserMobile').value.trim(),
@@ -1021,129 +861,86 @@
             });
         };
 
-        window.deleteUser = function(id) {
-            remove(ref(db, 'users/' + id)).then(() => showToast("User deleted from Cloud"));
-        };
+        window.deleteUser = function(id) { remove(ref(db, 'users/' + id)).then(() => showToast("User deleted from Cloud")); };
 
-        // ==========================================
-        // EXTRACTION LOGIC (SYNC TO FIREBASE)
-        // ==========================================
-        
-        // ADMIN EXTRACTION (Invoices)
-        extractBtn.addEventListener('click', () => {
+        document.getElementById('extractBtn').addEventListener('click', () => {
             const rawText = document.getElementById('rawInput').value.trim();
             if (!rawText) return showToast("Paste data first!");
             const lines = rawText.split(/\r?\n/);
             const separator = lines[0].includes('\t') ? '\t' : ',';
             const headers = lines[0].split(separator).map(h => h.trim());
-            
             const columnMapping = [];
             TARGET_COLUMNS.forEach(col => {
                 const index = headers.findIndex(h => h.toLowerCase() === col.toLowerCase());
                 if (index !== -1) columnMapping.push({ name: col, index });
             });
-
             if (columnMapping.length === 0) return showToast("Required headers missing.");
 
-            let updates = {};
-            let count = 0;
-            let cancelledCount = 0;
-            
+            let updates = {}; let count = 0; let cancelledCount = 0;
             extractedDataGlobal = [columnMapping.map(c => c.name)];
             
-            // Build a quick lookup dictionary for existing frames to check for duplicates/cancellations
             const existingFrames = {};
-            masterInvoices.forEach(inv => {
-                const f = inv[sanitizeKey('Frame #')];
-                if (f) existingFrames[f] = inv;
-            });
+            masterInvoices.forEach(inv => { const f = inv[sanitizeKey('Frame #')]; if (f) existingFrames[f] = inv; });
             
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 const rowData = lines[i].split(separator);
-                let rowObj = {};
-                let rowArr = [];
-                
+                let rowObj = {}; let rowArr = [];
                 columnMapping.forEach(col => {
                     let val = rowData[col.index] !== undefined ? rowData[col.index].trim().replace(/^"|"$/g, '') : "";
-                    if (col.name === "Permanent Reg No") {
-                        val = val.replace(/\s+/g, '');
-                        if (val.length < 5) val = "";
-                    }
-                    rowObj[sanitizeKey(col.name)] = val;
-                    rowArr.push(val);
+                    if (col.name === "Permanent Reg No") { val = val.replace(/\s+/g, ''); if (val.length < 5) val = ""; }
+                    rowObj[sanitizeKey(col.name)] = val; rowArr.push(val);
                 });
-                
                 extractedDataGlobal.push(rowArr);
-                
                 const currentFrame = rowObj[sanitizeKey('Frame #')];
                 const currentDate = rowObj[sanitizeKey('Invoice Date')] ? rowObj[sanitizeKey('Invoice Date')].split(' ')[0] : '';
                 const currentInvNo = rowObj[sanitizeKey('Invoice #')];
-                
                 let safeKey = sanitizeKey(currentInvNo || `INV_${Date.now()}_${count}`);
 
-                // Cancelled Bill Logic (Same Frame, Different Date/Invoice Number)
                 if (currentFrame && existingFrames[currentFrame]) {
                     let oldInv = existingFrames[currentFrame];
                     let oldDate = oldInv[sanitizeKey('Invoice Date')] ? oldInv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
-                    
                     if (oldDate !== currentDate && oldInv[sanitizeKey('Invoice #')] !== currentInvNo) {
-                        // Move old invoice to cancelled node
                         let oldFbKey = oldInv.__fbKey;
-                        let cleanOld = {...oldInv};
-                        delete cleanOld.__fbKey; // remove internal tracker before uploading
-                        
+                        let cleanOld = {...oldInv}; delete cleanOld.__fbKey; 
                         updates['/cancelled_invoices/' + oldFbKey] = cleanOld;
-                        updates['/invoices/' + oldFbKey] = null; // delete from active
+                        updates['/invoices/' + oldFbKey] = null; 
                         cancelledCount++;
                     }
                 }
-
-                updates['/invoices/' + safeKey] = rowObj;
-                count++;
+                updates['/invoices/' + safeKey] = rowObj; count++;
             }
-            
             if(count > 0) {
-                extractBtn.textContent = "Syncing...";
+                const btn = document.getElementById('extractBtn'); btn.textContent = "Syncing...";
                 update(ref(db), updates).then(() => {
-                    extractBtn.textContent = "Extract & Save to Cloud";
-                    document.getElementById('rawInput').value = ''; // Auto-clear text area
-                    
+                    btn.textContent = "Extract & Save to Cloud";
+                    document.getElementById('rawInput').value = ''; 
                     let toastMsg = `${count} records synced to Cloud DB.`;
                     if (cancelledCount > 0) toastMsg += ` (${cancelledCount} duplicate frames moved to Cancelled Bills)`;
                     showToast(toastMsg);
-                    
                     renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
-                    downloadBtn.disabled = false; copyBtn.disabled = false;
+                    document.getElementById('downloadBtn').disabled = false; document.getElementById('copyBtn').disabled = false;
                     document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> rows processed.`;
-                }).catch((error) => {
-                    extractBtn.textContent = "Extract & Save to Cloud";
-                    alert("Firebase Error: " + error.message);
-                    console.error("Firebase Sync Error:", error);
-                });
+                }).catch((error) => { btn.textContent = "Extract & Save to Cloud"; alert("Firebase Error: " + error.message); });
             }
         });
 
-        // USER EXTRACTION (Registrations)
-        extractBtnUser.addEventListener('click', () => {
+        document.getElementById('extractBtnUser').addEventListener('click', () => {
             const rawText = document.getElementById('rawInputUser').value.trim();
             if (!rawText) return showToast("Paste data first!");
             const lines = rawText.split(/\r?\n/);
             const separator = lines[0].includes('\t') ? '\t' : ',';
             const headers = lines[0].split(separator).map(h => h.trim());
-            
             const regNoIndex = headers.findIndex(h => h.toLowerCase() === 'registration no');
             if (regNoIndex === -1) return showToast("Missing 'Registration No' column");
 
-            let updates = {};
-            let count = 0;
+            let updates = {}; let count = 0;
             const finalRegHeaders = [...headers, "Processed By"];
             extractedRegDataGlobal = [finalRegHeaders];
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.includes('<-GRAND TOTAL->')) continue;
-                
                 const rowData = line.split(separator);
                 const regNo = rowData[regNoIndex] ? rowData[regNoIndex].trim() : "";
                 
@@ -1152,64 +949,72 @@
                     while(cleanRow.length < headers.length) cleanRow.push("");
                     cleanRow = cleanRow.slice(0, headers.length);
                     cleanRow.push(currentUser.name);
-                    
                     extractedRegDataGlobal.push(cleanRow);
-                    
                     let rowObj = {};
-                    finalRegHeaders.forEach((h, idx) => rowObj[sanitizeKey(h)] = cleanRow[idx]); // Sanitize keys for Firebase
-                    
+                    finalRegHeaders.forEach((h, idx) => rowObj[sanitizeKey(h)] = cleanRow[idx]); 
                     const chasisIndex = finalRegHeaders.findIndex(h => h.toLowerCase() === 'chasis no');
-                    let safeKey = (chasisIndex !== -1 && cleanRow[chasisIndex]) ? 
-                                   sanitizeKey(cleanRow[chasisIndex]) : `REG_${Date.now()}_${count}`;
-                    
-                    updates['/registrations/' + safeKey] = rowObj;
-                    count++;
+                    let safeKey = (chasisIndex !== -1 && cleanRow[chasisIndex]) ? sanitizeKey(cleanRow[chasisIndex]) : `REG_${Date.now()}_${count}`;
+                    updates['/registrations/' + safeKey] = rowObj; count++;
                 }
             }
-
             if(count > 0) {
-            document.getElementById('emptyStateUser').classList.add('hidden');
-            document.getElementById(tableId).classList.remove('hidden');
+                const btn = document.getElementById('extractBtnUser'); btn.textContent = "Syncing...";
+                update(ref(db), updates).then(() => {
+                    btn.textContent = "Extract & Save to Cloud";
+                    document.getElementById('rawInputUser').value = ''; 
+                    showToast(`${count} valid registrations saved to Cloud DB`);
+                    renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
+                    document.getElementById('downloadBtnUser').disabled = false; document.getElementById('copyBtnUser').disabled = false;
+                    document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved.`;
+                }).catch(e => { btn.textContent = "Extract & Save to Cloud"; alert("Sync Error: " + e.message); });
+            }
+        });
+
+        function renderPreviewTable(tableId, headId, bodyId, emptyId, data) {
+            const head = document.getElementById(headId); const body = document.getElementById(bodyId);
+            head.innerHTML = ''; body.innerHTML = '';
+            if (data.length < 1) return;
+            data[0].forEach(txt => {
+                const th = document.createElement('th');
+                th.className = 'px-4 py-3 font-semibold border-b bg-slate-50 whitespace-nowrap';
+                th.textContent = txt; head.appendChild(th);
+            });
+            const limit = Math.min(data.length - 1, 100); 
+            for (let i = 1; i <= limit; i++) {
+                const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50';
+                data[i].forEach(cell => {
+                    const td = document.createElement('td'); td.className = 'px-4 py-2 border-b whitespace-nowrap text-sm';
+                    td.textContent = cell; tr.appendChild(td);
+                });
+                body.appendChild(tr);
+            }
+            document.getElementById(emptyId).classList.add('hidden'); document.getElementById(tableId).classList.remove('hidden');
         }
 
-        // ==========================================
-        // DATE PARSER & REPORTS LOGIC
-        // ==========================================
-        
         window.initDefaultDates = function() {
             const today = new Date();
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
             const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
             const formatDate = (d) => {
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
+                const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
             };
-
             document.getElementById('reportStartDate').value = formatDate(firstDay);
             document.getElementById('reportEndDate').value = formatDate(lastDay);
         };
 
         function parseStandardDate(dateStr) {
             if(!dateStr) return null;
-            let dStr = dateStr.split(' ')[0]; // Remove time if present
-            
-            // Check separator
+            let dStr = dateStr.split(' ')[0]; 
             let parts;
             if (dStr.includes('/')) parts = dStr.split('/');
             else if (dStr.includes('-')) parts = dStr.split('-');
             else return new Date(dStr);
 
             if (parts && parts.length === 3) {
-                if (parts[0].length === 4) { // YYYY-MM-DD
-                    return new Date(parts[0], parseInt(parts[1])-1, parts[2]);
-                } else if (isNaN(parts[1])) { // DD-MMM-YYYY (15-Jan-2024)
-                    return new Date(dStr);
-                } else { // DD-MM-YYYY
-                    return new Date(parts[2], parseInt(parts[1])-1, parts[0]);
-                }
+                if (parts[0].length === 4) return new Date(parts[0], parseInt(parts[1])-1, parts[2]); // YYYY-MM-DD
+                else if (isNaN(parts[1])) return new Date(dStr); // DD-MMM-YYYY 
+                else return new Date(parts[2], parseInt(parts[1])-1, parts[0]); // DD-MM-YYYY
             }
             return new Date(dStr);
         }
@@ -1236,12 +1041,11 @@
         };
 
         window.renderReports = function() {
-            // Get Current Dates
             const startVal = document.getElementById('reportStartDate').value;
             const endVal = document.getElementById('reportEndDate').value;
             const startDate = startVal ? new Date(startVal) : null;
             let endDate = endVal ? new Date(endVal) : null;
-            if (endDate) endDate.setHours(23, 59, 59, 999); // Include full end day
+            if (endDate) endDate.setHours(23, 59, 59, 999); 
 
             let userFilter = currentUser.name;
             if (currentUser?.role === 'Admin') {
@@ -1254,7 +1058,6 @@
                 userFilter = userSelect.value;
             }
 
-            // Summary Render
             const summaryBody = document.getElementById('summaryTableBody');
             document.getElementById('summaryTableHeadRow').innerHTML = `
                 <th class="px-4 py-3 font-semibold border-b">${currentUser.role === 'Admin' ? 'Dealer Name' : 'Invoice Date'}</th>
@@ -1267,28 +1070,23 @@
             if (currentUser.role !== 'Admin') filteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')]?.toLowerCase() === currentUser.name.toLowerCase());
             else if (userFilter !== 'All') filteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')] === userFilter);
 
-            let grouped = {};
-            currentPendingExport = [TARGET_COLUMNS];
+            let grouped = {}; currentPendingExport = [TARGET_COLUMNS];
             
             filteredInvoices.forEach(inv => {
                 let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
-                
-                // Smart Date Range Filtering
                 let parsedInvDate = parseStandardDate(dateVal);
                 if(parsedInvDate && !isNaN(parsedInvDate)) {
-                    if (startDate && parsedInvDate < startDate) return; // Skip if before start date
-                    if (endDate && parsedInvDate > endDate) return; // Skip if after end date
+                    if (startDate && parsedInvDate < startDate) return; 
+                    if (endDate && parsedInvDate > endDate) return; 
                 }
 
                 let key = currentUser.role === 'Admin' ? (inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer') : dateVal;
                 if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0 };
                 
                 grouped[key].total++;
-                
-                // Smart Registered vs Pending Logic
                 let hasRtoMatch = masterRegistrations.some(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
                 let permRegField = inv[sanitizeKey('Permanent Reg No')];
-                let hasPermRegInInvoice = permRegField && permRegField.trim().length >= 5; // Valid reg string length
+                let hasPermRegInInvoice = permRegField && permRegField.trim().length >= 5; 
                 
                 if(hasRtoMatch || hasPermRegInInvoice) {
                     grouped[key].reg++;
@@ -1298,8 +1096,7 @@
                 }
             });
 
-            summaryBody.innerHTML = '';
-            let gt=0, gr=0, gp=0;
+            summaryBody.innerHTML = ''; let gt=0, gr=0, gp=0;
             Object.values(grouped).sort((a,b)=>a.label.localeCompare(b.label)).forEach(g => {
                 gt+=g.total; gr+=g.reg; gp+=g.pend;
                 summaryBody.innerHTML += `
@@ -1314,21 +1111,15 @@
             if (Object.keys(grouped).length) {
                 summaryBody.innerHTML += `
                     <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
-                        <td class="px-4 py-3">GRAND TOTAL</td>
-                        <td class="px-4 py-3 text-right">${gt}</td>
-                        <td class="px-4 py-3 text-emerald-700 text-right">${gr}</td>
-                        <td class="px-4 py-3 text-orange-600 text-right">${gp}</td>
+                        <td class="px-4 py-3">GRAND TOTAL</td><td class="px-4 py-3 text-right">${gt}</td><td class="px-4 py-3 text-emerald-700 text-right">${gr}</td><td class="px-4 py-3 text-orange-600 text-right">${gp}</td>
                     </tr>`;
             }
 
-            // Merged Master Logic (Admin only)
             if (currentUser?.role === 'Admin' && !document.getElementById('reportMergedView').classList.contains('hidden')) {
-                const extraCols = ['Receipt Dt_', 'Sale Amount', 'Fees', 'Mv Tax', 'Total', 'Processed By']; // sanitized keys
+                const extraCols = ['Receipt Dt_', 'Sale Amount', 'Fees', 'Mv Tax', 'Total', 'Processed By']; 
                 const displayCols = [...TARGET_COLUMNS, ...['Receipt Dt.', 'Sale Amount', 'Fees', 'Mv Tax', 'Total', 'Reg Processed By']];
-                
                 currentMergedExport = [displayCols];
-                const head = document.getElementById('mergedTableHead');
-                const body = document.getElementById('mergedTableBody');
+                const head = document.getElementById('mergedTableHead'); const body = document.getElementById('mergedTableBody');
                 const limitNotice = document.getElementById('mergedTableLimitNotice');
                 head.innerHTML = ''; body.innerHTML = '';
 
@@ -1336,22 +1127,17 @@
                     head.innerHTML += `<th class="px-4 py-2 text-xs font-semibold border-b ${i >= TARGET_COLUMNS.length ? 'bg-indigo-50 text-indigo-800' : 'bg-slate-100'} whitespace-nowrap">${c}</th>`;
                 });
 
-                let renderCount = 0;
-                const MAX_RENDER = 100; // Anti-lag rendering limit
+                let renderCount = 0; const MAX_RENDER = 100; 
 
                 filteredInvoices.forEach(inv => {
                     let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
-                    
-                    // Date Filter
                     let parsedInvDate = parseStandardDate(dateVal);
                     if(parsedInvDate && !isNaN(parsedInvDate)) {
                         if (startDate && parsedInvDate < startDate) return; 
                         if (endDate && parsedInvDate > endDate) return;
                     }
-
                     let matched = masterRegistrations.find(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
-                    let expRow = [];
-                    let trStr = `<tr class="hover:bg-slate-50 ${matched ? 'bg-green-50/30' : ''}">`;
+                    let expRow = []; let trStr = `<tr class="hover:bg-slate-50 ${matched ? 'bg-green-50/30' : ''}">`;
 
                     TARGET_COLUMNS.forEach(c => {
                         let val = inv[sanitizeKey(c)] || '';
@@ -1365,33 +1151,19 @@
                         expRow.push(val);
                         trStr += `<td class="px-4 py-2 border-b text-sm font-medium whitespace-nowrap">${val}</td>`;
                     });
-
                     trStr += `</tr>`;
-                    
-                    // Only append to DOM if under the limit to prevent Lag
-                    if (renderCount < MAX_RENDER) {
-                        body.innerHTML += trStr;
-                        renderCount++;
-                    }
-                    
+                    if (renderCount < MAX_RENDER) { body.innerHTML += trStr; renderCount++; }
                     currentMergedExport.push(expRow);
                 });
                 
-                if (currentMergedExport.length - 1 > MAX_RENDER) {
-                    limitNotice.classList.remove('hidden');
-                } else {
-                    limitNotice.classList.add('hidden');
-                }
+                if (currentMergedExport.length - 1 > MAX_RENDER) limitNotice.classList.remove('hidden');
+                else limitNotice.classList.add('hidden');
             }
         };
 
         window.switchManageTab = function(tab) {
             currentManageTab = tab;
-            const btnInv = document.getElementById('manageTabInvoices');
-            const btnReg = document.getElementById('manageTabRegs');
-            const btnCan = document.getElementById('manageTabCancelled');
-            
-            // Reset all visually
+            const btnInv = document.getElementById('manageTabInvoices'); const btnReg = document.getElementById('manageTabRegs'); const btnCan = document.getElementById('manageTabCancelled');
             btnInv.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
             btnReg.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
             btnCan.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
@@ -1413,32 +1185,19 @@
             if (currentUser?.role !== 'Admin') return;
             document.getElementById('manageSelectAll').checked = false;
 
-            const dateSelect = document.getElementById('manageDateFilter');
-            const userSelect = document.getElementById('manageUserFilter');
-            
-            // Prepare dataset based on tab
-            let dataArray = [];
-            let dateKey = sanitizeKey('Invoice Date');
-            let userKey = sanitizeKey('Requesting Dealer');
+            const dateSelect = document.getElementById('manageDateFilter'); const userSelect = document.getElementById('manageUserFilter');
+            let dataArray = []; let dateKey = sanitizeKey('Invoice Date'); let userKey = sanitizeKey('Requesting Dealer');
 
-            if (currentManageTab === 'invoices') {
-                dataArray = masterInvoices;
-            } else if (currentManageTab === 'registrations') {
-                dataArray = masterRegistrations;
-                dateKey = sanitizeKey('Receipt Dt.');
-                userKey = sanitizeKey('Processed By');
-            } else if (currentManageTab === 'cancelled') {
-                dataArray = cancelledInvoices;
-            }
+            if (currentManageTab === 'invoices') { dataArray = masterInvoices; } 
+            else if (currentManageTab === 'registrations') { dataArray = masterRegistrations; dateKey = sanitizeKey('Receipt Dt.'); userKey = sanitizeKey('Processed By'); } 
+            else if (currentManageTab === 'cancelled') { dataArray = cancelledInvoices; }
             
-            // Get unique dates
             const dates = new Set(dataArray.map(r => r[dateKey] ? r[dateKey].split(' ')[0] : '').filter(Boolean));
             let currDate = dateSelect.value || "All";
             dateSelect.innerHTML = '<option value="All">All Dates</option>';
             Array.from(dates).sort().reverse().forEach(d => dateSelect.innerHTML += `<option value="${d}">${d}</option>`);
             if (dates.has(currDate)) dateSelect.value = currDate;
 
-            // Get unique users
             const uKey = currentManageTab === 'invoices' ? sanitizeKey('Requesting Dealer') : sanitizeKey('Processed By');
             const users = new Set(dataArray.map(r => r[uKey]).filter(Boolean));
             let currUser = userSelect.value || "All";
@@ -1446,33 +1205,20 @@
             Array.from(users).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
             if(users.has(currUser)) userSelect.value = currUser;
 
-            // Filter data
-            const tbody = document.getElementById('manageTableBody');
-            tbody.innerHTML = '';
-
+            const tbody = document.getElementById('manageTableBody'); tbody.innerHTML = '';
             const filteredData = dataArray.filter(item => {
-                const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : '';
-                const iUser = item[uKey] || '';
+                const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : ''; const iUser = item[uKey] || '';
                 if (dateSelect.value !== 'All' && iDate !== dateSelect.value) return false;
                 if (userSelect.value !== 'All' && iUser !== userSelect.value) return false;
                 return true;
             });
 
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No records found matching filters.</td></tr>`;
-                return;
-            }
+            if (filteredData.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No records found matching filters.</td></tr>`; return; }
 
-            // Anti-Lag: Render Rows Limit to 100 max visually
             const limit = Math.min(filteredData.length, 100);
             for (let i = 0; i < limit; i++) {
-                const item = filteredData[i];
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50";
-                
-                const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-';
-                const displayUser = item[uKey] || '-';
-                
+                const item = filteredData[i]; const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50";
+                const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-'; const displayUser = item[uKey] || '-';
                 let displayIdentifier = '';
                 if (currentManageTab === 'invoices' || currentManageTab === 'cancelled') {
                     displayIdentifier = `<span class="font-medium">${item[sanitizeKey('Invoice #')] || '-'}</span><br><span class="text-xs text-slate-400">${item[sanitizeKey('Frame #')] || '-'}</span>`;
@@ -1481,35 +1227,24 @@
                 }
                 
                 let actionsHtml = `<button onclick="window.openEditModal('${item.__fbKey}', '${currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab}')" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium mr-3">Edit</button>`;
-                
                 if (currentManageTab === 'cancelled') {
                     actionsHtml += `<button onclick="window.restoreCancelledRecord('${item.__fbKey}')" class="text-emerald-600 hover:text-emerald-800 text-sm font-medium mr-3">Restore</button>`;
                 }
                 actionsHtml += `<button onclick="window.deleteSingleRecord('${item.__fbKey}', '${currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Delete</button>`;
 
                 tr.innerHTML = `
-                    <td class="px-4 py-3 text-center border-b border-slate-100">
-                        <input type="checkbox" value="${item.__fbKey}" class="manage-cb rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4">
-                    </td>
+                    <td class="px-4 py-3 text-center border-b border-slate-100"><input type="checkbox" value="${item.__fbKey}" class="manage-cb rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4"></td>
                     <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayDate}</td>
                     <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayUser}</td>
                     <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayIdentifier}</td>
-                    <td class="px-4 py-3 text-right border-b border-slate-100 whitespace-nowrap">
-                        ${actionsHtml}
-                    </td>
+                    <td class="px-4 py-3 text-right border-b border-slate-100 whitespace-nowrap">${actionsHtml}</td>
                 `;
                 tbody.appendChild(tr);
             }
-            
-            if (filteredData.length > limit) {
-                tbody.innerHTML += `<tr><td colspan="5" class="px-4 py-4 text-center text-sm text-slate-500 font-medium bg-slate-50">Showing first ${limit} of ${filteredData.length} records. Refine filters to see more.</td></tr>`;
-            }
+            if (filteredData.length > limit) tbody.innerHTML += `<tr><td colspan="5" class="px-4 py-4 text-center text-sm text-slate-500 font-medium bg-slate-50">Showing first ${limit} of ${filteredData.length} records.</td></tr>`;
         };
 
-        window.toggleSelectAll = function(checkbox) {
-            const checkboxes = document.querySelectorAll('.manage-cb');
-            checkboxes.forEach(cb => cb.checked = checkbox.checked);
-        };
+        window.toggleSelectAll = function(checkbox) { document.querySelectorAll('.manage-cb').forEach(cb => cb.checked = checkbox.checked); };
 
         window.deleteSingleRecord = function(dbKey, type) {
             window.showConfirmModal("Delete Record", "Are you sure you want to permanently delete this single record?", () => {
@@ -1521,13 +1256,8 @@
             window.showConfirmModal("Restore Invoice", "Move this invoice back to active status? (This will overwrite any active invoice with the same exact Key)", () => {
                 let cancelledItem = cancelledInvoices.find(c => c.__fbKey === dbKey);
                 if(cancelledItem) {
-                    let cleanItem = {...cancelledItem};
-                    delete cleanItem.__fbKey;
-                    
-                    let updates = {};
-                    updates['/invoices/' + dbKey] = cleanItem;
-                    updates['/cancelled_invoices/' + dbKey] = null;
-                    
+                    let cleanItem = {...cancelledItem}; delete cleanItem.__fbKey;
+                    let updates = {}; updates['/invoices/' + dbKey] = cleanItem; updates['/cancelled_invoices/' + dbKey] = null;
                     update(ref(db), updates).then(() => showToast("Invoice Restored!"));
                 }
             });
@@ -1536,94 +1266,59 @@
         window.bulkDeleteSelected = function() {
             const checkboxes = document.querySelectorAll('.manage-cb:checked');
             if (checkboxes.length === 0) return showToast("No records selected.");
-            
             const dbType = currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab;
-
             window.showConfirmModal("Delete Selected", `Are you sure you want to delete the ${checkboxes.length} selected record(s)?`, () => {
-                let updates = {};
-                checkboxes.forEach(cb => {
-                    updates[`/${dbType}/${cb.value}`] = null; // Set to null to delete multi-path
-                });
-                
-                update(ref(db), updates).then(() => {
-                    showToast(`${checkboxes.length} records deleted.`);
-                    document.getElementById('manageSelectAll').checked = false;
-                }).catch(e => alert("Delete Error: " + e.message));
+                let updates = {}; checkboxes.forEach(cb => { updates[`/${dbType}/${cb.value}`] = null; });
+                update(ref(db), updates).then(() => { showToast(`${checkboxes.length} records deleted.`); document.getElementById('manageSelectAll').checked = false; }).catch(e => alert("Delete Error: " + e.message));
             });
         };
 
         window.bulkDeleteFiltered = function() {
-            const dateSelect = document.getElementById('manageDateFilter').value;
-            const userSelect = document.getElementById('manageUserFilter').value;
-            
-            if (dateSelect === 'All' && userSelect === 'All') {
-                return window.showConfirmModal("Warning", "You are about to delete ALL data in this tab. Please select a Date or User filter first to be safe, or confirm if you truly want to wipe everything.", executeBulkWipe);
-            }
-
+            const dateSelect = document.getElementById('manageDateFilter').value; const userSelect = document.getElementById('manageUserFilter').value;
+            if (dateSelect === 'All' && userSelect === 'All') return window.showConfirmModal("Warning", "You are about to delete ALL data in this tab. Please select a Date or User filter first to be safe.", executeBulkWipe);
             executeBulkWipe();
             
             function executeBulkWipe() {
                 let dataArray = currentManageTab === 'invoices' ? masterInvoices : (currentManageTab === 'registrations' ? masterRegistrations : cancelledInvoices);
                 let dbType = currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab;
-                
                 const dateKey = currentManageTab === 'registrations' ? sanitizeKey('Receipt Dt.') : sanitizeKey('Invoice Date');
                 const uKey = currentManageTab === 'registrations' ? sanitizeKey('Processed By') : sanitizeKey('Requesting Dealer');
 
                 const toDelete = dataArray.filter(item => {
-                    const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : '';
-                    const iUser = item[uKey] || '';
+                    const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : ''; const iUser = item[uKey] || '';
                     if (dateSelect !== 'All' && iDate !== dateSelect) return false;
                     if (userSelect !== 'All' && iUser !== userSelect) return false;
                     return true;
                 });
-
                 if (toDelete.length === 0) return showToast("No records match the current filter.");
-
                 window.showConfirmModal("Delete All Filtered", `DANGER: You are about to permanently delete ${toDelete.length} records matching the current filters. Continue?`, () => {
-                    let updates = {};
-                    toDelete.forEach(item => {
-                        updates[`/${dbType}/${item.__fbKey}`] = null;
-                    });
-                    
-                    update(ref(db), updates).then(() => {
-                        showToast(`${toDelete.length} records deleted successfully.`);
-                    }).catch(e => alert("Delete Error: " + e.message));
+                    let updates = {}; toDelete.forEach(item => { updates[`/${dbType}/${item.__fbKey}`] = null; });
+                    update(ref(db), updates).then(() => { showToast(`${toDelete.length} records deleted successfully.`); }).catch(e => alert("Delete Error: " + e.message));
                 });
             }
         };
 
-        // ==========================================
-        // EXPORT UTILS
-        // ==========================================
         function exportCSV(dataArray, filename) {
             if (!dataArray || dataArray.length <= 1) return showToast("No data to download!");
             const content = dataArray.map(row => row.map(cell => {
-                let str = String(cell);
-                return (str.includes(',') || str.includes('"') || str.includes('\n')) ? `"${str.replace(/"/g, '""')}"` : str;
+                let str = String(cell); return (str.includes(',') || str.includes('"') || str.includes('\n')) ? `"${str.replace(/"/g, '""')}"` : str;
             }).join(',')).join('\n');
-            
             const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = filename; link.click();
         }
 
-        downloadBtn.addEventListener('click', () => exportCSV(extractedDataGlobal, 'extracted_vehicle_data.csv'));
-        downloadBtnUser.addEventListener('click', () => exportCSV(extractedRegDataGlobal, 'extracted_registration_data.csv'));
-        
+        document.getElementById('downloadBtn').addEventListener('click', () => exportCSV(extractedDataGlobal, 'extracted_vehicle_data.csv'));
+        document.getElementById('downloadBtnUser').addEventListener('click', () => exportCSV(extractedRegDataGlobal, 'extracted_registration_data.csv'));
         window.downloadPendingCSV = () => exportCSV(currentPendingExport, `Pending_${currentUser.name}.csv`);
         window.downloadMergedCSV = () => exportCSV(currentMergedExport, 'merged_master_data.csv');
 
         function clipboardCopy(dataArray) {
             if (!dataArray || dataArray.length === 0) return;
             const tsv = dataArray.map(r => r.join('\t')).join('\n');
-            navigator.clipboard.writeText(tsv).then(() => showToast("Copied to clipboard!"))
-                .catch(() => showToast("Failed to copy data."));
+            navigator.clipboard.writeText(tsv).then(() => showToast("Copied to clipboard!")).catch(() => showToast("Failed to copy data."));
         }
-        
-        copyBtn.addEventListener('click', () => clipboardCopy(extractedDataGlobal));
-        copyBtnUser.addEventListener('click', () => clipboardCopy(extractedRegDataGlobal));
+        document.getElementById('copyBtn').addEventListener('click', () => clipboardCopy(extractedDataGlobal));
+        document.getElementById('copyBtnUser').addEventListener('click', () => clipboardCopy(extractedRegDataGlobal));
 
     </script>
 </body>
