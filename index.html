@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Data Extractor - Firebase Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom scrollbar for table preview */
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col relative">
+
+    <!-- WELCOME MODAL -->
+    <div id="welcomeModal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-[100] backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300" id="welcomeModalContent">
+            <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-1">Welcome back!</h2>
+            <p class="text-slate-500 mb-6 font-medium text-lg" id="welcomeModalName">Admin</p>
+            <button onclick="window.closeWelcomeModal()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors w-full font-semibold shadow-md hover:shadow-lg">
+                Continue to Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRMATION MODAL -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[200] backdrop-blur-sm transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full transform scale-95 transition-transform duration-200" id="confirmModalContent">
+            <div class="flex items-center gap-3 mb-4 text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 bg-red-100 rounded-full p-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h3 class="text-lg font-bold text-slate-800" id="confirmTitle">Are you sure?</h3>
+            </div>
+            <p class="text-sm text-slate-600 mb-6" id="confirmMessage">This action cannot be undone.</p>
+            <div class="flex gap-3 justify-end">
+                <button onclick="window.closeConfirmModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors">Cancel</button>
+                <button id="confirmExecuteBtn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors shadow-sm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT RECORD MODAL -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-200" id="editModalContent">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                    Edit Record
+                </h3>
+                <button onclick="window.closeEditModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow">
+                <form id="editRecordForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></form>
+            </div>
+            <div class="p-5 border-t border-slate-200 bg-slate-50 rounded-b-xl flex justify-end gap-3">
+                <button onclick="window.closeEditModal()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium rounded-lg transition-colors">Cancel</button>
+                <button onclick="window.saveEditRecord()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="fixed inset-0 bg-slate-100 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-800">Smart Data Extractor</h1>
+                <p class="text-sm text-slate-500 mt-1">Please login to continue</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-4" onsubmit="event.preventDefault(); window.handleLogin();">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">User Name</label>
+                    <select id="loginUsername" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white" required>
+                        <option value="" disabled selected>Connecting to Database...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Login PIN</label>
+                    <input type="password" id="loginPin" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Enter your PIN" required>
+                </div>
+                
+                <div id="loginError" class="hidden text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
+                    Invalid username or PIN.
+                </div>
+                
+                <button id="loginBtn" type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 mt-4 disabled:opacity-50 disabled:bg-slate-500" disabled>
+                    Loading...
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN (Hidden by default) -->
+    <div id="mainApp" class="hidden flex-col min-h-screen">
+        
+        <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="window.goHome()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h1 class="text-xl font-bold text-slate-800">Smart Data Extractor</h1>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-sm flex flex-col text-right">
+                        <span id="currentUserDisplay" class="font-bold text-slate-800">Admin</span>
+                        <span id="currentUserRole" class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-full inline-block mt-0.5">Admin</span>
+                    </div>
+                    
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.showAppSection('reportsSection')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1">
+                            Reports
+                        </button>
+                        <button id="navDataBtn" onclick="window.showAppSection('manageDataSection')" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm items-center gap-1">
+                            Manage Data
+                        </button>
+                        <button id="navManageUsersBtn" onclick="window.showAppSection('usersSection')" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm items-center gap-1">
+                            Users
+                        </button>
+                        <button onclick="window.handleLogout()" class="text-red-600 hover:bg-red-50 font-medium py-1.5 px-3 rounded-md transition-colors duration-200 text-sm flex items-center gap-1 border border-transparent hover:border-red-100">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex flex-col gap-6 relative">
+            
+            <!-- EXTRACTOR SECTION (Admin) -->
+            <section id="extractorSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col lg:flex-row gap-0 transition-all duration-300">
+                <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-semibold">1. Paste Raw Data</h2>
+                        <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">Target: 12 Cols</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Copy entire spreadsheet data and paste below. <span class="text-indigo-600 font-medium">(Syncs to Firebase)</span></p>
+                    
+                    <textarea id="rawInput" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none" placeholder="Paste tab-separated data here..."></textarea>
+                    
+                    <div id="errorMessage" class="hidden mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100"></div>
+                    
+                    <button id="extractBtn" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm">
+                        Extract & Save to Cloud
+                    </button>
+                </div>
+
+                <div class="w-full lg:w-2/3 p-6 flex flex-col h-full min-h-[400px]">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold">2. Preview & Export</h2>
+                            <p id="statsText" class="text-sm text-slate-500">Awaiting data...</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="copyBtn" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">Copy</button>
+                            <button id="downloadBtn" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm shadow-sm">Download</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-grow border border-slate-200 rounded-lg overflow-hidden bg-white shadow-inner flex flex-col relative h-[500px]">
+                        <div id="emptyState" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10">
+                            <p class="text-sm font-medium">Extracted invoice data will appear here</p>
+                        </div>
+                        <div class="overflow-x-auto overflow-y-auto w-full h-full custom-scrollbar">
+                            <table id="previewTable" class="w-full text-left border-collapse text-sm hidden">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
+                                    <tr id="tableHeadRow"></tr>
+                                </thead>
+                                <tbody id="tableBody" class="text-slate-600 divide-y divide-slate-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MANAGE DATA SECTION (Admin Only) -->
+            <section id="manageDataSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+                <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-800">Data Management</h2>
+                        <p class="text-sm text-slate-500">Edit or delete invoices and registration records.</p>
+                    </div>
+                    <button onclick="window.goHome()" class="text-slate-500 hover:text-slate-700 text-sm font-medium">Back to App</button>
+                </div>
+                
+                <div class="p-6 flex flex-col gap-6">
+                    <!-- Tabs -->
+                    <div class="flex gap-4 border-b border-slate-200 pb-2">
+                        <button id="manageTabInvoices" onclick="window.switchManageTab('invoices')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Admin Invoices</button>
+                        <button id="manageTabRegs" onclick="window.switchManageTab('registrations')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">User Registrations</button>
+                    </div>
+
+                    <!-- Filters & Bulk Actions -->
+                    <div class="flex flex-wrap justify-between items-end gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div class="flex flex-wrap gap-4 items-end">
+                            <div>
+                                <label class="block text-xs font-medium mb-1">Filter by Date</label>
+                                <select id="manageDateFilter" onchange="window.renderManageData()" class="w-40 px-3 py-1.5 border rounded-md text-sm bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium mb-1">Filter by User/Dealer</label>
+                                <select id="manageUserFilter" onchange="window.renderManageData()" class="w-40 px-3 py-1.5 border rounded-md text-sm bg-white"></select>
+                            </div>
+                            <button onclick="window.renderManageData()" class="bg-white border border-slate-300 hover:bg-slate-50 py-1.5 px-3 rounded-md text-sm shadow-sm h-[34px]">Apply Filter</button>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="window.bulkDeleteSelected()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-1.5 px-3 rounded-md text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">
+                                Delete Selected
+                            </button>
+                            <button onclick="window.bulkDeleteFiltered()" class="bg-red-600 hover:bg-red-700 text-white py-1.5 px-3 rounded-md text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">
+                                Delete All Filtered
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="overflow-x-auto overflow-y-auto max-h-[600px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative bg-white">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
+                                <tr>
+                                    <th class="px-4 py-3 border-b w-10 text-center"><input type="checkbox" id="manageSelectAll" onchange="window.toggleSelectAll(this)" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4"></th>
+                                    <th class="px-4 py-3 font-semibold border-b">Date</th>
+                                    <th class="px-4 py-3 font-semibold border-b">User / Dealer</th>
+                                    <th class="px-4 py-3 font-semibold border-b" id="manageIdentifierHead">Identifier</th>
+                                    <th class="px-4 py-3 font-semibold border-b text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="manageTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REGISTRATION EXTRACTOR (User) -->
+            <section id="extractorSectionUser" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col lg:flex-row gap-0 transition-all duration-300">
+                <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-semibold">1. Paste Reg Data</h2>
+                        <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">Target: Regs</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Paste Registration Data. Blank rows skipped. <span class="text-indigo-600 font-medium">(Syncs to Firebase)</span></p>
+                    
+                    <textarea id="rawInputUser" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none" placeholder="Paste data..."></textarea>
+                    
+                    <div id="errorMessageUser" class="hidden mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100"></div>
+                    
+                    <button id="extractBtnUser" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm">
+                        Extract & Save to Cloud
+                    </button>
+                </div>
+
+                <div class="w-full lg:w-2/3 p-6 flex flex-col h-full min-h-[400px]">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold">2. Preview & Export</h2>
+                            <p id="statsTextUser" class="text-sm text-slate-500">Awaiting data...</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="copyBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 px-4 rounded-lg text-sm">Copy</button>
+                            <button id="downloadBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg text-sm shadow-sm">Download</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-grow border border-slate-200 rounded-lg overflow-hidden bg-white shadow-inner flex flex-col relative h-[500px]">
+                        <div id="emptyStateUser" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10">
+                            <p class="text-sm font-medium">Extracted reg data will appear here</p>
+                        </div>
+                        <div class="overflow-x-auto overflow-y-auto w-full h-full custom-scrollbar">
+                            <table id="previewTableUser" class="w-full text-left border-collapse text-sm hidden">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20">
+                                    <tr id="tableHeadRowUser"></tr>
+                                </thead>
+                                <tbody id="tableBodyUser" class="text-slate-600 divide-y divide-slate-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- USER MANAGEMENT (Admin only) -->
+            <section id="usersSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+                <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-800">User Management</h2>
+                        <p class="text-sm text-slate-500">Create and manage access for your team.</p>
+                    </div>
+                    <button onclick="window.goHome()" class="text-slate-500 hover:text-slate-700 text-sm font-medium">Back to App</button>
+                </div>
+                
+                <div class="flex flex-col md:flex-row p-6 gap-8">
+                    <div class="w-full md:w-1/3">
+                        <h3 class="text-md font-semibold mb-4 text-slate-800">Add New User</h3>
+                        <form id="addUserForm" class="space-y-4" onsubmit="event.preventDefault(); window.handleAddUser();">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">User Name</label>
+                                <input type="text" id="newUserName" class="w-full px-3 py-2 border rounded-md" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Mobile No.</label>
+                                <input type="tel" id="newUserMobile" class="w-full px-3 py-2 border rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Login PIN</label>
+                                <input type="text" id="newUserPin" class="w-full px-3 py-2 border rounded-md" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">User Type</label>
+                                <select id="newUserRole" class="w-full px-3 py-2 border rounded-md bg-white" required>
+                                    <option value="User">User</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Viewer">Viewer</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 px-4 rounded-md text-sm">Create User</button>
+                        </form>
+                    </div>
+                    
+                    <div class="w-full md:w-2/3">
+                        <h3 class="text-md font-semibold mb-4 text-slate-800">Existing Users</h3>
+                        <div class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[400px] overflow-y-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                                    <tr>
+                                        <th class="px-4 py-3 border-b">Name</th>
+                                        <th class="px-4 py-3 border-b">Mobile</th>
+                                        <th class="px-4 py-3 border-b">Role</th>
+                                        <th class="px-4 py-3 border-b text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REPORTS SECTION -->
+            <section id="reportsSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+                <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-800">Dashboard & Reports</h2>
+                        <p class="text-sm text-slate-500">Live data fetched directly from Firebase.</p>
+                    </div>
+                    <button onclick="window.goHome()" class="text-slate-500 hover:text-slate-700 text-sm font-medium">Back to App</button>
+                </div>
+                
+                <div class="p-6 flex flex-col gap-6">
+                    <div class="flex gap-4 border-b border-slate-200 pb-2">
+                        <button id="tabSummary" onclick="window.switchReportTab('summary')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Summary Report</button>
+                        <button id="tabMerged" onclick="window.switchReportTab('merged')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Merged Master Data</button>
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="block text-xs font-medium mb-1">Filter by Date</label>
+                            <select id="reportDateFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border rounded-md text-sm"></select>
+                        </div>
+                        <div id="reportUserFilterContainer" class="hidden">
+                            <label class="block text-xs font-medium mb-1">Filter by Dealer</label>
+                            <select id="reportUserFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border rounded-md text-sm"></select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="window.renderReports()" class="bg-white border border-slate-300 hover:bg-slate-50 py-1.5 px-3 rounded-md text-sm shadow-sm">Refresh</button>
+                            <button onclick="window.downloadPendingCSV()" class="bg-orange-500 hover:bg-orange-600 text-white py-1.5 px-3 rounded-md text-sm shadow-sm">Download Pending</button>
+                        </div>
+                    </div>
+
+                    <div id="reportSummaryView" class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700">
+                                <tr id="summaryTableHeadRow"></tr>
+                            </thead>
+                            <tbody id="summaryTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="reportMergedView" class="hidden overflow-x-auto overflow-y-auto max-h-[500px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative">
+                        <div class="flex justify-between items-center p-3 bg-slate-50 border-b border-slate-200 sticky top-0 left-0 z-30 shadow-sm">
+                            <span class="font-semibold text-sm">Live Invoice + Registration Merged Match</span>
+                            <button onclick="window.downloadMergedCSV()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-1.5 px-3 rounded-md text-xs shadow-sm">Download Merged CSV</button>
+                        </div>
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-[53px] shadow-sm z-20">
+                                <tr id="mergedTableHead"></tr>
+                            </thead>
+                            <tbody id="mergedTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-3 rounded-lg shadow-lg transform translate-y-24 opacity-0 transition-all duration-300 flex items-center gap-2 z-50">
+        <span id="toastMsg">Action successful!</span>
+    </div>
+
+    <!-- FIREBASE AND APP LOGIC (Modular Setup) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, update, remove, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // ==========================================
+        // 🚨 IMPORTANT: ADD YOUR FIREBASE CONFIG HERE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKey-PleaseUpdateWithRealKey", // Usually required for prod, but RTDB often works with open rules
+            authDomain: "regdata-f08a2.firebaseapp.com",
+            databaseURL: "https://regdata-f08a2-default-rtdb.firebaseio.com/",
+            projectId: "regdata-f08a2",
+            storageBucket: "regdata-f08a2.appspot.com",
+            messagingSenderId: "1234567890", 
+            appId: "1:1234567890:web:1234567890abcdef"
+        };
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const loginUsernameInput = document.getElementById('loginUsername');
+        
+        // CHECK IF CONFIG IS MISSING
+        if (!firebaseConfig.databaseURL || firebaseConfig.databaseURL.includes("YOUR_PROJECT_ID")) {
+            loginBtn.textContent = "⚠️ Firebase Config Missing!";
+            loginBtn.classList.replace('bg-indigo-600', 'bg-red-600');
+            loginUsernameInput.innerHTML = '<option value="" disabled selected>Please update source code</option>';
+            alert("Configuration Error: Please update the firebaseConfig object.");
+            // Halt execution here so it doesn't throw Firebase errors
+            throw new Error("Firebase config is missing.");
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // State variables
+        let usersDB = [];
+        let masterInvoices = [];
+        let masterRegistrations = [];
+        let currentUser = null;
+        let currentManageTab = 'invoices';
+        let currentEditRecord = null;
+        let pendingConfirmAction = null;
+
+        const TARGET_COLUMNS = [
+            "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", 
+            "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", 
+            "Engine No/Motor No", "Network Type", "City", "Permanent Reg No", "Billing Network Code"
+        ];
+
+        let extractedDataGlobal = [];
+        let extractedRegDataGlobal = [];
+        let currentMergedExport = [];
+        let currentPendingExport = [];
+
+        const extractBtn = document.getElementById('extractBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const extractBtnUser = document.getElementById('extractBtnUser');
+        const downloadBtnUser = document.getElementById('downloadBtnUser');
+        const copyBtnUser = document.getElementById('copyBtnUser');
+
+        // Utils
+        function sanitizeKey(str) {
+            return String(str).replace(/[.#$\[\]\/]/g, '_');
+        }
+
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        window.showConfirmModal = function(title, message, actionCallback) {
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            pendingConfirmAction = actionCallback;
+            
+            const modal = document.getElementById('confirmModal');
+            const content = document.getElementById('confirmModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            
+            // Handle execution
+            document.getElementById('confirmExecuteBtn').onclick = () => {
+                if (pendingConfirmAction) pendingConfirmAction();
+                window.closeConfirmModal();
+            };
+
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+            });
+        };
+
+        window.closeConfirmModal = function() {
+            const modal = document.getElementById('confirmModal');
+            const content = document.getElementById('confirmModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); pendingConfirmAction = null; }, 200);
+        };
+
+        window.openEditModal = function(dbKey, type) {
+            const dataArray = type === 'invoices' ? masterInvoices : masterRegistrations;
+            currentEditRecord = dataArray.find(r => r.__fbKey === dbKey);
+            if(!currentEditRecord) return;
+            
+            // Add identifying info to state
+            currentEditRecord.__type = type;
+
+            const form = document.getElementById('editRecordForm');
+            form.innerHTML = '';
+            
+            Object.keys(currentEditRecord).forEach(key => {
+                if (key === '__fbKey' || key === '__type') return; // Skip internal keys
+                const val = currentEditRecord[key];
+                
+                // Build input group
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <label class="block text-xs font-medium text-slate-700 mb-1 truncate" title="${key}">${key}</label>
+                    <input type="text" data-key="${key}" value="${val.replace(/"/g, '&quot;')}" class="edit-input w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 outline-none">
+                `;
+                form.appendChild(div);
+            });
+
+            const modal = document.getElementById('editModal');
+            const content = document.getElementById('editModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0'); content.classList.remove('scale-95');
+                }, 10);
+            });
+        };
+
+        window.closeEditModal = function() {
+            const modal = document.getElementById('editModal');
+            const content = document.getElementById('editModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditRecord = null; }, 200);
+        };
+
+        window.saveEditRecord = function() {
+            if(!currentEditRecord) return;
+            const inputs = document.querySelectorAll('.edit-input');
+            let updatedData = {};
+            
+            inputs.forEach(input => {
+                updatedData[input.getAttribute('data-key')] = input.value.trim();
+            });
+
+            const dbPath = currentEditRecord.__type + '/' + currentEditRecord.__fbKey;
+            update(ref(db, dbPath), updatedData).then(() => {
+                showToast("Record updated successfully!");
+                window.closeEditModal();
+            }).catch(e => {
+                alert("Update failed: " + e.message);
+            });
+        };
+
+        // ==========================================
+        // FIREBASE REAL-TIME LISTENERS
+        // ==========================================
+        onValue(ref(db, 'users'), (snapshot) => {
+            const data = snapshot.val();
+            
+            if (!data) {
+                // DB is completely empty (First time run) - Auto Create Admin Instantly
+                const defaultAdmin = { id: Date.now(), name: 'admin', mobile: '9999999999', pin: '7773', role: 'Admin' };
+                usersDB = [defaultAdmin]; // Set local state instantly
+                set(ref(db, 'users/' + defaultAdmin.id), defaultAdmin); // Push to cloud in background
+            } else {
+                usersDB = Object.values(data);
+            }
+            
+            populateUserDropdown();
+            if (currentUser?.role === 'Admin') renderUsersTable();
+            
+            // Enable login button now that DB is connected
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Sign In";
+            loginBtn.classList.replace('bg-slate-500', 'bg-indigo-600');
+        }, (error) => {
+            loginBtn.textContent = "Database Connection Failed";
+            loginBtn.classList.replace('bg-indigo-600', 'bg-red-600');
+            alert("Firebase Error: " + error.message + "\n\nPlease make sure your Realtime Database rules allow read/write and the Database URL is exactly correct.");
+        });
+
+        onValue(ref(db, 'invoices'), (snapshot) => {
+            const data = snapshot.val();
+            // Map the Firebase Push Key to the object so we can edit/delete it later
+            masterInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+            if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
+            if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+        });
+
+        onValue(ref(db, 'registrations'), (snapshot) => {
+            const data = snapshot.val();
+            // Map the Firebase Push Key to the object so we can edit/delete it later
+            masterRegistrations = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+            if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
+            if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+        });
+
+
+        // ==========================================
+        // AUTHENTICATION & MODAL
+        // ==========================================
+        function populateUserDropdown() {
+            const select = loginUsernameInput;
+            const currentValue = select.value;
+            select.innerHTML = '<option value="" disabled selected>Select your username</option>';
+            usersDB.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.name;
+                option.textContent = user.name;
+                select.appendChild(option);
+            });
+            if (currentValue && usersDB.some(u => u.name === currentValue)) select.value = currentValue;
+        }
+
+        window.handleLogin = function() {
+            const username = loginUsernameInput.value.trim().toLowerCase();
+            const pin = document.getElementById('loginPin').value.trim();
+            const user = usersDB.find(u => u.name.toLowerCase() === username && String(u.pin) === pin);
+
+            if (user) {
+                document.getElementById('loginError').classList.add('hidden');
+                currentUser = user;
+                
+                document.getElementById('currentUserDisplay').textContent = user.name;
+                document.getElementById('currentUserRole').textContent = user.role;
+                
+                const manageBtn = document.getElementById('navManageUsersBtn');
+                const dataBtn = document.getElementById('navDataBtn');
+                
+                if (user.role === 'Admin') {
+                    manageBtn.classList.remove('hidden'); manageBtn.classList.add('flex');
+                    dataBtn.classList.remove('hidden'); dataBtn.classList.add('flex');
+                    extractBtn.disabled = false; extractBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    document.getElementById('tabMerged').classList.remove('hidden');
+                    document.getElementById('reportUserFilterContainer').classList.remove('hidden');
+                } else {
+                    manageBtn.classList.add('hidden'); manageBtn.classList.remove('flex');
+                    dataBtn.classList.add('hidden'); dataBtn.classList.remove('flex');
+                    document.getElementById('tabMerged').classList.add('hidden');
+                    document.getElementById('reportUserFilterContainer').classList.add('hidden');
+                    window.switchReportTab('summary');
+                }
+
+                if(user.role === 'Viewer') {
+                    extractBtnUser.disabled = true; extractBtnUser.classList.add('opacity-50');
+                } else {
+                    extractBtnUser.disabled = false; extractBtnUser.classList.remove('opacity-50');
+                }
+
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('mainApp').classList.add('flex');
+                
+                window.goHome();
+                
+                // Show animated Welcome Modal
+                window.showWelcomeModal(user.name);
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        };
+
+        window.showWelcomeModal = function(name) {
+            document.getElementById('welcomeModalName').textContent = name;
+            const modal = document.getElementById('welcomeModal');
+            const content = document.getElementById('welcomeModalContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Trigger animations
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+            });
+        };
+
+        window.closeWelcomeModal = function() {
+            const modal = document.getElementById('welcomeModal');
+            const content = document.getElementById('welcomeModalContent');
+            
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300); // match duration
+        };
+
+        window.handleLogout = function() {
+            currentUser = null;
+            document.getElementById('mainApp').classList.add('hidden', 'flex');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            loginUsernameInput.value = '';
+            document.getElementById('loginPin').value = '';
+            extractedDataGlobal = [];
+            extractedRegDataGlobal = [];
+            showToast("Logged out successfully");
+        };
+
+        window.goHome = function() {
+            if (currentUser?.role === 'Admin') window.showAppSection('extractorSection');
+            else window.showAppSection('extractorSectionUser');
+        };
+
+        window.showAppSection = function(sectionId) {
+            ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+            });
+            const target = document.getElementById(sectionId);
+            if(target) {
+                target.classList.remove('hidden'); target.classList.add('flex');
+            }
+            if (sectionId === 'usersSection' && currentUser?.role === 'Admin') renderUsersTable();
+            if (sectionId === 'reportsSection') window.renderReports();
+            if (sectionId === 'manageDataSection' && currentUser?.role === 'Admin') window.renderManageData();
+        };
+
+        // ==========================================
+        // USER MANAGEMENT
+        // ==========================================
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            usersDB.forEach(user => {
+                const tr = document.createElement('tr');
+                let roleColor = user.role === 'Admin' ? 'bg-purple-100 text-purple-700' : (user.role === 'Viewer' ? 'bg-slate-100 text-slate-700' : 'bg-blue-100 text-blue-700');
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-sm font-medium">${user.name}</td>
+                    <td class="px-4 py-3 text-sm">${user.mobile || '-'}</td>
+                    <td class="px-4 py-3 text-sm"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${roleColor}">${user.role}</span></td>
+                    <td class="px-4 py-3 text-right text-sm">
+                        ${user.name.toLowerCase() !== 'admin' ? `<button onclick="window.deleteUser(${user.id})" class="text-red-500 hover:text-red-700">Delete</button>` : `<span class="text-slate-400 text-xs">Primary</span>`}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.handleAddUser = function() {
+            const name = document.getElementById('newUserName').value.trim();
+            if (usersDB.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+                showToast("User already exists!"); return;
+            }
+            const newUser = {
+                id: Date.now(), name,
+                mobile: document.getElementById('newUserMobile').value.trim(),
+                pin: document.getElementById('newUserPin').value.trim(),
+                role: document.getElementById('newUserRole').value
+            };
+            set(ref(db, 'users/' + newUser.id), newUser).then(() => {
+                document.getElementById('addUserForm').reset();
+                showToast("User added to Cloud DB");
+            });
+        };
+
+        window.deleteUser = function(id) {
+            remove(ref(db, 'users/' + id)).then(() => showToast("User deleted from Cloud"));
+        };
+
+        // ==========================================
+        // EXTRACTION LOGIC (SYNC TO FIREBASE)
+        // ==========================================
+        
+        // ADMIN EXTRACTION (Invoices)
+        extractBtn.addEventListener('click', () => {
+            const rawText = document.getElementById('rawInput').value.trim();
+            if (!rawText) return showToast("Paste data first!");
+            const lines = rawText.split(/\r?\n/);
+            const separator = lines[0].includes('\t') ? '\t' : ',';
+            const headers = lines[0].split(separator).map(h => h.trim());
+            
+            const columnMapping = [];
+            TARGET_COLUMNS.forEach(col => {
+                const index = headers.findIndex(h => h.toLowerCase() === col.toLowerCase());
+                if (index !== -1) columnMapping.push({ name: col, index });
+            });
+
+            if (columnMapping.length === 0) return showToast("Required headers missing.");
+
+            let updates = {};
+            let count = 0;
+            
+            extractedDataGlobal = [columnMapping.map(c => c.name)];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const rowData = lines[i].split(separator);
+                let rowObj = {};
+                let rowArr = [];
+                
+                columnMapping.forEach(col => {
+                    let val = rowData[col.index] !== undefined ? rowData[col.index].trim().replace(/^"|"$/g, '') : "";
+                    if (col.name === "Permanent Reg No") {
+                        val = val.replace(/\s+/g, '');
+                        if (val.length < 8) val = "";
+                    }
+                    rowObj[sanitizeKey(col.name)] = val;
+                    rowArr.push(val);
+                });
+                
+                extractedDataGlobal.push(rowArr);
+                let safeKey = sanitizeKey(rowObj[sanitizeKey('Invoice #')] || `INV_${Date.now()}_${count}`);
+                updates['/invoices/' + safeKey] = rowObj;
+                count++;
+            }
+            
+            if(count > 0) {
+                extractBtn.textContent = "Syncing...";
+                update(ref(db), updates).then(() => {
+                    extractBtn.textContent = "Extract & Save to Cloud";
+                    showToast(`${count} records synced to Cloud DB`);
+                    renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
+                    downloadBtn.disabled = false; copyBtn.disabled = false;
+                    document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> rows processed and saved.`;
+                }).catch((error) => {
+                    extractBtn.textContent = "Extract & Save to Cloud";
+                    alert("Firebase Error: " + error.message);
+                    console.error("Firebase Sync Error:", error);
+                });
+            }
+        });
+
+        // USER EXTRACTION (Registrations)
+        extractBtnUser.addEventListener('click', () => {
+            const rawText = document.getElementById('rawInputUser').value.trim();
+            if (!rawText) return showToast("Paste data first!");
+            const lines = rawText.split(/\r?\n/);
+            const separator = lines[0].includes('\t') ? '\t' : ',';
+            const headers = lines[0].split(separator).map(h => h.trim());
+            
+            const regNoIndex = headers.findIndex(h => h.toLowerCase() === 'registration no');
+            if (regNoIndex === -1) return showToast("Missing 'Registration No' column");
+
+            let updates = {};
+            let count = 0;
+            const finalRegHeaders = [...headers, "Processed By"];
+            extractedRegDataGlobal = [finalRegHeaders];
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.includes('<-GRAND TOTAL->')) continue;
+                
+                const rowData = line.split(separator);
+                const regNo = rowData[regNoIndex] ? rowData[regNoIndex].trim() : "";
+                
+                if (regNo !== "") {
+                    let cleanRow = rowData.map(val => val ? val.trim().replace(/^"|"$/g, '') : "");
+                    while(cleanRow.length < headers.length) cleanRow.push("");
+                    cleanRow = cleanRow.slice(0, headers.length);
+                    cleanRow.push(currentUser.name);
+                    
+                    extractedRegDataGlobal.push(cleanRow);
+                    
+                    let rowObj = {};
+                    finalRegHeaders.forEach((h, idx) => rowObj[sanitizeKey(h)] = cleanRow[idx]); // Sanitize keys for Firebase
+                    
+                    const chasisIndex = finalRegHeaders.findIndex(h => h.toLowerCase() === 'chasis no');
+                    let safeKey = (chasisIndex !== -1 && cleanRow[chasisIndex]) ? 
+                                   sanitizeKey(cleanRow[chasisIndex]) : `REG_${Date.now()}_${count}`;
+                    
+                    updates['/registrations/' + safeKey] = rowObj;
+                    count++;
+                }
+            }
+
+            if(count > 0) {
+                extractBtnUser.textContent = "Syncing...";
+                update(ref(db), updates).then(() => {
+                    extractBtnUser.textContent = "Extract & Save to Cloud";
+                    showToast(`${count} valid registrations saved to Cloud DB`);
+                    renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
+                    downloadBtnUser.disabled = false; copyBtnUser.disabled = false;
+                    document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved.`;
+                }).catch(e => {
+                    extractBtnUser.textContent = "Extract & Save to Cloud";
+                    alert("Sync Error: " + e.message);
+                });
+            }
+        });
+
+        function renderPreviewTable(tableId, headId, bodyId, emptyId, data) {
+            const head = document.getElementById(headId);
+            const body = document.getElementById(bodyId);
+            head.innerHTML = ''; body.innerHTML = '';
+            
+            if (data.length < 1) return;
+            data[0].forEach(txt => {
+                const th = document.createElement('th');
+                th.className = 'px-4 py-3 font-semibold border-b bg-slate-50 whitespace-nowrap';
+                th.textContent = txt; head.appendChild(th);
+            });
+
+            const limit = Math.min(data.length - 1, 50); // display max 50 to avoid lag
+            for (let i = 1; i <= limit; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50';
+                data[i].forEach(cell => {
+                    const td = document.createElement('td');
+                    td.className = 'px-4 py-2 border-b whitespace-nowrap text-sm';
+                    td.textContent = cell; tr.appendChild(td);
+                });
+                body.appendChild(tr);
+            }
+            document.getElementById(emptyId).classList.add('hidden');
+            document.getElementById(tableId).classList.remove('hidden');
+        }
+
+        // ==========================================
+        // REPORTS LOGIC
+        // ==========================================
+        window.switchReportTab = function(tab) {
+            if(tab === 'summary') {
+                document.getElementById('tabSummary').classList.add('text-indigo-600', 'border-indigo-600');
+                document.getElementById('tabSummary').classList.remove('text-slate-500');
+                if(currentUser?.role === 'Admin') {
+                    document.getElementById('tabMerged').classList.remove('text-indigo-600', 'border-indigo-600');
+                    document.getElementById('tabMerged').classList.add('text-slate-500');
+                }
+                document.getElementById('reportSummaryView').classList.remove('hidden');
+                document.getElementById('reportMergedView').classList.add('hidden');
+            } else {
+                document.getElementById('tabMerged').classList.add('text-indigo-600', 'border-indigo-600');
+                document.getElementById('tabMerged').classList.remove('text-slate-500');
+                document.getElementById('tabSummary').classList.remove('text-indigo-600', 'border-indigo-600');
+                document.getElementById('tabSummary').classList.add('text-slate-500');
+                document.getElementById('reportSummaryView').classList.add('hidden');
+                document.getElementById('reportMergedView').classList.remove('hidden');
+            }
+            window.renderReports();
+        };
+
+        window.renderReports = function() {
+            // Populate Filters
+            const dateSelect = document.getElementById('reportDateFilter');
+            const dates = new Set(masterInvoices.map(r => r[sanitizeKey('Invoice Date')] ? r[sanitizeKey('Invoice Date')].split(' ')[0] : '').filter(Boolean));
+            let currDate = dateSelect.value || "All";
+            dateSelect.innerHTML = '<option value="All">All Dates</option>';
+            Array.from(dates).sort().forEach(d => dateSelect.innerHTML += `<option value="${d}">${d}</option>`);
+            if (dates.has(currDate)) dateSelect.value = currDate;
+
+            let userFilter = currentUser.name;
+            if (currentUser?.role === 'Admin') {
+                const userSelect = document.getElementById('reportUserFilter');
+                const dealers = new Set(masterInvoices.map(r => r[sanitizeKey('Requesting Dealer')]).filter(Boolean));
+                let currUser = userSelect.value || "All";
+                userSelect.innerHTML = '<option value="All">All Dealers</option>';
+                Array.from(dealers).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
+                if(dealers.has(currUser)) userSelect.value = currUser;
+                userFilter = userSelect.value;
+            }
+
+            // Summary Render
+            const summaryBody = document.getElementById('summaryTableBody');
+            document.getElementById('summaryTableHeadRow').innerHTML = `
+                <th class="px-4 py-3 font-semibold border-b">${currentUser.role === 'Admin' ? 'Dealer Name' : 'Invoice Date'}</th>
+                <th class="px-4 py-3 font-semibold border-b text-right">Total Invoices</th>
+                <th class="px-4 py-3 font-semibold border-b text-right text-emerald-600 bg-emerald-50">Registered</th>
+                <th class="px-4 py-3 font-semibold border-b text-right text-orange-600 bg-orange-50">Pending</th>
+            `;
+
+            let filteredInvoices = masterInvoices;
+            if (currentUser.role !== 'Admin') filteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')]?.toLowerCase() === currentUser.name.toLowerCase());
+            else if (userFilter !== 'All') filteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')] === userFilter);
+
+            let grouped = {};
+            currentPendingExport = [TARGET_COLUMNS];
+            
+            filteredInvoices.forEach(inv => {
+                let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
+                if (dateSelect.value !== 'All' && dateVal !== dateSelect.value) return;
+
+                let key = currentUser.role === 'Admin' ? (inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer') : dateVal;
+                if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0 };
+                
+                grouped[key].total++;
+                let isReg = masterRegistrations.some(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
+                if(isReg) grouped[key].reg++;
+                else {
+                    grouped[key].pend++;
+                    currentPendingExport.push(TARGET_COLUMNS.map(c => inv[sanitizeKey(c)] || ''));
+                }
+            });
+
+            summaryBody.innerHTML = '';
+            let gt=0, gr=0, gp=0;
+            Object.values(grouped).sort((a,b)=>a.label.localeCompare(b.label)).forEach(g => {
+                gt+=g.total; gr+=g.reg; gp+=g.pend;
+                summaryBody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 text-sm font-medium">${g.label}</td>
+                        <td class="px-4 py-3 text-sm font-bold text-right">${g.total}</td>
+                        <td class="px-4 py-3 text-sm font-bold text-emerald-600 text-right bg-emerald-50/30">${g.reg}</td>
+                        <td class="px-4 py-3 text-sm font-bold text-orange-500 text-right bg-orange-50/30">${g.pend}</td>
+                    </tr>`;
+            });
+
+            if (Object.keys(grouped).length) {
+                summaryBody.innerHTML += `
+                    <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
+                        <td class="px-4 py-3">GRAND TOTAL</td>
+                        <td class="px-4 py-3 text-right">${gt}</td>
+                        <td class="px-4 py-3 text-emerald-700 text-right">${gr}</td>
+                        <td class="px-4 py-3 text-orange-600 text-right">${gp}</td>
+                    </tr>`;
+            }
+
+            // Merged Master Logic (Admin only)
+            if (currentUser?.role === 'Admin' && !document.getElementById('reportMergedView').classList.contains('hidden')) {
+                const extraCols = ['Receipt Dt_', 'Sale Amount', 'Fees', 'Mv Tax', 'Total', 'Processed By']; // sanitized keys
+                const displayCols = [...TARGET_COLUMNS, ...['Receipt Dt.', 'Sale Amount', 'Fees', 'Mv Tax', 'Total', 'Reg Processed By']];
+                
+                currentMergedExport = [displayCols];
+                const head = document.getElementById('mergedTableHead');
+                const body = document.getElementById('mergedTableBody');
+                head.innerHTML = ''; body.innerHTML = '';
+
+                displayCols.forEach((c, i) => {
+                    head.innerHTML += `<th class="px-4 py-2 text-xs font-semibold border-b ${i >= TARGET_COLUMNS.length ? 'bg-indigo-50 text-indigo-800' : 'bg-slate-100'} whitespace-nowrap">${c}</th>`;
+                });
+
+                filteredInvoices.forEach(inv => {
+                    let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
+                    if (dateSelect.value !== 'All' && dateVal !== dateSelect.value) return;
+
+                    let matched = masterRegistrations.find(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
+                    let expRow = [];
+                    let trStr = `<tr class="hover:bg-slate-50 ${matched ? 'bg-green-50/30' : ''}">`;
+
+                    TARGET_COLUMNS.forEach(c => {
+                        let val = inv[sanitizeKey(c)] || '';
+                        if (c === 'Permanent Reg No' && matched && (!val || val === '')) val = matched[sanitizeKey('Registration No')] || '';
+                        expRow.push(val);
+                        trStr += `<td class="px-4 py-2 border-b text-sm whitespace-nowrap ${c === 'Permanent Reg No' && matched ? 'font-bold text-emerald-600' : ''}">${val}</td>`;
+                    });
+
+                    extraCols.forEach(c => {
+                        let val = matched ? (matched[c] || '') : '';
+                        expRow.push(val);
+                        trStr += `<td class="px-4 py-2 border-b text-sm font-medium whitespace-nowrap">${val}</td>`;
+                    });
+
+                    trStr += `</tr>`;
+                    body.innerHTML += trStr;
+                    currentMergedExport.push(expRow);
+                });
+            }
+        };
+
+        window.switchManageTab = function(tab) {
+            currentManageTab = tab;
+            const btnInv = document.getElementById('manageTabInvoices');
+            const btnReg = document.getElementById('manageTabRegs');
+            
+            if (tab === 'invoices') {
+                btnInv.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
+                btnReg.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+                document.getElementById('manageIdentifierHead').textContent = 'Invoice # | Frame #';
+            } else {
+                btnReg.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
+                btnInv.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+                document.getElementById('manageIdentifierHead').textContent = 'Reg No | Chasis No';
+            }
+            window.renderManageData();
+        };
+
+        window.renderManageData = function() {
+            if (currentUser?.role !== 'Admin') return;
+            document.getElementById('manageSelectAll').checked = false;
+
+            const dateSelect = document.getElementById('manageDateFilter');
+            const userSelect = document.getElementById('manageUserFilter');
+            
+            // Prepare dataset
+            const dataArray = currentManageTab === 'invoices' ? masterInvoices : masterRegistrations;
+            
+            // Get unique dates
+            const dateKey = currentManageTab === 'invoices' ? sanitizeKey('Invoice Date') : sanitizeKey('Receipt Dt.');
+            const dates = new Set(dataArray.map(r => r[dateKey] ? r[dateKey].split(' ')[0] : '').filter(Boolean));
+            let currDate = dateSelect.value || "All";
+            dateSelect.innerHTML = '<option value="All">All Dates</option>';
+            Array.from(dates).sort().reverse().forEach(d => dateSelect.innerHTML += `<option value="${d}">${d}</option>`);
+            if (dates.has(currDate)) dateSelect.value = currDate;
+
+            // Get unique users
+            const userKey = currentManageTab === 'invoices' ? sanitizeKey('Requesting Dealer') : sanitizeKey('Processed By');
+            const users = new Set(dataArray.map(r => r[userKey]).filter(Boolean));
+            let currUser = userSelect.value || "All";
+            userSelect.innerHTML = '<option value="All">All Users/Dealers</option>';
+            Array.from(users).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
+            if(users.has(currUser)) userSelect.value = currUser;
+
+            // Filter data
+            const tbody = document.getElementById('manageTableBody');
+            tbody.innerHTML = '';
+
+            const filteredData = dataArray.filter(item => {
+                const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : '';
+                const iUser = item[userKey] || '';
+                if (dateSelect.value !== 'All' && iDate !== dateSelect.value) return false;
+                if (userSelect.value !== 'All' && iUser !== userSelect.value) return false;
+                return true;
+            });
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No records found matching filters.</td></tr>`;
+                return;
+            }
+
+            // Render Rows (Limit rendering if huge to avoid freezing, e.g., max 500)
+            const limit = Math.min(filteredData.length, 500);
+            for (let i = 0; i < limit; i++) {
+                const item = filteredData[i];
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50";
+                
+                const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-';
+                const displayUser = item[userKey] || '-';
+                
+                let displayIdentifier = '';
+                if (currentManageTab === 'invoices') {
+                    displayIdentifier = `<span class="font-medium">${item[sanitizeKey('Invoice #')] || '-'}</span><br><span class="text-xs text-slate-400">${item[sanitizeKey('Frame #')] || '-'}</span>`;
+                } else {
+                    displayIdentifier = `<span class="font-medium">${item[sanitizeKey('Registration No')] || '-'}</span><br><span class="text-xs text-slate-400">${item[sanitizeKey('Chasis No')] || '-'}</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-center border-b border-slate-100">
+                        <input type="checkbox" value="${item.__fbKey}" class="manage-cb rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4">
+                    </td>
+                    <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayDate}</td>
+                    <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayUser}</td>
+                    <td class="px-4 py-3 text-sm border-b border-slate-100 whitespace-nowrap">${displayIdentifier}</td>
+                    <td class="px-4 py-3 text-right border-b border-slate-100 whitespace-nowrap">
+                        <button onclick="window.openEditModal('${item.__fbKey}', '${currentManageTab}')" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium mr-3">Edit</button>
+                        <button onclick="window.deleteSingleRecord('${item.__fbKey}', '${currentManageTab}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+            
+            if (filteredData.length > limit) {
+                tbody.innerHTML += `<tr><td colspan="5" class="px-4 py-4 text-center text-sm text-slate-500 font-medium bg-slate-50">Showing first ${limit} of ${filteredData.length} records. Refine filters to see more.</td></tr>`;
+            }
+        };
+
+        window.toggleSelectAll = function(checkbox) {
+            const checkboxes = document.querySelectorAll('.manage-cb');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        };
+
+        window.deleteSingleRecord = function(dbKey, type) {
+            window.showConfirmModal("Delete Record", "Are you sure you want to permanently delete this single record?", () => {
+                remove(ref(db, `${type}/${dbKey}`)).then(() => showToast("Record deleted."));
+            });
+        };
+
+        window.bulkDeleteSelected = function() {
+            const checkboxes = document.querySelectorAll('.manage-cb:checked');
+            if (checkboxes.length === 0) return showToast("No records selected.");
+            
+            window.showConfirmModal("Delete Selected", `Are you sure you want to delete the ${checkboxes.length} selected record(s)?`, () => {
+                let updates = {};
+                checkboxes.forEach(cb => {
+                    updates[`/${currentManageTab}/${cb.value}`] = null; // Set to null to delete multi-path
+                });
+                
+                update(ref(db), updates).then(() => {
+                    showToast(`${checkboxes.length} records deleted.`);
+                    document.getElementById('manageSelectAll').checked = false;
+                }).catch(e => alert("Delete Error: " + e.message));
+            });
+        };
+
+        window.bulkDeleteFiltered = function() {
+            // Re-run filter logic to ensure we delete EXACTLY what's matching the current dropdowns
+            const dateSelect = document.getElementById('manageDateFilter').value;
+            const userSelect = document.getElementById('manageUserFilter').value;
+            
+            if (dateSelect === 'All' && userSelect === 'All') {
+                return window.showConfirmModal("Warning", "You are about to delete ALL data in this tab. Please select a Date or User filter first to be safe, or confirm if you truly want to wipe everything.", executeBulkWipe);
+            }
+
+            executeBulkWipe();
+            
+            function executeBulkWipe() {
+                const dataArray = currentManageTab === 'invoices' ? masterInvoices : masterRegistrations;
+                const dateKey = currentManageTab === 'invoices' ? sanitizeKey('Invoice Date') : sanitizeKey('Receipt Dt.');
+                const userKey = currentManageTab === 'invoices' ? sanitizeKey('Requesting Dealer') : sanitizeKey('Processed By');
+
+                const toDelete = dataArray.filter(item => {
+                    const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : '';
+                    const iUser = item[userKey] || '';
+                    if (dateSelect !== 'All' && iDate !== dateSelect) return false;
+                    if (userSelect !== 'All' && iUser !== userSelect) return false;
+                    return true;
+                });
+
+                if (toDelete.length === 0) return showToast("No records match the current filter.");
+
+                window.showConfirmModal("Delete All Filtered", `DANGER: You are about to permanently delete ${toDelete.length} records matching the current filters. Continue?`, () => {
+                    let updates = {};
+                    toDelete.forEach(item => {
+                        updates[`/${currentManageTab}/${item.__fbKey}`] = null;
+                    });
+                    
+                    update(ref(db), updates).then(() => {
+                        showToast(`${toDelete.length} records deleted successfully.`);
+                    }).catch(e => alert("Delete Error: " + e.message));
+                });
+            }
+        };
+
+        // ==========================================
+        // EXPORT UTILS
+        // ==========================================
+        function exportCSV(dataArray, filename) {
+            if (!dataArray || dataArray.length <= 1) return showToast("No data to download!");
+            const content = dataArray.map(row => row.map(cell => {
+                let str = String(cell);
+                return (str.includes(',') || str.includes('"') || str.includes('\n')) ? `"${str.replace(/"/g, '""')}"` : str;
+            }).join(',')).join('\n');
+            
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        downloadBtn.addEventListener('click', () => exportCSV(extractedDataGlobal, 'extracted_vehicle_data.csv'));
+        downloadBtnUser.addEventListener('click', () => exportCSV(extractedRegDataGlobal, 'extracted_registration_data.csv'));
+        
+        window.downloadPendingCSV = () => exportCSV(currentPendingExport, `Pending_${currentUser.name}.csv`);
+        window.downloadMergedCSV = () => exportCSV(currentMergedExport, 'merged_master_data.csv');
+
+        function clipboardCopy(dataArray) {
+            if (!dataArray || dataArray.length === 0) return;
+            const tsv = dataArray.map(r => r.join('\t')).join('\n');
+            navigator.clipboard.writeText(tsv).then(() => showToast("Copied to clipboard!"))
+                .catch(() => showToast("Failed to copy data."));
+        }
+        
+        copyBtn.addEventListener('click', () => clipboardCopy(extractedDataGlobal));
+        copyBtnUser.addEventListener('click', () => clipboardCopy(extractedRegDataGlobal));
+
+    </script>
+</body>
+</html>
