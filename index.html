@@ -941,11 +941,11 @@
 
             if (parts && parts.length === 3) {
                 // If year is first YYYY-MM-DD
-                if (parts[0].length === 4) return new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+                if (parts[0].length === 4) return new Date(parts[0], parseInt(parts[1])-1, parts[2], 0, 0, 0, 0);
                 // If month is string (DD-MMM-YYYY)
                 else if (isNaN(parts[1])) return new Date(dStr);
                 // Assume DD-MM-YYYY
-                else return new Date(parts[2], parseInt(parts[1])-1, parts[0]);
+                else return new Date(parts[2], parseInt(parts[1])-1, parts[0], 0, 0, 0, 0);
             }
             return new Date(dStr);
         }
@@ -975,9 +975,18 @@
         window.renderReports = function() {
             const startVal = document.getElementById('reportStartDate').value;
             const endVal = document.getElementById('reportEndDate').value;
-            const startDate = startVal ? new Date(startVal) : null;
-            let endDate = endVal ? new Date(endVal) : null;
-            if (endDate) endDate.setHours(23, 59, 59, 999); // Include entire end day
+            
+            let startDate = null;
+            if (startVal) {
+                const parts = startVal.split('-');
+                startDate = new Date(parts[0], parseInt(parts[1])-1, parts[2], 0, 0, 0, 0);
+            }
+            
+            let endDate = null;
+            if (endVal) {
+                const parts = endVal.split('-');
+                endDate = new Date(parts[0], parseInt(parts[1])-1, parts[2], 23, 59, 59, 999);
+            }
 
             let userFilter = currentUser.name;
             if (currentUser?.role === 'Admin') {
