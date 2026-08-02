@@ -63,11 +63,11 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
+    <!-- EDIT MODAL -->
     <div id="editModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-200" id="editModalContent">
             <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
-                <h3 class="font-bold text-slate-800">Edit Record</h3>
+                <h3 class="font-bold text-slate-800" id="editModalTitle">Edit Record</h3>
                 <button onclick="window.closeEditModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div class="p-6 overflow-y-auto custom-scrollbar flex-grow">
@@ -77,6 +77,38 @@
                 <button onclick="window.closeEditModal()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg">Cancel</button>
                 <button onclick="window.saveEditRecord()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Save Changes</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ADD USER MODAL -->
+    <div id="addUserModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200" id="addUserModalContent">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" /></svg>
+                    Add New User
+                </h3>
+                <button onclick="window.closeAddUserModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <form id="addUserForm" onsubmit="event.preventDefault(); window.handleAddUser();">
+                <div class="p-6 space-y-4">
+                    <div><label class="block text-sm font-medium mb-1">User Name</label><input type="text" id="newUserName" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500" required></div>
+                    <div><label class="block text-sm font-medium mb-1">Mobile No.</label><input type="tel" id="newUserMobile" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500"></div>
+                    <div><label class="block text-sm font-medium mb-1">Login PIN</label><input type="text" id="newUserPin" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500" required></div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">User Type</label>
+                        <select id="newUserRole" class="w-full px-3 py-2 border rounded-md bg-white outline-none focus:ring-1 focus:ring-indigo-500" required>
+                            <option value="User">User</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Viewer">Viewer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="p-4 border-t bg-slate-50 flex justify-end gap-3 rounded-b-xl">
+                    <button type="button" onclick="window.closeAddUserModal()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg">Create User</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -294,40 +326,24 @@
                         <h2 class="text-lg font-semibold text-slate-800">User Management</h2>
                         <p class="text-sm text-slate-500">Create and manage access for your team.</p>
                     </div>
+                    <button onclick="window.openAddUserModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Add New User
+                    </button>
                 </div>
-                <div class="flex flex-col md:flex-row p-6 gap-8">
-                    <div class="w-full md:w-1/3">
-                        <h3 class="text-md font-semibold mb-4 text-slate-800">Add New User</h3>
-                        <form id="addUserForm" class="space-y-4" onsubmit="event.preventDefault(); window.handleAddUser();">
-                            <div><label class="block text-sm font-medium mb-1">User Name</label><input type="text" id="newUserName" class="w-full px-3 py-2 border rounded-md" required></div>
-                            <div><label class="block text-sm font-medium mb-1">Mobile No.</label><input type="tel" id="newUserMobile" class="w-full px-3 py-2 border rounded-md"></div>
-                            <div><label class="block text-sm font-medium mb-1">Login PIN</label><input type="text" id="newUserPin" class="w-full px-3 py-2 border rounded-md" required></div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">User Type</label>
-                                <select id="newUserRole" class="w-full px-3 py-2 border rounded-md bg-white" required>
-                                    <option value="User">User</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Viewer">Viewer</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 px-4 rounded-md transition-colors text-sm">Create User</button>
-                        </form>
-                    </div>
-                    <div class="w-full md:w-2/3">
-                        <h3 class="text-md font-semibold mb-4 text-slate-800">Existing Users</h3>
-                        <div class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[400px] overflow-y-auto">
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
-                                    <tr>
-                                        <th class="px-4 py-3 border-b">Name</th>
-                                        <th class="px-4 py-3 border-b">Mobile</th>
-                                        <th class="px-4 py-3 border-b">Role</th>
-                                        <th class="px-4 py-3 border-b text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
-                            </table>
-                        </div>
+                <div class="p-6">
+                    <div class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[500px] overflow-y-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="px-4 py-3 border-b">Name</th>
+                                    <th class="px-4 py-3 border-b">Mobile</th>
+                                    <th class="px-4 py-3 border-b">Role</th>
+                                    <th class="px-4 py-3 border-b text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
                     </div>
                 </div>
             </section>
@@ -447,6 +463,7 @@
         let currentUser = null;
         let currentManageTab = 'invoices';
         let currentEditRecord = null;
+        let currentEditType = null;
         let pendingConfirmAction = null;
 
         const TARGET_COLUMNS = [
@@ -723,20 +740,69 @@
             setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); pendingConfirmAction = null; }, 200);
         };
 
+        window.openAddUserModal = function() {
+            const modal = document.getElementById('addUserModal');
+            const content = document.getElementById('addUserModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+        window.closeAddUserModal = function() {
+            const modal = document.getElementById('addUserModal');
+            const content = document.getElementById('addUserModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 200);
+        };
+
         window.openEditModal = function(dbKey, type) {
-            const dataArray = type === 'invoices' ? masterInvoices : masterRegistrations;
-            currentEditRecord = dataArray.find(r => r.__fbKey === dbKey);
+            currentEditType = type;
+            let dataArray;
+            let title = 'Edit Record';
+
+            if (type === 'users') {
+                dataArray = usersDB;
+                currentEditRecord = dataArray.find(r => r.id == dbKey);
+                title = 'Edit User';
+            } else {
+                dataArray = type === 'invoices' || type === 'cancelled_invoices' ? masterInvoices : masterRegistrations;
+                if(type === 'cancelled_invoices') dataArray = cancelledInvoices;
+                currentEditRecord = dataArray.find(r => r.__fbKey === dbKey);
+            }
+
             if(!currentEditRecord) return;
-            currentEditRecord.__type = type;
+            
+            document.getElementById('editModalTitle').textContent = title;
             const form = document.getElementById('editRecordForm');
             form.innerHTML = '';
-            Object.keys(currentEditRecord).forEach(key => {
-                if (key === '__fbKey' || key === '__type') return;
-                const val = currentEditRecord[key];
-                const div = document.createElement('div');
-                div.innerHTML = `<label class="block text-xs font-medium text-slate-700 mb-1 truncate">${key}</label><input type="text" data-key="${key}" value="${val.replace(/"/g, '&quot;')}" class="edit-input w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500">`;
-                form.appendChild(div);
-            });
+
+            if (type === 'users') {
+                // Custom form for users
+                // Lock role editing if editing oneself or primary admin account
+                const isLockedAdmin = currentEditRecord.name.toLowerCase() === 'admin' || currentEditRecord.id === currentUser.id;
+                
+                form.innerHTML = `
+                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">User Name</label><input type="text" id="editUserName" value="${currentEditRecord.name.replace(/"/g, '&quot;')}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500" required></div>
+                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">Mobile No.</label><input type="tel" id="editUserMobile" value="${(currentEditRecord.mobile || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500"></div>
+                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">Login PIN</label><input type="text" id="editUserPin" value="${currentEditRecord.pin}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500" required></div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1 truncate">User Type ${isLockedAdmin ? '<span class="text-red-500 font-bold">(Locked)</span>' : ''}</label>
+                        <select id="editUserRole" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 ${isLockedAdmin ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white'}" required ${isLockedAdmin ? 'disabled' : ''}>
+                            <option value="User" ${currentEditRecord.role === 'User' ? 'selected' : ''}>User</option>
+                            <option value="Admin" ${currentEditRecord.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                            <option value="Viewer" ${currentEditRecord.role === 'Viewer' ? 'selected' : ''}>Viewer</option>
+                        </select>
+                    </div>
+                `;
+            } else {
+                // Dynamic form for records
+                Object.keys(currentEditRecord).forEach(key => {
+                    if (key === '__fbKey') return;
+                    const val = currentEditRecord[key];
+                    const div = document.createElement('div');
+                    div.innerHTML = `<label class="block text-xs font-medium text-slate-700 mb-1 truncate">${key}</label><input type="text" data-key="${key}" value="${String(val).replace(/"/g, '&quot;')}" class="edit-input w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500">`;
+                    form.appendChild(div);
+                });
+            }
+
             const modal = document.getElementById('editModal');
             const content = document.getElementById('editModalContent');
             modal.classList.remove('hidden'); modal.classList.add('flex');
@@ -746,16 +812,43 @@
             const modal = document.getElementById('editModal');
             const content = document.getElementById('editModalContent');
             modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditRecord = null; }, 200);
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditRecord = null; currentEditType = null; }, 200);
         };
         window.saveEditRecord = function() {
             if(!currentEditRecord) return;
-            const inputs = document.querySelectorAll('.edit-input');
+            
             let updatedData = {};
-            inputs.forEach(input => { updatedData[input.getAttribute('data-key')] = input.value.trim(); });
-            const dbPath = currentEditRecord.__type + '/' + currentEditRecord.__fbKey;
+            let dbPath = '';
+
+            if (currentEditType === 'users') {
+                const newName = document.getElementById('editUserName').value.trim();
+                // Check if name exists for OTHER users
+                if (newName.toLowerCase() !== currentEditRecord.name.toLowerCase() && usersDB.some(u => u.name.toLowerCase() === newName.toLowerCase())) {
+                    alert("A user with this name already exists!");
+                    return;
+                }
+                
+                const roleInput = document.getElementById('editUserRole');
+                updatedData = {
+                    id: currentEditRecord.id,
+                    name: newName,
+                    mobile: document.getElementById('editUserMobile').value.trim(),
+                    pin: document.getElementById('editUserPin').value.trim(),
+                    role: roleInput.disabled ? currentEditRecord.role : roleInput.value
+                };
+                dbPath = 'users/' + currentEditRecord.id;
+            } else {
+                const inputs = document.querySelectorAll('.edit-input');
+                inputs.forEach(input => { updatedData[input.getAttribute('data-key')] = input.value.trim(); });
+                dbPath = currentEditType + '/' + currentEditRecord.__fbKey;
+            }
+
             update(ref(db, dbPath), updatedData).then(() => {
-                showToast("Record updated!"); window.closeEditModal();
+                showToast("Updated successfully!"); window.closeEditModal();
+                if(currentEditType === 'users' && currentEditRecord.id === currentUser.id && updatedData.name !== currentUser.name) {
+                     alert("Your username was changed. Please log in again.");
+                     window.handleLogout();
+                }
             }).catch(e => alert("Update failed: " + e.message));
         };
 
@@ -915,7 +1008,10 @@
                     <td class="px-4 py-3 text-sm">${user.mobile || '-'}</td>
                     <td class="px-4 py-3 text-sm"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${roleColor}">${user.role}</span></td>
                     <td class="px-4 py-3 text-right text-sm">
-                        ${user.name.toLowerCase() !== 'admin' ? `<button onclick="window.deleteUser(${user.id})" class="text-red-500 hover:text-red-700">Delete</button>` : `<span class="text-slate-400 text-xs">Primary</span>`}
+                        <button onclick="window.openEditModal('${user.id}', 'users')" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition-colors">Edit</button>
+                        ${(user.name.toLowerCase() !== 'admin' && user.id !== currentUser.id) ? `
+                            <button onclick="window.deleteUser(${user.id})" class="text-red-500 hover:text-red-700 font-medium transition-colors">Delete</button>
+                        ` : `<span class="text-slate-400 text-xs font-semibold bg-slate-100 px-2 py-1 rounded">Primary</span>`}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -935,6 +1031,7 @@
             };
             set(ref(db, 'users/' + newUser.id), newUser).then(() => {
                 document.getElementById('addUserForm').reset();
+                window.closeAddUserModal();
                 showToast("User added to Cloud DB");
             });
         };
