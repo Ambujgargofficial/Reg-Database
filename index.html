@@ -773,7 +773,7 @@
             });
             if (columnMapping.length === 0) return showToast("Required headers missing.");
 
-            let updates = {}; let count = 0; let cancelledCount = 0;
+            let updates = {}; let count = 0; let cancelledCount = 0; let updatedRegCount = 0;
             extractedDataGlobal = [columnMapping.map(c => c.name)];
             const existingFrames = {};
             masterInvoices.forEach(inv => { const f = inv[sanitizeKey('Frame #')]; if(f) existingFrames[f] = inv; });
@@ -797,26 +797,41 @@
                 if (currentFrame && existingFrames[currentFrame]) {
                     let oldInv = existingFrames[currentFrame];
                     let oldDate = oldInv[sanitizeKey('Invoice Date')] ? oldInv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
+                    let oldReg = oldInv[sanitizeKey('Permanent Reg No')];
+                    let newReg = rowObj[sanitizeKey('Permanent Reg No')];
+                    
                     if (oldDate !== currentDate && oldInv[sanitizeKey('Invoice #')] !== currentInvNo) {
                         let oldFbKey = oldInv.__fbKey;
                         let cleanOld = {...oldInv}; delete cleanOld.__fbKey;
                         updates['/cancelled_invoices/' + oldFbKey] = cleanOld;
                         updates['/invoices/' + oldFbKey] = null;
                         cancelledCount++;
+                        updates['/invoices/' + safeKey] = rowObj; count++;
+                    } else {
+                        let oldFbKey = oldInv.__fbKey;
+                        if ((!oldReg || oldReg.trim() === '') && newReg && newReg.trim().length >= 5) {
+                            updates['/invoices/' + oldFbKey + '/' + sanitizeKey('Permanent Reg No')] = newReg;
+                            updatedRegCount++;
+                        }
                     }
+                } else {
+                    updates['/invoices/' + safeKey] = rowObj; count++;
                 }
-                updates['/invoices/' + safeKey] = rowObj; count++;
             }
-            if(count > 0) {
+            if(Object.keys(updates).length > 0) {
                 const btn = document.getElementById('extractBtn'); btn.textContent = "Syncing...";
                 update(ref(db), updates).then(() => {
                     btn.textContent = "Extract & Save to Cloud"; document.getElementById('rawInput').value = '';
-                    showToast(`${count} synced.` + (cancelledCount > 0 ? ` (${cancelledCount} Cancelled)` : ''));
+                    let toastMsg = `Sync Complete! `;
+                    if (count > 0) toastMsg += `${count} new records added. `;
+                    if (updatedRegCount > 0) toastMsg += `${updatedRegCount} Reg updates. `;
+                    if (cancelledCount > 0) toastMsg += `${cancelledCount} Cancelled.`;
+                    showToast(toastMsg);
                     renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
                     document.getElementById('downloadBtn').disabled = false; document.getElementById('copyBtn').disabled = false;
-                    document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> rows processed.`;
+                    document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> new rows, <span class="font-bold text-indigo-600">${updatedRegCount}</span> Reg updates.`;
                 });
-            }
+            } else { showToast("No new invoices or updates found."); }
         });
 
         // USER EXTRACTION (Registrations)
