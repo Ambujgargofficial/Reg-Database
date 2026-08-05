@@ -21,7 +21,6 @@
 <body class="text-slate-800 h-screen w-screen overflow-hidden flex bg-slate-50 relative">
 
     <!-- MODALS -->
-    <!-- Welcome Modal -->
     <div id="welcomeModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[100] backdrop-blur-sm opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-sm w-full text-center border border-slate-100 transform scale-95 transition-transform duration-300 relative overflow-hidden" id="welcomeModalContent">
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
@@ -34,7 +33,6 @@
         </div>
     </div>
 
-    <!-- Change PIN Modal -->
     <div id="changePinModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[200] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full transform scale-95 transition-transform duration-200" id="changePinModalContent">
             <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Change Login PIN</h3>
@@ -51,7 +49,6 @@
         </div>
     </div>
 
-    <!-- Confirm Modal -->
     <div id="confirmModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[200] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full transform scale-95 transition-transform duration-200" id="confirmModalContent">
             <h3 class="text-lg font-bold text-red-600 mb-2 flex items-center gap-2" id="confirmTitle"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> Confirm</h3>
@@ -63,7 +60,6 @@
         </div>
     </div>
 
-    <!-- EDIT MODAL -->
     <div id="editModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-200" id="editModalContent">
             <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
@@ -80,7 +76,6 @@
         </div>
     </div>
 
-    <!-- ADD USER MODAL -->
     <div id="addUserModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200" id="addUserModalContent">
             <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
@@ -112,7 +107,6 @@
         </div>
     </div>
 
-    <!-- LOGIN SCREEN -->
     <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100 flex items-center justify-center z-[150]">
         <div class="bg-white/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white w-full max-w-md relative overflow-hidden">
             <div class="text-center mb-8 relative z-10">
@@ -138,7 +132,6 @@
         <div class="absolute bottom-4 w-full text-center text-xs font-semibold text-slate-400 tracking-wider">DEVELOPED BY AMBUJ GARG</div>
     </div>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar" class="bg-white border-r border-slate-200 flex flex-col transition-all duration-300 sidebar-expanded z-40 relative">
         <div class="h-[72px] flex items-center px-4 border-b border-slate-100 shrink-0">
             <button onclick="window.toggleSidebar()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-500 flex-shrink-0">
@@ -309,7 +302,7 @@
                                     <th class="px-4 py-3 border-b w-10 text-center"><input type="checkbox" id="manageSelectAll" onchange="window.toggleSelectAll(this)" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4"></th>
                                     <th class="px-4 py-3 font-semibold border-b">Date</th>
                                     <th class="px-4 py-3 font-semibold border-b">User / Dealer</th>
-                                    <th class="px-4 py-3 font-semibold border-b" id="manageIdentifierHead">Identifier</th>
+                                    <th class="px-4 py-3 font-semibold border-b" id="manageIdentifierHead">Invoice # | Frame #</th>
                                     <th class="px-4 py-3 font-semibold border-b text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -331,7 +324,8 @@
                         Add New User
                     </button>
                 </div>
-                <div class="p-6">
+                <div class="p-6 flex flex-col gap-6">
+                    <h3 class="font-bold text-slate-800 border-b pb-2">Existing Users</h3>
                     <div class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[500px] overflow-y-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
@@ -366,31 +360,37 @@
                         <div class="flex gap-4">
                             <div>
                                 <label class="block text-xs font-medium text-slate-700 mb-1">Start Date</label>
-                                <input type="date" id="reportStartDate" onchange="window.renderReports()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                <input type="date" id="reportStartDate" onchange="window.handleReportFilterChange()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-slate-700 mb-1">End Date</label>
-                                <input type="date" id="reportEndDate" onchange="window.renderReports()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                <input type="date" id="reportEndDate" onchange="window.handleReportFilterChange()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
                             </div>
                         </div>
                         <div id="reportUserFilterContainer" class="hidden">
                             <label class="block text-xs font-medium text-slate-700 mb-1">Filter by Dealer</label>
-                            <select id="reportUserFilter" onchange="window.renderReports()" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></select>
+                            <select id="reportUserFilter" onchange="window.handleReportFilterChange()" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></select>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="window.renderReports()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm flex items-center gap-1 transition-colors">Refresh</button>
+                            <button onclick="window.handleReportFilterChange()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm flex items-center gap-1 transition-colors">Refresh</button>
                             <button onclick="window.downloadPendingCSV()" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-1.5 px-3 rounded-md text-sm flex items-center gap-1 shadow-sm transition-colors">Download Pending</button>
                         </div>
                     </div>
 
+                    <!-- Summary View Container -->
                     <div id="reportSummaryView" class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-100 text-slate-700"><tr id="summaryTableHeadRow"></tr></thead>
-                            <tbody id="summaryTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        <table id="summaryTable" class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700">
+                                <tr id="summaryTableHeadRow"></tr>
+                            </thead>
+                            <tbody id="summaryTableBody" class="divide-y divide-slate-200">
+                                <tr><td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">Loading...</td></tr>
+                            </tbody>
                         </table>
                     </div>
 
-                    <div id="reportMergedView" class="hidden overflow-x-auto overflow-y-auto max-h-[500px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative bg-white">
+                    <!-- Merged Master View Container -->
+                    <div id="reportMergedView" class="hidden overflow-x-auto overflow-y-auto max-h-[500px] border border-slate-200 rounded-lg shadow-sm custom-scrollbar relative bg-white flex-col">
                         <div class="flex justify-between items-center p-3 bg-slate-50 border-b border-slate-200 sticky top-0 left-0 z-30 shadow-sm">
                             <span class="font-semibold text-sm text-slate-800">Live Invoice + Registration Merged Match</span>
                             <button onclick="window.downloadMergedCSV()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-xs flex items-center gap-1 shadow-sm transition-colors">
@@ -401,6 +401,14 @@
                             <thead class="bg-slate-100 text-slate-700 sticky top-[53px] shadow-sm z-20"><tr id="mergedTableHead"></tr></thead>
                             <tbody id="mergedTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
                         </table>
+                        
+                        <!-- Pagination Controls -->
+                        <div id="mergedPaginationControls" class="sticky bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 flex justify-between items-center z-30">
+                            <span id="mergedPageInfo" class="text-sm text-slate-600">Showing 0 to 0 of 0 records</span>
+                            <div class="flex gap-1" id="mergedPaginationButtons">
+                                <!-- Buttons will be injected here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -417,9 +425,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        // EXPOSE FUNCTIONS TO GLOBAL WINDOW OBJECT EARLY
-        window.renderUsersTable = renderUsersTable;
 
         // CONFIGURATION
         const firebaseConfig = {
@@ -465,6 +470,8 @@
         let currentEditRecord = null;
         let currentEditType = null;
         let pendingConfirmAction = null;
+        let currentMergedPage = 1;
+        const mergedRowsPerPage = 20;
 
         const TARGET_COLUMNS = [
             "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", 
@@ -477,12 +484,39 @@
         let currentMergedExport = [];
         let currentPendingExport = [];
 
+        // EXPOSE FUNCTIONS GLOBALLY EARLY
+        window.renderUsersTable = function() {
+            const tbody = document.getElementById('usersTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            usersDB.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50";
+                let roleColor = user.role === 'Admin' ? 'bg-purple-100 text-purple-700' : (user.role === 'Viewer' ? 'bg-slate-100 text-slate-700' : 'bg-blue-100 text-blue-700');
+                
+                let actionsHtml = `<button onclick="window.openEditModal('${user.id}', 'users')" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition-colors">Edit</button>`;
+                
+                if (user.name.toLowerCase() !== 'admin' && user.id !== currentUser.id) {
+                    actionsHtml += `<button onclick="window.deleteUser(${user.id})" class="text-red-500 hover:text-red-700 font-medium transition-colors">Delete</button>`;
+                } else {
+                    actionsHtml += `<span class="text-slate-400 text-xs font-semibold bg-slate-100 px-2 py-1 rounded">Primary</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-sm font-medium">${user.name}</td>
+                    <td class="px-4 py-3 text-sm">${user.mobile || '-'}</td>
+                    <td class="px-4 py-3 text-sm"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${roleColor}">${user.role}</span></td>
+                    <td class="px-4 py-3 text-right text-sm">${actionsHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
         // FIREBASE CONNECTION FLOW
         try {
             loginBtn.textContent = "Connecting to Servers...";
             loginUsernameInput.innerHTML = '<option value="" disabled selected>Connecting to Servers...</option>';
 
-            // Timeout Check
             const connectionTimeout = setTimeout(() => {
                 if(!currentUser && usersDB.length === 0) {
                     showFatalError("Connection Timed Out. Please check your internet or Firebase Rules.");
@@ -690,7 +724,6 @@
             showToast("Logged out successfully");
         };
 
-        // Modals (PIN, Edit, Confirm)
         window.openChangePinModal = function() {
             document.getElementById('currentPinInput').value = '';
             document.getElementById('newPinInput').value = '';
@@ -740,118 +773,6 @@
             setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); pendingConfirmAction = null; }, 200);
         };
 
-        window.openAddUserModal = function() {
-            const modal = document.getElementById('addUserModal');
-            const content = document.getElementById('addUserModalContent');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
-        };
-        window.closeAddUserModal = function() {
-            const modal = document.getElementById('addUserModal');
-            const content = document.getElementById('addUserModalContent');
-            modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 200);
-        };
-
-        window.openEditModal = function(dbKey, type) {
-            currentEditType = type;
-            let dataArray;
-            let title = 'Edit Record';
-
-            if (type === 'users') {
-                dataArray = usersDB;
-                currentEditRecord = dataArray.find(r => r.id == dbKey);
-                title = 'Edit User';
-            } else {
-                dataArray = type === 'invoices' || type === 'cancelled_invoices' ? masterInvoices : masterRegistrations;
-                if(type === 'cancelled_invoices') dataArray = cancelledInvoices;
-                currentEditRecord = dataArray.find(r => r.__fbKey === dbKey);
-            }
-
-            if(!currentEditRecord) return;
-            
-            document.getElementById('editModalTitle').textContent = title;
-            const form = document.getElementById('editRecordForm');
-            form.innerHTML = '';
-
-            if (type === 'users') {
-                // Custom form for users
-                // Lock role editing if editing oneself or primary admin account
-                const isLockedAdmin = currentEditRecord.name.toLowerCase() === 'admin' || currentEditRecord.id === currentUser.id;
-                
-                form.innerHTML = `
-                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">User Name</label><input type="text" id="editUserName" value="${currentEditRecord.name.replace(/"/g, '&quot;')}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500" required></div>
-                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">Mobile No.</label><input type="tel" id="editUserMobile" value="${(currentEditRecord.mobile || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500"></div>
-                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">Login PIN</label><input type="text" id="editUserPin" value="${currentEditRecord.pin}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500" required></div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1 truncate">User Type ${isLockedAdmin ? '<span class="text-red-500 font-bold">(Locked)</span>' : ''}</label>
-                        <select id="editUserRole" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 ${isLockedAdmin ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white'}" required ${isLockedAdmin ? 'disabled' : ''}>
-                            <option value="User" ${currentEditRecord.role === 'User' ? 'selected' : ''}>User</option>
-                            <option value="Admin" ${currentEditRecord.role === 'Admin' ? 'selected' : ''}>Admin</option>
-                            <option value="Viewer" ${currentEditRecord.role === 'Viewer' ? 'selected' : ''}>Viewer</option>
-                        </select>
-                    </div>
-                `;
-            } else {
-                // Dynamic form for records
-                Object.keys(currentEditRecord).forEach(key => {
-                    if (key === '__fbKey') return;
-                    const val = currentEditRecord[key];
-                    const div = document.createElement('div');
-                    div.innerHTML = `<label class="block text-xs font-medium text-slate-700 mb-1 truncate">${key}</label><input type="text" data-key="${key}" value="${String(val).replace(/"/g, '&quot;')}" class="edit-input w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500">`;
-                    form.appendChild(div);
-                });
-            }
-
-            const modal = document.getElementById('editModal');
-            const content = document.getElementById('editModalContent');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
-        };
-        window.closeEditModal = function() {
-            const modal = document.getElementById('editModal');
-            const content = document.getElementById('editModalContent');
-            modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditRecord = null; currentEditType = null; }, 200);
-        };
-        window.saveEditRecord = function() {
-            if(!currentEditRecord) return;
-            
-            let updatedData = {};
-            let dbPath = '';
-
-            if (currentEditType === 'users') {
-                const newName = document.getElementById('editUserName').value.trim();
-                // Check if name exists for OTHER users
-                if (newName.toLowerCase() !== currentEditRecord.name.toLowerCase() && usersDB.some(u => u.name.toLowerCase() === newName.toLowerCase())) {
-                    alert("A user with this name already exists!");
-                    return;
-                }
-                
-                const roleInput = document.getElementById('editUserRole');
-                updatedData = {
-                    id: currentEditRecord.id,
-                    name: newName,
-                    mobile: document.getElementById('editUserMobile').value.trim(),
-                    pin: document.getElementById('editUserPin').value.trim(),
-                    role: roleInput.disabled ? currentEditRecord.role : roleInput.value
-                };
-                dbPath = 'users/' + currentEditRecord.id;
-            } else {
-                const inputs = document.querySelectorAll('.edit-input');
-                inputs.forEach(input => { updatedData[input.getAttribute('data-key')] = input.value.trim(); });
-                dbPath = currentEditType + '/' + currentEditRecord.__fbKey;
-            }
-
-            update(ref(db, dbPath), updatedData).then(() => {
-                showToast("Updated successfully!"); window.closeEditModal();
-                if(currentEditType === 'users' && currentEditRecord.id === currentUser.id && updatedData.name !== currentUser.name) {
-                     alert("Your username was changed. Please log in again.");
-                     window.handleLogout();
-                }
-            }).catch(e => alert("Update failed: " + e.message));
-        };
-
         // ADMIN EXTRACTION (Invoices)
         document.getElementById('extractBtn').addEventListener('click', () => {
             const rawText = document.getElementById('rawInput').value.trim();
@@ -859,32 +780,50 @@
             const lines = rawText.split(/\r?\n/);
             const separator = lines[0].includes('\t') ? '\t' : ',';
             const headers = lines[0].split(separator).map(h => h.trim());
+            
             const columnMapping = [];
             TARGET_COLUMNS.forEach(col => {
                 const index = headers.findIndex(h => h.toLowerCase() === col.toLowerCase());
                 if (index !== -1) columnMapping.push({ name: col, index });
             });
+
             if (columnMapping.length === 0) return showToast("Required headers missing.");
 
-            let updates = {}; let count = 0; let cancelledCount = 0; let updatedRegCount = 0;
+            let updates = {};
+            let count = 0;
+            let cancelledCount = 0;
+            let updatedRegCount = 0;
+            
             extractedDataGlobal = [columnMapping.map(c => c.name)];
+            
             const existingFrames = {};
-            masterInvoices.forEach(inv => { const f = inv[sanitizeKey('Frame #')]; if(f) existingFrames[f] = inv; });
+            masterInvoices.forEach(inv => {
+                const f = inv[sanitizeKey('Frame #')];
+                if (f) existingFrames[f] = inv;
+            });
             
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 const rowData = lines[i].split(separator);
-                let rowObj = {}; let rowArr = [];
+                let rowObj = {};
+                let rowArr = [];
+                
                 columnMapping.forEach(col => {
                     let val = rowData[col.index] !== undefined ? rowData[col.index].trim().replace(/^"|"$/g, '') : "";
-                    if (col.name === "Permanent Reg No") { val = val.replace(/\s+/g, ''); if(val.length < 5) val = ""; }
-                    rowObj[sanitizeKey(col.name)] = val; rowArr.push(val);
+                    if (col.name === "Permanent Reg No") {
+                        val = val.replace(/\s+/g, '');
+                        if (val.length < 5) val = "";
+                    }
+                    rowObj[sanitizeKey(col.name)] = val;
+                    rowArr.push(val);
                 });
+                
                 extractedDataGlobal.push(rowArr);
                 
                 const currentFrame = rowObj[sanitizeKey('Frame #')];
                 const currentDate = rowObj[sanitizeKey('Invoice Date')] ? rowObj[sanitizeKey('Invoice Date')].split(' ')[0] : '';
                 const currentInvNo = rowObj[sanitizeKey('Invoice #')];
+                
                 let safeKey = sanitizeKey(currentInvNo || `INV_${Date.now()}_${count}`);
 
                 if (currentFrame && existingFrames[currentFrame]) {
@@ -895,12 +834,16 @@
                     
                     if (oldDate !== currentDate && oldInv[sanitizeKey('Invoice #')] !== currentInvNo) {
                         let oldFbKey = oldInv.__fbKey;
-                        let cleanOld = {...oldInv}; delete cleanOld.__fbKey;
+                        let cleanOld = {...oldInv};
+                        delete cleanOld.__fbKey;
+                        
                         updates['/cancelled_invoices/' + oldFbKey] = cleanOld;
                         updates['/invoices/' + oldFbKey] = null;
                         cancelledCount++;
-                        updates['/invoices/' + safeKey] = rowObj; count++;
-                    } else {
+                        updates['/invoices/' + safeKey] = rowObj;
+                        count++;
+                    } 
+                    else {
                         let oldFbKey = oldInv.__fbKey;
                         if ((!oldReg || oldReg.trim() === '') && newReg && newReg.trim().length >= 5) {
                             updates['/invoices/' + oldFbKey + '/' + sanitizeKey('Permanent Reg No')] = newReg;
@@ -908,23 +851,31 @@
                         }
                     }
                 } else {
-                    updates['/invoices/' + safeKey] = rowObj; count++;
+                    updates['/invoices/' + safeKey] = rowObj;
+                    count++;
                 }
             }
+            
             if(Object.keys(updates).length > 0) {
-                const btn = document.getElementById('extractBtn'); btn.textContent = "Syncing...";
+                const btn = document.getElementById('extractBtn');
+                btn.textContent = "Syncing...";
                 update(ref(db), updates).then(() => {
-                    btn.textContent = "Extract & Save to Cloud"; document.getElementById('rawInput').value = '';
+                    btn.textContent = "Extract & Save to Cloud";
+                    document.getElementById('rawInput').value = '';
+                    
                     let toastMsg = `Sync Complete! `;
                     if (count > 0) toastMsg += `${count} new records added. `;
-                    if (updatedRegCount > 0) toastMsg += `${updatedRegCount} Reg updates. `;
-                    if (cancelledCount > 0) toastMsg += `${cancelledCount} Cancelled.`;
+                    if (updatedRegCount > 0) toastMsg += `${updatedRegCount} missing Reg Numbers auto-filled. `;
+                    if (cancelledCount > 0) toastMsg += `${cancelledCount} duplicates moved to Cancelled.`;
+                    
                     showToast(toastMsg);
                     renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
                     document.getElementById('downloadBtn').disabled = false; document.getElementById('copyBtn').disabled = false;
                     document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> new rows, <span class="font-bold text-indigo-600">${updatedRegCount}</span> Reg updates.`;
                 });
-            } else { showToast("No new invoices or updates found."); }
+            } else {
+                showToast("No new invoices or updates found in this data.");
+            }
         });
 
         // USER EXTRACTION (Registrations)
@@ -994,29 +945,113 @@
             document.getElementById(tableId).classList.remove('hidden');
         }
 
-        // USER MANAGEMENT FUNCTIONS
-        function renderUsersTable() {
-            const tbody = document.getElementById('usersTableBody');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            usersDB.forEach(user => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50";
-                let roleColor = user.role === 'Admin' ? 'bg-purple-100 text-purple-700' : (user.role === 'Viewer' ? 'bg-slate-100 text-slate-700' : 'bg-blue-100 text-blue-700');
-                tr.innerHTML = `
-                    <td class="px-4 py-3 text-sm font-medium">${user.name}</td>
-                    <td class="px-4 py-3 text-sm">${user.mobile || '-'}</td>
-                    <td class="px-4 py-3 text-sm"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${roleColor}">${user.role}</span></td>
-                    <td class="px-4 py-3 text-right text-sm">
-                        <button onclick="window.openEditModal('${user.id}', 'users')" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition-colors">Edit</button>
-                        ${(user.name.toLowerCase() !== 'admin' && user.id !== currentUser.id) ? `
-                            <button onclick="window.deleteUser(${user.id})" class="text-red-500 hover:text-red-700 font-medium transition-colors">Delete</button>
-                        ` : `<span class="text-slate-400 text-xs font-semibold bg-slate-100 px-2 py-1 rounded">Primary</span>`}
-                    </td>
+        window.openAddUserModal = function() {
+            const modal = document.getElementById('addUserModal');
+            const content = document.getElementById('addUserModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+        window.closeAddUserModal = function() {
+            const modal = document.getElementById('addUserModal');
+            const content = document.getElementById('addUserModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 200);
+        };
+
+        window.openEditModal = function(dbKey, type) {
+            currentEditType = type;
+            let dataArray;
+            let title = 'Edit Record';
+
+            if (type === 'users') {
+                dataArray = usersDB;
+                currentEditRecord = dataArray.find(r => r.id == dbKey);
+                title = 'Edit User';
+            } else {
+                dataArray = type === 'invoices' || type === 'cancelled_invoices' ? masterInvoices : masterRegistrations;
+                if(type === 'cancelled_invoices') dataArray = cancelledInvoices;
+                currentEditRecord = dataArray.find(r => r.__fbKey === dbKey);
+            }
+
+            if(!currentEditRecord) return;
+            
+            document.getElementById('editModalTitle').textContent = title;
+            const form = document.getElementById('editRecordForm');
+            form.innerHTML = '';
+
+            if (type === 'users') {
+                const isLockedAdmin = currentEditRecord.name.toLowerCase() === 'admin' || currentEditRecord.id === currentUser.id;
+                
+                form.innerHTML = `
+                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">User Name</label><input type="text" id="editUserName" value="${currentEditRecord.name.replace(/"/g, '&quot;')}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500" required></div>
+                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">Mobile No.</label><input type="tel" id="editUserMobile" value="${(currentEditRecord.mobile || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500"></div>
+                    <div><label class="block text-xs font-medium text-slate-700 mb-1 truncate">Login PIN</label><input type="text" id="editUserPin" value="${currentEditRecord.pin}" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500" required></div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1 truncate">User Type ${isLockedAdmin ? '<span class="text-red-500 font-bold">(Locked)</span>' : ''}</label>
+                        <select id="editUserRole" class="w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 ${isLockedAdmin ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white'}" required ${isLockedAdmin ? 'disabled' : ''}>
+                            <option value="User" ${currentEditRecord.role === 'User' ? 'selected' : ''}>User</option>
+                            <option value="Admin" ${currentEditRecord.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                            <option value="Viewer" ${currentEditRecord.role === 'Viewer' ? 'selected' : ''}>Viewer</option>
+                        </select>
+                    </div>
                 `;
-                tbody.appendChild(tr);
-            });
-        }
+            } else {
+                Object.keys(currentEditRecord).forEach(key => {
+                    if (key === '__fbKey') return;
+                    const val = currentEditRecord[key];
+                    const div = document.createElement('div');
+                    div.innerHTML = `<label class="block text-xs font-medium text-slate-700 mb-1 truncate">${key}</label><input type="text" data-key="${key}" value="${String(val).replace(/"/g, '&quot;')}" class="edit-input w-full px-3 py-2 border rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500">`;
+                    form.appendChild(div);
+                });
+            }
+
+            const modal = document.getElementById('editModal');
+            const content = document.getElementById('editModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+        window.closeEditModal = function() {
+            const modal = document.getElementById('editModal');
+            const content = document.getElementById('editModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditRecord = null; currentEditType = null; }, 200);
+        };
+        window.saveEditRecord = function() {
+            if(!currentEditRecord) return;
+            
+            let updatedData = {};
+            let dbPath = '';
+
+            if (currentEditType === 'users') {
+                const newName = document.getElementById('editUserName').value.trim();
+                if (newName.toLowerCase() !== currentEditRecord.name.toLowerCase() && usersDB.some(u => u.name.toLowerCase() === newName.toLowerCase())) {
+                    alert("A user with this name already exists!");
+                    return;
+                }
+                
+                const roleInput = document.getElementById('editUserRole');
+                updatedData = {
+                    id: currentEditRecord.id,
+                    name: newName,
+                    mobile: document.getElementById('editUserMobile').value.trim(),
+                    pin: document.getElementById('editUserPin').value.trim(),
+                    role: roleInput.disabled ? currentEditRecord.role : roleInput.value
+                };
+                dbPath = 'users/' + currentEditRecord.id;
+            } else {
+                const inputs = document.querySelectorAll('.edit-input');
+                inputs.forEach(input => { updatedData[input.getAttribute('data-key')] = input.value.trim(); });
+                dbPath = currentEditType + '/' + currentEditRecord.__fbKey;
+            }
+
+            update(ref(db, dbPath), updatedData).then(() => {
+                showToast("Updated successfully!"); window.closeEditModal();
+                if(currentEditType === 'users' && currentEditRecord.id === currentUser.id && updatedData.name !== currentUser.name) {
+                     alert("Your username was changed. Please log in again.");
+                     window.handleLogout();
+                }
+            }).catch(e => alert("Update failed: " + e.message));
+        };
 
         window.handleAddUser = function() {
             const name = document.getElementById('newUserName').value.trim();
@@ -1052,12 +1087,9 @@
             else return new Date(dStr);
 
             if (parts && parts.length === 3) {
-                // If year is first YYYY-MM-DD
-                if (parts[0].length === 4) return new Date(parts[0], parseInt(parts[1])-1, parts[2], 0, 0, 0, 0);
-                // If month is string (DD-MMM-YYYY)
+                if (parts[0].length === 4) return new Date(parts[0], parseInt(parts[1])-1, parts[2]);
                 else if (isNaN(parts[1])) return new Date(dStr);
-                // Assume DD-MM-YYYY
-                else return new Date(parts[2], parseInt(parts[1])-1, parts[0], 0, 0, 0, 0);
+                else return new Date(parts[2], parseInt(parts[1])-1, parts[0]);
             }
             return new Date(dStr);
         }
@@ -1080,7 +1112,19 @@
                 document.getElementById('tabSummary').classList.add('text-slate-500');
                 document.getElementById('reportSummaryView').classList.add('hidden');
                 document.getElementById('reportMergedView').classList.remove('hidden');
+                document.getElementById('reportMergedView').classList.add('flex');
+                currentMergedPage = 1;
             }
+            window.renderReports();
+        };
+
+        window.handleReportFilterChange = function() {
+            currentMergedPage = 1;
+            window.renderReports();
+        };
+
+        window.changeMergedPage = function(newPage) {
+            currentMergedPage = newPage;
             window.renderReports();
         };
 
@@ -1091,13 +1135,13 @@
             let startDate = null;
             if (startVal) {
                 const parts = startVal.split('-');
-                startDate = new Date(parts[0], parseInt(parts[1])-1, parts[2], 0, 0, 0, 0);
+                startDate = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
             }
             
             let endDate = null;
             if (endVal) {
                 const parts = endVal.split('-');
-                endDate = new Date(parts[0], parseInt(parts[1])-1, parts[2], 23, 59, 59, 999);
+                endDate = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
             }
 
             let userFilter = currentUser.name;
@@ -1110,34 +1154,47 @@
                 if(dealers.has(currUser)) userSelect.value = currUser;
                 userFilter = userSelect.value;
             }
+            
+            // 1. Filter by Dealer/User FIRST
+            let userFilteredInvoices = masterInvoices;
+            if (currentUser.role !== 'Admin') {
+                userFilteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')]?.toLowerCase() === currentUser.name.toLowerCase());
+            } else if (userFilter !== 'All') {
+                userFilteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')] === userFilter);
+            }
+
+            // 2. Filter by Date SECOND
+            let filteredInvoices = userFilteredInvoices.filter(inv => {
+                let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
+                let parsedInvDate = parseStandardDate(dateVal);
+                
+                if(parsedInvDate && !isNaN(parsedInvDate)) {
+                    if (startDate && parsedInvDate < startDate) return false;
+                    if (endDate && parsedInvDate > endDate) return false;
+                }
+                return true;
+            });
 
             // Summary Render
             const summaryBody = document.getElementById('summaryTableBody');
-            document.getElementById('summaryTableHeadRow').innerHTML = `
+            const summaryHead = document.getElementById('summaryTableHeadRow');
+            
+            if (!summaryBody || !summaryHead) return; 
+
+            summaryHead.innerHTML = `
                 <th class="px-4 py-3 font-semibold border-b">${currentUser.role === 'Admin' ? 'Dealer Name' : 'Invoice Date'}</th>
                 <th class="px-4 py-3 font-semibold border-b text-right">Total Invoices</th>
                 <th class="px-4 py-3 font-semibold border-b text-right text-emerald-600 bg-emerald-50">Registered</th>
                 <th class="px-4 py-3 font-semibold border-b text-right text-orange-600 bg-orange-50">Pending</th>
             `;
 
-            let filteredInvoices = masterInvoices;
-            if (currentUser.role !== 'Admin') filteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')]?.toLowerCase() === currentUser.name.toLowerCase());
-            else if (userFilter !== 'All') filteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')] === userFilter);
-
             let grouped = {};
             currentPendingExport = [TARGET_COLUMNS];
             
             filteredInvoices.forEach(inv => {
                 let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
-                let parsedInvDate = parseStandardDate(dateVal);
-                
-                // Date Filter Check
-                if(parsedInvDate && !isNaN(parsedInvDate)) {
-                    if (startDate && parsedInvDate < startDate) return;
-                    if (endDate && parsedInvDate > endDate) return;
-                }
-
                 let key = currentUser.role === 'Admin' ? (inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer') : dateVal;
+                
                 if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0 };
                 
                 grouped[key].total++;
@@ -1156,6 +1213,7 @@
 
             summaryBody.innerHTML = '';
             let gt=0, gr=0, gp=0;
+            
             Object.values(grouped).sort((a,b)=>a.label.localeCompare(b.label)).forEach(g => {
                 gt+=g.total; gr+=g.reg; gp+=g.pend;
                 summaryBody.innerHTML += `
@@ -1172,6 +1230,8 @@
                     <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
                         <td class="px-4 py-3">GRAND TOTAL</td><td class="px-4 py-3 text-right">${gt}</td><td class="px-4 py-3 text-emerald-700 text-right">${gr}</td><td class="px-4 py-3 text-orange-600 text-right">${gp}</td>
                     </tr>`;
+            } else {
+                summaryBody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">No data found for selected dates/dealers.</td></tr>`;
             }
 
             // Merged Master Logic (Admin only)
@@ -1185,27 +1245,81 @@
 
                 displayCols.forEach((c, i) => { head.innerHTML += `<th class="px-4 py-2 text-xs font-semibold border-b ${i >= TARGET_COLUMNS.length ? 'bg-indigo-50 text-indigo-800' : 'bg-slate-100'} whitespace-nowrap">${c}</th>`; });
 
+                let mergedRowsData = [];
+                
                 filteredInvoices.forEach(inv => {
                     let matched = masterRegistrations.find(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
                     let expRow = [];
-                    let trStr = `<tr class="hover:bg-slate-50 ${matched ? 'bg-green-50/30' : ''}">`;
+                    let rowHtml = `<tr class="hover:bg-slate-50 ${matched ? 'bg-green-50/30' : ''}">`;
 
                     TARGET_COLUMNS.forEach(c => {
                         let val = inv[sanitizeKey(c)] || '';
                         if (c === 'Permanent Reg No' && matched && (!val || val === '')) val = matched[sanitizeKey('Registration No')] || '';
                         expRow.push(val);
-                        trStr += `<td class="px-4 py-2 border-b text-sm whitespace-nowrap ${c === 'Permanent Reg No' && matched ? 'font-bold text-emerald-600' : ''}">${val}</td>`;
+                        rowHtml += `<td class="px-4 py-2 border-b text-sm whitespace-nowrap ${c === 'Permanent Reg No' && matched ? 'font-bold text-emerald-600' : ''}">${val}</td>`;
                     });
                     extraCols.forEach(c => {
                         let val = matched ? (matched[c] || '') : ''; expRow.push(val);
-                        trStr += `<td class="px-4 py-2 border-b text-sm font-medium whitespace-nowrap">${val}</td>`;
+                        rowHtml += `<td class="px-4 py-2 border-b text-sm font-medium whitespace-nowrap">${val}</td>`;
                     });
-                    trStr += `</tr>`; body.innerHTML += trStr; currentMergedExport.push(expRow);
+                    rowHtml += `</tr>`; 
+                    
+                    mergedRowsData.push(rowHtml);
+                    currentMergedExport.push(expRow);
                 });
+                
+                const totalRows = mergedRowsData.length;
+                const totalPages = Math.ceil(totalRows / mergedRowsPerPage) || 1;
+                
+                if (currentMergedPage > totalPages) currentMergedPage = totalPages;
+                if (currentMergedPage < 1) currentMergedPage = 1;
+                
+                const startIndex = (currentMergedPage - 1) * mergedRowsPerPage;
+                const endIndex = Math.min(startIndex + mergedRowsPerPage, totalRows);
+                
+                for (let i = startIndex; i < endIndex; i++) {
+                    body.innerHTML += mergedRowsData[i];
+                }
+                
+                if (totalRows === 0) {
+                     body.innerHTML = `<tr><td colspan="${displayCols.length}" class="px-4 py-8 text-center text-sm text-slate-500">No merged data found for selected dates/dealers.</td></tr>`;
+                }
+                
+                document.getElementById('mergedPageInfo').textContent = `Showing ${totalRows === 0 ? 0 : startIndex + 1} to ${endIndex} of ${totalRows} records`;
+                
+                const paginationContainer = document.getElementById('mergedPaginationButtons');
+                paginationContainer.innerHTML = '';
+                
+                if (totalPages > 1) {
+                    paginationContainer.innerHTML += `<button onclick="window.changeMergedPage(${currentMergedPage - 1})" class="px-3 py-1 border border-slate-300 rounded bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed" ${currentMergedPage === 1 ? 'disabled' : ''}>Prev</button>`;
+                    
+                    let startPage = Math.max(1, currentMergedPage - 2);
+                    let endPage = Math.min(totalPages, startPage + 4);
+                    if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+                    
+                    if (startPage > 1) {
+                        paginationContainer.innerHTML += `<button onclick="window.changeMergedPage(1)" class="px-3 py-1 border border-slate-300 rounded bg-white text-slate-600 hover:bg-slate-50">1</button>`;
+                        if (startPage > 2) paginationContainer.innerHTML += `<span class="px-2 py-1 text-slate-400">...</span>`;
+                    }
+                    
+                    for (let p = startPage; p <= endPage; p++) {
+                        if (p === currentMergedPage) {
+                            paginationContainer.innerHTML += `<button class="px-3 py-1 border border-indigo-600 rounded bg-indigo-50 text-indigo-700 font-medium">${p}</button>`;
+                        } else {
+                            paginationContainer.innerHTML += `<button onclick="window.changeMergedPage(${p})" class="px-3 py-1 border border-slate-300 rounded bg-white text-slate-600 hover:bg-slate-50">${p}</button>`;
+                        }
+                    }
+                    
+                    if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) paginationContainer.innerHTML += `<span class="px-2 py-1 text-slate-400">...</span>`;
+                        paginationContainer.innerHTML += `<button onclick="window.changeMergedPage(${totalPages})" class="px-3 py-1 border border-slate-300 rounded bg-white text-slate-600 hover:bg-slate-50">${totalPages}</button>`;
+                    }
+                    
+                    paginationContainer.innerHTML += `<button onclick="window.changeMergedPage(${currentMergedPage + 1})" class="px-3 py-1 border border-slate-300 rounded bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed" ${currentMergedPage === totalPages ? 'disabled' : ''}>Next</button>`;
+                }
             }
         };
 
-        // ADMIN MANAGE DATA
         window.switchManageTab = function(tab) {
             currentManageTab = tab;
             const btnInv = document.getElementById('manageTabInvoices'); const btnReg = document.getElementById('manageTabRegs'); const btnCan = document.getElementById('manageTabCancelled');
@@ -1253,7 +1367,7 @@
 
             if (filteredData.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No records found.</td></tr>`; return; }
 
-            const limit = Math.min(filteredData.length, 200); // Anti-lag limit
+            const limit = Math.min(filteredData.length, 200);
             for (let i = 0; i < limit; i++) {
                 const item = filteredData[i]; const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50";
                 const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-'; const displayUser = item[userKey] || '-';
