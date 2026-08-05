@@ -378,7 +378,7 @@
                     </div>
 
                     <!-- Summary View Container -->
-                    <div id="reportSummaryView" class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white">
+                    <div id="reportSummaryView" class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white max-w-3xl">
                         <table id="summaryTable" class="w-full text-left border-collapse text-sm">
                             <thead class="bg-slate-100 text-slate-700">
                                 <tr id="summaryTableHeadRow"></tr>
@@ -619,11 +619,28 @@
 
         window.showAppSection = function(sectionId) {
             ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection'].forEach(id => {
+                // 1. Hide all sections
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+                
+                // 2. Remove Active state from all sidebar buttons
+                const btn = document.getElementById('navBtn_' + id);
+                if(btn) {
+                    btn.classList.remove('bg-indigo-50', 'text-indigo-600');
+                    btn.classList.add('text-slate-600');
+                }
             });
+            
+            // 3. Show target section
             const target = document.getElementById(sectionId);
             if(target) { target.classList.remove('hidden'); target.classList.add('flex'); }
+            
+            // 4. Highlight Active sidebar button
+            const activeBtn = document.getElementById('navBtn_' + sectionId);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-600');
+                activeBtn.classList.add('bg-indigo-50', 'text-indigo-600');
+            }
             
             if (sectionId === 'usersSection' && currentUser?.role === 'Admin') window.renderUsersTable();
             if (sectionId === 'reportsSection') window.renderReports();
