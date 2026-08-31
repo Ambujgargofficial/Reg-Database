@@ -107,6 +107,41 @@
         </div>
     </div>
 
+    <!-- DRILL DOWN MODAL -->
+    <div id="drillDownModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[250] backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-200" id="drillDownModalContent">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg" id="drillDownModalTitle">Data Details</h3>
+                    <p class="text-xs text-slate-500" id="drillDownModalSubtitle">Viewing specific records</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.exportDrillDownCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm flex items-center gap-1 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        Export
+                    </button>
+                    <button onclick="window.closeDrillDownModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-md transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+            </div>
+            <div class="p-0 overflow-hidden flex-grow flex flex-col">
+                <div class="overflow-x-auto overflow-y-auto w-full h-full custom-scrollbar relative">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                            <tr id="drillDownTableHead"></tr>
+                        </thead>
+                        <tbody id="drillDownTableBody" class="divide-y divide-slate-200 bg-white">
+                            <!-- Data populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="p-3 border-t bg-slate-50 flex justify-between items-center rounded-b-xl">
+                <span class="text-xs font-medium text-slate-500" id="drillDownCount">Total Records: 0</span>
+                <button onclick="window.closeDrillDownModal()" class="px-4 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-sm font-medium rounded-lg text-slate-700">Close</button>
+            </div>
+        </div>
+    </div>
+
     <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100 flex items-center justify-center z-[150]">
         <div class="bg-white/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white w-full max-w-md relative overflow-hidden">
             <div class="text-center mb-8 relative z-10">
@@ -353,6 +388,7 @@
                 <div class="p-6 flex flex-col gap-6">
                     <div class="flex gap-4 border-b border-slate-200 pb-2">
                         <button id="tabSummary" onclick="window.switchReportTab('summary')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Summary Report</button>
+                        <button id="tabRegReport" onclick="window.switchReportTab('regreport')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Reg Report</button>
                         <button id="tabMerged" onclick="window.switchReportTab('merged')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Merged Master Data</button>
                     </div>
 
@@ -387,6 +423,24 @@
                                 <tr><td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">Loading...</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                    
+                    <!-- Reg Report View Container -->
+                    <div id="reportRegView" class="hidden w-full max-w-3xl">
+                        <div class="mb-4 flex items-center gap-1 bg-slate-100 p-1 rounded-lg w-fit border border-slate-200">
+                            <button onclick="window.setRegReportMode('upload')" id="modeBtnUpload" class="px-3 py-1.5 text-sm font-medium rounded-md text-slate-500 hover:text-slate-700 transition-all">By Upload Date</button>
+                            <button onclick="window.setRegReportMode('receipt')" id="modeBtnReceipt" class="px-3 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-indigo-600 transition-all">By Receipt Date</button>
+                        </div>
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white">
+                            <table id="regReportTable" class="w-full text-left border-collapse text-sm">
+                                <thead class="bg-slate-100 text-slate-700">
+                                    <tr id="regReportTableHeadRow"></tr>
+                                </thead>
+                                <tbody id="regReportTableBody" class="divide-y divide-slate-200">
+                                    <tr><td colspan="3" class="px-4 py-8 text-center text-sm text-slate-500">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- Merged Master View Container -->
@@ -467,10 +521,12 @@
         let cancelledInvoices = [];
         let currentUser = null;
         let currentManageTab = 'invoices';
+        let currentReportTab = 'summary'; // New tracker for Report Views
         let currentEditRecord = null;
         let currentEditType = null;
         let pendingConfirmAction = null;
         let currentMergedPage = 1;
+        let currentRegMode = 'receipt'; // Mode for Reg Report ('upload' or 'receipt')
         const mergedRowsPerPage = 20;
 
         const TARGET_COLUMNS = [
@@ -483,6 +539,7 @@
         let extractedRegDataGlobal = [];
         let currentMergedExport = [];
         let currentPendingExport = [];
+        let currentDrillDownData = [];
 
         // EXPOSE FUNCTIONS GLOBALLY EARLY
         window.renderUsersTable = function() {
@@ -512,7 +569,6 @@
             });
         };
 
-        // FIREBASE CONNECTION FLOW
         try {
             loginBtn.textContent = "Connecting to Servers...";
             loginUsernameInput.innerHTML = '<option value="" disabled selected>Connecting to Servers...</option>';
@@ -619,11 +675,9 @@
 
         window.showAppSection = function(sectionId) {
             ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection'].forEach(id => {
-                // 1. Hide all sections
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
                 
-                // 2. Remove Active state from all sidebar buttons
                 const btn = document.getElementById('navBtn_' + id);
                 if(btn) {
                     btn.classList.remove('bg-indigo-50', 'text-indigo-600');
@@ -631,11 +685,9 @@
                 }
             });
             
-            // 3. Show target section
             const target = document.getElementById(sectionId);
             if(target) { target.classList.remove('hidden'); target.classList.add('flex'); }
             
-            // 4. Highlight Active sidebar button
             const activeBtn = document.getElementById('navBtn_' + sectionId);
             if(activeBtn) {
                 activeBtn.classList.remove('text-slate-600');
@@ -700,8 +752,8 @@
                     navUser1.classList.remove('hidden'); navUser1.classList.add('flex');
                     
                     document.getElementById('tabMerged').classList.add('hidden');
+                    // Hide user filter for regular users
                     document.getElementById('reportUserFilterContainer').classList.add('hidden');
-                    window.switchReportTab('summary');
                 }
 
                 if(user.role === 'Viewer') {
@@ -714,6 +766,9 @@
                 document.getElementById('mainContentArea').classList.remove('hidden');
                 window.goHome();
                 
+                // Initialize Report UI explicitly on login
+                window.switchReportTab('summary'); 
+
                 document.getElementById('welcomeModalName').textContent = user.name;
                 const modal = document.getElementById('welcomeModal');
                 const content = document.getElementById('welcomeModalContent');
@@ -789,6 +844,63 @@
             modal.classList.add('opacity-0'); content.classList.add('scale-95');
             setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); pendingConfirmAction = null; }, 200);
         };
+
+        window.openDrillDownModal = function(title, subtitle, headers, dataRows) {
+            document.getElementById('drillDownModalTitle').textContent = title;
+            document.getElementById('drillDownModalSubtitle').textContent = subtitle;
+            
+            const headRow = document.getElementById('drillDownTableHead');
+            headRow.innerHTML = '';
+            headers.forEach(h => {
+                headRow.innerHTML += `<th class="px-4 py-3 font-semibold border-b whitespace-nowrap">${h}</th>`;
+            });
+
+            const body = document.getElementById('drillDownTableBody');
+            body.innerHTML = '';
+            
+            if (!dataRows || dataRows.length === 0) {
+                body.innerHTML = `<tr><td colspan="${headers.length}" class="px-4 py-8 text-center text-sm text-slate-500">No data found.</td></tr>`;
+            } else {
+                dataRows.forEach(row => {
+                    let tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50';
+                    row.forEach(cell => {
+                        tr.innerHTML += `<td class="px-4 py-2 border-b whitespace-nowrap text-sm">${cell || '-'}</td>`;
+                    });
+                    body.appendChild(tr);
+                });
+            }
+
+            document.getElementById('drillDownCount').textContent = `Total Records: ${dataRows.length}`;
+            currentDrillDownData = [headers, ...dataRows];
+
+            const modal = document.getElementById('drillDownModal');
+            const content = document.getElementById('drillDownModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+
+        window.closeDrillDownModal = function() {
+            const modal = document.getElementById('drillDownModal');
+            const content = document.getElementById('drillDownModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentDrillDownData = []; }, 200);
+        };
+
+        window.exportDrillDownCSV = function() {
+            if (!currentDrillDownData || currentDrillDownData.length <= 1) return showToast("No data to export!");
+            const title = document.getElementById('drillDownModalTitle').textContent.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            exportCSV(currentDrillDownData, `drilldown_${title}_${new Date().getTime()}.csv`);
+        };
+        
+        // Ensure Drill Down modal closes on escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                if (!document.getElementById('drillDownModal').classList.contains('hidden')) {
+                    window.closeDrillDownModal();
+                }
+            }
+        });
 
         // ADMIN EXTRACTION (Invoices)
         document.getElementById('extractBtn').addEventListener('click', () => {
@@ -906,8 +1018,12 @@
             if (regNoIndex === -1) return showToast("Missing 'Registration No' column");
 
             let updates = {}; let count = 0;
-            const finalRegHeaders = [...headers, "Processed By"];
+            const finalRegHeaders = [...headers, "Processed By", "Upload Date"]; // Adding Upload Date
             extractedRegDataGlobal = [finalRegHeaders];
+            
+            // Get accurate local date string (YYYY-MM-DD)
+            const now = new Date();
+            const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -920,6 +1036,7 @@
                     while(cleanRow.length < headers.length) cleanRow.push("");
                     cleanRow = cleanRow.slice(0, headers.length);
                     cleanRow.push(currentUser.name);
+                    cleanRow.push(todayStr); // Track when they uploaded this data
                     extractedRegDataGlobal.push(cleanRow);
                     
                     let rowObj = {};
@@ -1113,25 +1230,46 @@
 
         // REPORTS
         window.switchReportTab = function(tab) {
-            if(tab === 'summary') {
-                document.getElementById('tabSummary').classList.add('text-indigo-600', 'border-indigo-600');
-                document.getElementById('tabSummary').classList.remove('text-slate-500');
-                if(currentUser?.role === 'Admin') {
-                    document.getElementById('tabMerged').classList.remove('text-indigo-600', 'border-indigo-600');
-                    document.getElementById('tabMerged').classList.add('text-slate-500');
+            currentReportTab = tab;
+            
+            // Tab visual state
+            ['tabSummary', 'tabMerged', 'tabRegReport'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.classList.remove('text-indigo-600', 'border-indigo-600');
+                    el.classList.add('text-slate-500');
                 }
-                document.getElementById('reportSummaryView').classList.remove('hidden');
-                document.getElementById('reportMergedView').classList.add('hidden');
-            } else {
-                document.getElementById('tabMerged').classList.add('text-indigo-600', 'border-indigo-600');
-                document.getElementById('tabMerged').classList.remove('text-slate-500');
-                document.getElementById('tabSummary').classList.remove('text-indigo-600', 'border-indigo-600');
-                document.getElementById('tabSummary').classList.add('text-slate-500');
-                document.getElementById('reportSummaryView').classList.add('hidden');
-                document.getElementById('reportMergedView').classList.remove('hidden');
-                document.getElementById('reportMergedView').classList.add('flex');
-                currentMergedPage = 1;
+            });
+
+            const activeTabId = 'tab' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : 'RegReport'));
+            const activeTab = document.getElementById(activeTabId);
+            if (activeTab) {
+                activeTab.classList.add('text-indigo-600', 'border-indigo-600');
+                activeTab.classList.remove('text-slate-500');
             }
+
+            // View toggles
+            ['reportSummaryView', 'reportMergedView', 'reportRegView'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+            });
+
+            const activeViewId = 'report' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : 'Reg')) + 'View';
+            const activeView = document.getElementById(activeViewId);
+            if(activeView) {
+                activeView.classList.remove('hidden');
+                if(tab === 'merged') activeView.classList.add('flex');
+            }
+
+            // Filter label context update for Admin
+            if (currentUser?.role === 'Admin') {
+                const filterLabel = document.querySelector('#reportUserFilterContainer label');
+                if (filterLabel) {
+                    filterLabel.textContent = tab === 'regreport' ? 'Filter by User' : 'Filter by Dealer';
+                }
+            }
+
+            currentMergedPage = 1;
             window.renderReports();
         };
 
@@ -1142,6 +1280,20 @@
 
         window.changeMergedPage = function(newPage) {
             currentMergedPage = newPage;
+            window.renderReports();
+        };
+
+        window.setRegReportMode = function(mode) {
+            currentRegMode = mode;
+            const btnU = document.getElementById('modeBtnUpload');
+            const btnR = document.getElementById('modeBtnReceipt');
+            if(mode === 'upload') {
+                btnU.className = "px-3 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-indigo-600 transition-all";
+                btnR.className = "px-3 py-1.5 text-sm font-medium rounded-md text-slate-500 hover:text-slate-700 transition-all";
+            } else {
+                btnR.className = "px-3 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-indigo-600 transition-all";
+                btnU.className = "px-3 py-1.5 text-sm font-medium rounded-md text-slate-500 hover:text-slate-700 transition-all";
+            }
             window.renderReports();
         };
 
@@ -1164,15 +1316,162 @@
             let userFilter = currentUser.name;
             if (currentUser?.role === 'Admin') {
                 const userSelect = document.getElementById('reportUserFilter');
-                const dealers = new Set(masterInvoices.map(r => r[sanitizeKey('Requesting Dealer')]).filter(Boolean));
                 let currUser = userSelect.value || "All";
-                userSelect.innerHTML = '<option value="All">All Dealers</option>';
-                Array.from(dealers).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
-                if(dealers.has(currUser)) userSelect.value = currUser;
+                userSelect.innerHTML = `<option value="All">All ${currentReportTab === 'regreport' ? 'Users' : 'Dealers'}</option>`;
+                
+                // Dynamically populate depending on which report we're looking at
+                if (currentReportTab === 'regreport') {
+                    const users = new Set(masterRegistrations.map(r => r[sanitizeKey('Processed By')]).filter(Boolean));
+                    Array.from(users).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
+                } else {
+                    const dealers = new Set(masterInvoices.map(r => r[sanitizeKey('Requesting Dealer')]).filter(Boolean));
+                    Array.from(dealers).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
+                }
+                
+                let optionExists = Array.from(userSelect.options).some(opt => opt.value === currUser);
+                userSelect.value = optionExists ? currUser : 'All';
                 userFilter = userSelect.value;
             }
             
-            // 1. Filter by Dealer/User FIRST
+            // --- BRANCH: REGISTRATION REPORT LOGIC ---
+            if (currentReportTab === 'regreport') {
+                const regBody = document.getElementById('regReportTableBody');
+                const regHead = document.getElementById('regReportTableHeadRow');
+                if(!regBody || !regHead) return;
+
+                let dateHeader = currentRegMode === 'upload' ? 'Upload Date' : 'Receipt Date';
+                let headHtml = `<th class="px-4 py-3 font-semibold border-b">${dateHeader}</th>`;
+                if (currentUser.role === 'Admin') headHtml += `<th class="px-4 py-3 font-semibold border-b">Uploaded By</th>`;
+                headHtml += `<th class="px-4 py-3 font-semibold border-b text-right">Registration Count</th>`;
+                regHead.innerHTML = headHtml;
+
+                let filteredRegs = masterRegistrations;
+
+                // User Filters
+                if (currentUser.role !== 'Admin') {
+                    filteredRegs = filteredRegs.filter(r => (r[sanitizeKey('Processed By')] || '').toLowerCase() === currentUser.name.toLowerCase());
+                } else if (userFilter !== 'All') {
+                    filteredRegs = filteredRegs.filter(r => r[sanitizeKey('Processed By')] === userFilter);
+                }
+
+                let grouped = {};
+                let gt = 0;
+                
+                filteredRegs.forEach(r => {
+                    let dateVal = 'Unknown';
+                    
+                    if (currentRegMode === 'upload') {
+                        let rawDate = r[sanitizeKey('Upload Date')];
+                        dateVal = rawDate ? rawDate.split(' ')[0] : 'Legacy Data';
+                    } else {
+                        let rawDate = r[sanitizeKey('Receipt Dt.')];
+                        dateVal = rawDate ? rawDate.split(' ')[0] : 'Unknown Date';
+                    }
+                    
+                    let pDate = parseStandardDate(dateVal);
+
+                    if (pDate && !isNaN(pDate)) {
+                        if (startDate && pDate < startDate) return;
+                        if (endDate && pDate > endDate) return;
+                    } else if (startDate || endDate) {
+                        // Exclude Legacy/Unknown Data if specific date filters are active
+                        if (dateVal === 'Legacy Data' || dateVal === 'Unknown Date') return;
+                    }
+
+                    let userVal = r[sanitizeKey('Processed By')] || 'Unknown';
+                    let key = dateVal + '|' + userVal;
+
+                    if(!grouped[key]) grouped[key] = { date: dateVal, user: userVal, count: 0, records: [] };
+                    grouped[key].count++;
+                    grouped[key].records.push(r);
+                    gt++;
+                });
+
+                // Attach the grouped data to window so drill down can access it
+                window.__tempRegGroupedData = grouped;
+                window.__tempRegAllData = filteredRegs; // Store all for Grand Total
+                
+                window.handleRegDrillDown = function(groupKey) {
+                    let records = [];
+                    let title = 'Registration Details';
+                    let subtitle = '';
+
+                    if (groupKey === 'GRAND_TOTAL') {
+                        records = window.__tempRegAllData || [];
+                        title = 'All Selected Registrations';
+                        subtitle = 'Grand Total Data';
+                    } else {
+                        const group = window.__tempRegGroupedData[groupKey];
+                        if(!group || !group.records) return;
+                        records = group.records;
+                        subtitle = `Filtered by ${group.user} on ${group.date} (${currentRegMode === 'upload' ? 'Upload Date' : 'Receipt Date'})`;
+                    }
+                    
+                    const headers = ["Upload Date", "Uploaded By", "Registration No", "Chasis No", "Customer Name", "Receipt Dt.", "Sale Amount"];
+                    
+                    const getVal = (obj, keyStr) => {
+                        if(!obj) return '-';
+                        const safeKey = String(keyStr).replace(/[.#$\[\]\/]/g, '_');
+                        if(obj[safeKey] !== undefined && obj[safeKey] !== '') return obj[safeKey];
+                        const ultraLoose = keyStr.toLowerCase().replace(/[^a-z0-9]/g, '');
+                        const foundLoose = Object.keys(obj).find(k => k.toLowerCase().replace(/[^a-z0-9]/g, '') === ultraLoose);
+                        return (foundLoose && obj[foundLoose] !== '') ? obj[foundLoose] : '-';
+                    };
+
+                    const dataRows = records.map(r => {
+                        let uploadDate = getVal(r, 'Upload Date');
+                        if (uploadDate === '-') uploadDate = 'Legacy Data';
+
+                        return [
+                            uploadDate,
+                            getVal(r, 'Processed By'),
+                            getVal(r, 'Registration No'),
+                            getVal(r, 'Chasis No'),
+                            getVal(r, 'Customer Name'),
+                            getVal(r, 'Receipt Dt.'),
+                            getVal(r, 'Sale Amount')
+                        ];
+                    });
+                    
+                    window.openDrillDownModal(title, subtitle, headers, dataRows);
+                };
+
+                regBody.innerHTML = '';
+                // Sort Descending by Date
+                let sortedGroups = Object.values(grouped).sort((a,b) => b.date.localeCompare(a.date)); 
+
+                sortedGroups.forEach(g => {
+                    const groupKey = `${g.date}|${g.user}`;
+                    let rowHtml = `<tr class="hover:bg-slate-50"><td class="px-4 py-3 text-sm font-medium">${g.date}</td>`;
+                    if (currentUser.role === 'Admin') rowHtml += `<td class="px-4 py-3 text-sm">${g.user}</td>`;
+                    rowHtml += `<td class="px-4 py-3 text-sm font-bold text-right">
+                        <span onclick="window.handleRegDrillDown('${groupKey}')" class="text-indigo-600 hover:text-indigo-900 font-semibold underline decoration-indigo-300/70 decoration-1 underline-offset-4 cursor-pointer transition-colors">
+                            ${g.count}
+                        </span>
+                    </td></tr>`;
+                    regBody.innerHTML += rowHtml;
+                });
+
+                if (sortedGroups.length) {
+                    regBody.innerHTML += `
+                        <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
+                            <td class="px-4 py-3">GRAND TOTAL</td>
+                            ${currentUser.role === 'Admin' ? '<td></td>' : ''}
+                            <td class="px-4 py-3 text-right text-indigo-700">
+                                <span onclick="window.handleRegDrillDown('GRAND_TOTAL')" class="text-indigo-700 hover:text-indigo-900 font-bold underline decoration-indigo-400/70 decoration-1 underline-offset-4 cursor-pointer transition-colors">
+                                    ${gt}
+                                </span>
+                            </td>
+                        </tr>`;
+                } else {
+                    regBody.innerHTML = `<tr><td colspan="${currentUser.role === 'Admin' ? 3 : 2}" class="px-4 py-8 text-center text-sm text-slate-500">No upload records found for selected filters.</td></tr>`;
+                }
+                
+                return; 
+            }
+
+            // --- BRANCH: ORIGINAL SUMMARY & MERGED REPORTS ---
+            // 1. Filter by Dealer/User FIRST (For Invoices)
             let userFilteredInvoices = masterInvoices;
             if (currentUser.role !== 'Admin') {
                 userFilteredInvoices = masterInvoices.filter(inv => inv[sanitizeKey('Requesting Dealer')]?.toLowerCase() === currentUser.name.toLowerCase());
@@ -1196,59 +1495,93 @@
             const summaryBody = document.getElementById('summaryTableBody');
             const summaryHead = document.getElementById('summaryTableHeadRow');
             
-            if (!summaryBody || !summaryHead) return; 
+            if (summaryBody && summaryHead) {
+                summaryHead.innerHTML = `
+                    <th class="px-4 py-3 font-semibold border-b">${currentUser.role === 'Admin' ? 'Dealer Name' : 'Invoice Date'}</th>
+                    <th class="px-4 py-3 font-semibold border-b text-right">Total Invoices</th>
+                    <th class="px-4 py-3 font-semibold border-b text-right text-emerald-600 bg-emerald-50">Registered</th>
+                    <th class="px-4 py-3 font-semibold border-b text-right text-orange-600 bg-orange-50">Pending</th>
+                `;
 
-            summaryHead.innerHTML = `
-                <th class="px-4 py-3 font-semibold border-b">${currentUser.role === 'Admin' ? 'Dealer Name' : 'Invoice Date'}</th>
-                <th class="px-4 py-3 font-semibold border-b text-right">Total Invoices</th>
-                <th class="px-4 py-3 font-semibold border-b text-right text-emerald-600 bg-emerald-50">Registered</th>
-                <th class="px-4 py-3 font-semibold border-b text-right text-orange-600 bg-orange-50">Pending</th>
-            `;
+                let grouped = {};
+                currentPendingExport = [TARGET_COLUMNS];
+                
+                filteredInvoices.forEach(inv => {
+                    let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
+                    let key = currentUser.role === 'Admin' ? (inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer') : dateVal;
+                    
+                    if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0, recordsReg: [], recordsPend: [] };
+                    
+                    grouped[key].total++;
+                    
+                    let hasRtoMatch = masterRegistrations.some(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
+                    let permRegField = inv[sanitizeKey('Permanent Reg No')];
+                    let hasPermRegInInvoice = permRegField && permRegField.trim().length >= 5; 
+                    
+                    if(hasRtoMatch || hasPermRegInInvoice) {
+                        grouped[key].reg++;
+                        grouped[key].recordsReg.push(inv);
+                    } else {
+                        grouped[key].pend++;
+                        grouped[key].recordsPend.push(inv);
+                        currentPendingExport.push(TARGET_COLUMNS.map(c => inv[sanitizeKey(c)] || ''));
+                    }
+                });
+                
+                window.__tempSummaryGroupedData = grouped;
+                
+                window.handleSummaryDrillDown = function(groupKey, type) {
+                     const group = window.__tempSummaryGroupedData[groupKey];
+                     if(!group) return;
+                     
+                     const records = type === 'reg' ? group.recordsReg : group.recordsPend;
+                     const statusColor = type === 'reg' ? 'emerald' : 'orange';
+                     const statusText = type === 'reg' ? 'Registered' : 'Pending';
+                     
+                     const headers = ["Invoice Date", "Dealer", "Invoice #", "Frame #", "Assigned DSE", "Status"];
+                     const dataRows = records.map(r => [
+                         (r[sanitizeKey('Invoice Date')] || '').split(' ')[0],
+                         r[sanitizeKey('Requesting Dealer')] || '-',
+                         r[sanitizeKey('Invoice #')] || '-',
+                         r[sanitizeKey('Frame #')] || '-',
+                         r[sanitizeKey('Assigned To (DSE) Name')] || '-',
+                         `<span class="text-${statusColor}-600 font-medium">${statusText}</span>`
+                     ]);
+                     
+                     window.openDrillDownModal(`${statusText} Invoices Detail`, `Filtered by: ${group.label}`, headers, dataRows);
+                };
 
-            let grouped = {};
-            currentPendingExport = [TARGET_COLUMNS];
-            
-            filteredInvoices.forEach(inv => {
-                let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : 'Unknown';
-                let key = currentUser.role === 'Admin' ? (inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer') : dateVal;
+                summaryBody.innerHTML = '';
+                let gt=0, gr=0, gp=0;
                 
-                if(!grouped[key]) grouped[key] = { label: key, total: 0, reg: 0, pend: 0 };
-                
-                grouped[key].total++;
-                
-                let hasRtoMatch = masterRegistrations.some(r => r[sanitizeKey('Chasis No')] === inv[sanitizeKey('Frame #')]);
-                let permRegField = inv[sanitizeKey('Permanent Reg No')];
-                let hasPermRegInInvoice = permRegField && permRegField.trim().length >= 5; 
-                
-                if(hasRtoMatch || hasPermRegInInvoice) {
-                    grouped[key].reg++;
+                Object.values(grouped).sort((a,b)=>a.label.localeCompare(b.label)).forEach(g => {
+                    gt+=g.total; gr+=g.reg; gp+=g.pend;
+                    
+                    let regCellHtml = g.reg > 0 
+                        ? `<span onclick="window.handleSummaryDrillDown('${g.label.replace(/'/g, "\\'")}', 'reg')" class="text-emerald-600 hover:text-emerald-900 font-semibold underline decoration-emerald-300/70 decoration-1 underline-offset-4 cursor-pointer transition-colors">${g.reg}</span>`
+                        : `<span class="text-emerald-600/50">0</span>`;
+                        
+                    let pendCellHtml = g.pend > 0 
+                        ? `<span onclick="window.handleSummaryDrillDown('${g.label.replace(/'/g, "\\'")}', 'pend')" class="text-orange-600 hover:text-orange-900 font-semibold underline decoration-orange-300/70 decoration-1 underline-offset-4 cursor-pointer transition-colors">${g.pend}</span>`
+                        : `<span class="text-orange-500/50">0</span>`;
+                    
+                    summaryBody.innerHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-4 py-3 text-sm font-medium">${g.label}</td>
+                            <td class="px-4 py-3 text-sm font-bold text-right">${g.total}</td>
+                            <td class="px-4 py-3 text-sm font-bold text-right bg-emerald-50/30">${regCellHtml}</td>
+                            <td class="px-4 py-3 text-sm font-bold text-right bg-orange-50/30">${pendCellHtml}</td>
+                        </tr>`;
+                });
+
+                if (Object.keys(grouped).length) {
+                    summaryBody.innerHTML += `
+                        <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
+                            <td class="px-4 py-3">GRAND TOTAL</td><td class="px-4 py-3 text-right">${gt}</td><td class="px-4 py-3 text-emerald-700 text-right pr-6">${gr}</td><td class="px-4 py-3 text-orange-600 text-right pr-6">${gp}</td>
+                        </tr>`;
                 } else {
-                    grouped[key].pend++;
-                    currentPendingExport.push(TARGET_COLUMNS.map(c => inv[sanitizeKey(c)] || ''));
+                    summaryBody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">No data found for selected dates/dealers.</td></tr>`;
                 }
-            });
-
-            summaryBody.innerHTML = '';
-            let gt=0, gr=0, gp=0;
-            
-            Object.values(grouped).sort((a,b)=>a.label.localeCompare(b.label)).forEach(g => {
-                gt+=g.total; gr+=g.reg; gp+=g.pend;
-                summaryBody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-4 py-3 text-sm font-medium">${g.label}</td>
-                        <td class="px-4 py-3 text-sm font-bold text-right">${g.total}</td>
-                        <td class="px-4 py-3 text-sm font-bold text-emerald-600 text-right bg-emerald-50/30">${g.reg}</td>
-                        <td class="px-4 py-3 text-sm font-bold text-orange-500 text-right bg-orange-50/30">${g.pend}</td>
-                    </tr>`;
-            });
-
-            if (Object.keys(grouped).length) {
-                summaryBody.innerHTML += `
-                    <tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
-                        <td class="px-4 py-3">GRAND TOTAL</td><td class="px-4 py-3 text-right">${gt}</td><td class="px-4 py-3 text-emerald-700 text-right">${gr}</td><td class="px-4 py-3 text-orange-600 text-right">${gp}</td>
-                    </tr>`;
-            } else {
-                summaryBody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">No data found for selected dates/dealers.</td></tr>`;
             }
 
             // Merged Master Logic (Admin only)
