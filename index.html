@@ -831,6 +831,8 @@
             if(!tbody) return;
             tbody.innerHTML = '';
             usersDB.forEach(user => {
+                if (!user || !user.name) return; // Skip invalid or corrupted user records
+                
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50";
                 let roleColor = user.role === 'Admin' ? 'bg-purple-100 text-purple-700' : (user.role === 'Viewer' ? 'bg-slate-100 text-slate-700' : 'bg-blue-100 text-blue-700');
@@ -884,7 +886,8 @@
                 } else {
                     // Prevent our hidden model groups from appearing as a user
                     delete data['admin_settings'];
-                    usersDB = Object.values(data);
+                    // Filter out any accidentally saved blank records
+                    usersDB = Object.values(data).filter(u => u && u.name && u.name.trim() !== '');
                 }
                 
                 populateUserDropdown();
@@ -1065,17 +1068,18 @@
             const currentValue = select.value;
             select.innerHTML = '<option value="" disabled selected>Select your username</option>';
             usersDB.forEach(user => {
+                if (!user || !user.name) return;
                 const option = document.createElement('option');
                 option.value = user.name; option.textContent = user.name;
                 select.appendChild(option);
             });
-            if (currentValue && usersDB.some(u => u.name === currentValue)) select.value = currentValue;
+            if (currentValue && usersDB.some(u => u && u.name === currentValue)) select.value = currentValue;
         }
 
         window.handleLogin = function() {
             const username = loginUsernameInput.value.trim().toLowerCase();
             const pin = document.getElementById('loginPin').value.trim();
-            const user = usersDB.find(u => u.name.toLowerCase() === username && String(u.pin) === pin);
+            const user = usersDB.find(u => u && u.name && u.name.toLowerCase() === username && String(u.pin) === pin);
 
             if (user) {
                 document.getElementById('loginError').classList.add('hidden');
