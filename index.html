@@ -107,6 +107,42 @@
         </div>
     </div>
 
+    <!-- TIMELINE MODAL -->
+    <div id="timelineModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col transform scale-95 transition-transform duration-200" id="timelineModalContent">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2" id="timelineModalTitle">
+                    Create Timeline
+                </h3>
+                <button onclick="window.closeTimelineModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <form id="tlForm" onsubmit="event.preventDefault(); window.saveTimeline();">
+                <div class="p-6 space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Timeline Name (e.g. Navratra, Diwali)</label>
+                        <input type="text" id="tlName" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500 bg-slate-50 font-medium" placeholder="Enter Event Name" required>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-indigo-50/50 p-4 rounded-lg border border-indigo-100">
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-indigo-800 text-sm border-b border-indigo-200 pb-1">Range 1 (e.g. Last Year)</h4>
+                            <div><label class="block text-xs font-medium mb-1 text-slate-600">Start Date</label><input type="date" id="tlD1Start" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500 bg-white" required></div>
+                            <div><label class="block text-xs font-medium mb-1 text-slate-600">End Date</label><input type="date" id="tlD1End" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500 bg-white" required></div>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-indigo-800 text-sm border-b border-indigo-200 pb-1">Range 2 (e.g. This Year)</h4>
+                            <div><label class="block text-xs font-medium mb-1 text-slate-600">Start Date</label><input type="date" id="tlD2Start" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500 bg-white" required></div>
+                            <div><label class="block text-xs font-medium mb-1 text-slate-600">End Date</label><input type="date" id="tlD2End" class="w-full px-3 py-2 border rounded-md outline-none focus:ring-1 focus:ring-indigo-500 bg-white" required></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t bg-slate-50 flex justify-end gap-3 rounded-b-xl">
+                    <button type="button" onclick="window.closeTimelineModal()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Save Timeline</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- DRILL DOWN MODAL -->
     <div id="drillDownModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[250] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-200" id="drillDownModalContent">
@@ -142,6 +178,7 @@
         </div>
     </div>
 
+    <!-- LOGIN SCREEN -->
     <div id="loginScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100 flex items-center justify-center z-[150]">
         <div class="bg-white/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white w-full max-w-md relative overflow-hidden">
             <div class="text-center mb-8 relative z-10">
@@ -196,10 +233,20 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Data</span>
             </button>
+
+            <button id="navBtn_modelGroupsSection" onclick="window.showAppSection('modelGroupsSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Model Groups</span>
+            </button>
             
             <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Users</span>
+            </button>
+
+            <button id="navBtn_manageTimelinesSection" onclick="window.showAppSection('manageTimelinesSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Timeline</span>
             </button>
 
             <!-- User Buttons -->
@@ -347,6 +394,47 @@
                 </div>
             </section>
 
+            <!-- MODEL GROUPS SECTION (Admin Only) -->
+            <section id="modelGroupsSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+                <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-800">Manage Model Groups</h2>
+                        <p class="text-sm text-slate-500">Group individual models into master categories for cleaner reports.</p>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col gap-4">
+                    <!-- Tabs -->
+                    <div class="flex gap-4 border-b border-slate-200 pb-2">
+                        <button id="mgTabUnmapped" onclick="window.switchModelGroupTab('unmapped')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Unmapped Models</button>
+                        <button id="mgTabMapped" onclick="window.switchModelGroupTab('mapped')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Mapped Groups</button>
+                        <button id="mgTabUpload" onclick="window.switchModelGroupTab('upload')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Bulk Paste Mapping</button>
+                    </div>
+                    
+                    <!-- Table View (Mapped/Unmapped) -->
+                    <div id="mgTableContainer" class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[500px] overflow-y-auto bg-white">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="px-4 py-3 font-semibold border-b">Raw Model Name (from Invoices)</th>
+                                    <th class="px-4 py-3 font-semibold border-b w-1/2">Master Group Name</th>
+                                    <th class="px-4 py-3 font-semibold border-b text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modelGroupsTableBody" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Upload/Paste View -->
+                    <div id="mgUploadContainer" class="hidden flex-col gap-4 border border-slate-200 rounded-lg p-6 bg-slate-50">
+                        <p class="text-sm text-slate-600">Paste your model mappings below from Excel. You need exactly 2 columns:<br><b>Column 1:</b> Raw Model Name &nbsp;|&nbsp; <b>Column 2:</b> Target Group Name</p>
+                        <textarea id="mgUploadTextarea" class="w-full h-64 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none custom-scrollbar" placeholder="ACTIVA 125 OBD2&#9;ACTIVA 125&#10;DIO OBD2&#9;DIO"></textarea>
+                        <button onclick="window.uploadModelGroups()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors w-fit">Save Uploaded Mappings</button>
+                    </div>
+                    
+                    <datalist id="groupModelDatalist"></datalist>
+                </div>
+            </section>
+
             <!-- USER MANAGEMENT (Admin only) -->
             <section id="usersSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
@@ -377,8 +465,37 @@
                 </div>
             </section>
 
+            <!-- MANAGE TIMELINES SECTION (Admin only) -->
+            <section id="manageTimelinesSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+                <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-800">Manage Timelines</h2>
+                        <p class="text-sm text-slate-500">Define custom event periods (e.g., Navratra, Diwali) to use in Timeline Reports.</p>
+                    </div>
+                    <button onclick="window.openTimelineModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Create Timeline
+                    </button>
+                </div>
+                <div class="p-6 flex flex-col gap-6">
+                    <div class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[500px] overflow-y-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="px-4 py-3 border-b">Timeline Name</th>
+                                    <th class="px-4 py-3 border-b">Range 1 (Start - End)</th>
+                                    <th class="px-4 py-3 border-b">Range 2 (Start - End)</th>
+                                    <th class="px-4 py-3 border-b text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timelinesTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <!-- REPORTS SECTION -->
-            <section id="reportsSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300 hidden">
+            <section id="reportsSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-800">Dashboard & Reports</h2>
@@ -390,9 +507,11 @@
                         <button id="tabSummary" onclick="window.switchReportTab('summary')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Summary Report</button>
                         <button id="tabRegReport" onclick="window.switchReportTab('regreport')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Reg Report</button>
                         <button id="tabMerged" onclick="window.switchReportTab('merged')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Merged Master Data</button>
+                        <button id="tabCompare" onclick="window.switchReportTab('compare')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Compare Invoice</button>
+                        <button id="tabCompareTimeline" onclick="window.switchReportTab('comptimeline')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Timeline Compare</button>
                     </div>
 
-                    <div class="flex flex-wrap gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div id="sharedReportFilters" class="flex flex-wrap gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div class="flex gap-4">
                             <div>
                                 <label class="block text-xs font-medium text-slate-700 mb-1">Start Date</label>
@@ -409,7 +528,7 @@
                         </div>
                         <div class="flex gap-2">
                             <button onclick="window.handleReportFilterChange()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm flex items-center gap-1 transition-colors">Refresh</button>
-                            <button onclick="window.downloadPendingCSV()" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-1.5 px-3 rounded-md text-sm flex items-center gap-1 shadow-sm transition-colors">Download Pending</button>
+                            <button id="downloadPendingBtn" onclick="window.downloadPendingCSV()" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-1.5 px-3 rounded-md text-sm flex items-center gap-1 shadow-sm transition-colors">Download Pending</button>
                         </div>
                     </div>
 
@@ -464,6 +583,165 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Compare Invoice View Container (Admin Only) -->
+                    <div id="reportCompareView" class="hidden flex-col gap-4 w-full">
+                        <div class="flex flex-col gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <div class="flex flex-wrap gap-6 items-end">
+                                <!-- Range 1 -->
+                                <div class="flex gap-2 items-end border-r pr-6 border-slate-300">
+                                    <div><label class="block text-xs font-medium text-slate-700 mb-1">Date Range 1 Start</label><input type="date" id="compR1Start" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                    <div><label class="block text-xs font-medium text-slate-700 mb-1">Date Range 1 End</label><input type="date" id="compR1End" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                </div>
+                                <!-- Range 2 -->
+                                <div class="flex gap-2 items-end border-r pr-6 border-slate-300">
+                                    <div><label class="block text-xs font-medium text-slate-700 mb-1">Date Range 2 Start</label><input type="date" id="compR2Start" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                    <div><label class="block text-xs font-medium text-slate-700 mb-1">Date Range 2 End</label><input type="date" id="compR2End" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-4 items-end">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Dealer Filter</label>
+                                    <select id="compDealerFilter" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                        <option value="All">All Dealers</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Model Filter</label>
+                                    <select id="compModelFilter" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                        <option value="All">All Models</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">View Type (Pivot)</label>
+                                    <select id="compViewBy" class="w-48 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                        <option value="DealerSummary">Dealer Summary</option>
+                                        <option value="ModelSummary">Model Summary</option>
+                                        <option value="Pivot" selected>Dealer -> Model (Pivot)</option>
+                                    </select>
+                                </div>
+                                <button onclick="window.renderCompareReport()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-4 rounded-md text-sm shadow-sm transition-colors">Compare</button>
+                                <button onclick="window.exportCompareReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-1.5 px-4 rounded-md text-sm shadow-sm transition-colors">Export CSV</button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white custom-scrollbar max-h-[600px] overflow-y-auto relative">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold border-b" id="compTableGroupHead">Name / Description</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Range 1 Count</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Range 2 Count</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Variance</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Growth %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="compareTableBody" class="divide-y divide-slate-200">
+                                    <tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Select dates and generate report.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Compare View Container (Admin Only) -->
+                    <div id="reportCompareTimelineView" class="hidden flex-col gap-4 w-full">
+                        <div class="flex flex-col gap-3 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <div class="flex flex-wrap gap-4 items-end z-10 relative">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Select Timeline Event</label>
+                                    <select id="compTlSelect" onchange="window.handleTimelineSelection()" class="w-48 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white font-semibold text-indigo-700">
+                                        <option value="" disabled selected>Select Timeline...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Dealer Filter</label>
+                                    <select id="compTlDealer" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                        <option value="All">All Dealers</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Model Filter</label>
+                                    <select id="compTlModel" class="w-40 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                        <option value="All">All Models</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1">Pivot & Group By</label>
+                                    <select id="compTlViewBy" onchange="window.toggleCustomTimelinePivot()" class="w-48 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white font-medium">
+                                        <option value="DaySummary">Day-wise Summary</option>
+                                        <option value="DealerSummary">Dealer-wise Summary</option>
+                                        <option value="DealerModel" selected>Dealer ➔ Model</option>
+                                        <option value="Custom">Custom Pivot...</option>
+                                    </select>
+                                </div>
+                                <div id="customPivotContainer" class="hidden flex-wrap gap-2 items-end border-l pl-4 border-slate-300">
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1">Level 1</label>
+                                        <select id="pivotL1" class="w-24 px-2 py-1.5 border border-slate-300 rounded-md text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                            <option value="dealer">Dealer</option>
+                                            <option value="model">Model</option>
+                                            <option value="day">Day</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1">Level 2</label>
+                                        <select id="pivotL2" class="w-24 px-2 py-1.5 border border-slate-300 rounded-md text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                            <option value="none">None</option>
+                                            <option value="dealer">Dealer</option>
+                                            <option value="model" selected>Model</option>
+                                            <option value="day">Day</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-700 mb-1">Level 3</label>
+                                        <select id="pivotL3" class="w-24 px-2 py-1.5 border border-slate-300 rounded-md text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                                            <option value="none" selected>None</option>
+                                            <option value="dealer">Dealer</option>
+                                            <option value="model">Model</option>
+                                            <option value="day">Day</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button onclick="window.renderTimelineReport()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-4 rounded-md text-sm shadow-sm transition-colors">Compare</button>
+                                <button onclick="window.exportTimelineReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-1.5 px-4 rounded-md text-sm shadow-sm transition-colors">Export CSV</button>
+                            </div>
+                            
+                            <!-- DYNAMIC OVERRIDE DATES CONTAINER -->
+                            <div id="tlDateOverrides" class="hidden w-full flex-wrap gap-4 items-center bg-indigo-50/70 p-3 rounded-md border border-indigo-100">
+                                <div class="flex gap-2 items-center border-r pr-4 border-indigo-200">
+                                    <span class="text-xs font-bold text-indigo-800 bg-white px-2 py-1 rounded shadow-sm border border-indigo-100">Range 1</span>
+                                    <div><label class="block text-[10px] font-semibold text-slate-500 mb-0.5 uppercase">Start</label><input type="date" id="orD1Start" class="w-32 px-2 py-1 border border-slate-300 rounded text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                    <div><label class="block text-[10px] font-semibold text-slate-500 mb-0.5 uppercase">End</label><input type="date" id="orD1End" class="w-32 px-2 py-1 border border-slate-300 rounded text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                </div>
+                                <div class="flex gap-2 items-center">
+                                    <span class="text-xs font-bold text-indigo-800 bg-white px-2 py-1 rounded shadow-sm border border-indigo-100">Range 2</span>
+                                    <div><label class="block text-[10px] font-semibold text-slate-500 mb-0.5 uppercase">Start</label><input type="date" id="orD2Start" class="w-32 px-2 py-1 border border-slate-300 rounded text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                    <div><label class="block text-[10px] font-semibold text-slate-500 mb-0.5 uppercase">End</label><input type="date" id="orD2End" class="w-32 px-2 py-1 border border-slate-300 rounded text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></div>
+                                </div>
+                                <div class="text-[11px] text-indigo-600 font-medium italic pb-0.5 ml-2 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    You can temporarily override dates for this report.
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm bg-white custom-scrollbar max-h-[600px] overflow-y-auto relative">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold border-b" id="compTlTableGroupHead">Category / Timeline Day</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Range 1 Count</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Range 2 Count</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Variance</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right">Growth %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="compareTimelineTableBody" class="divide-y divide-slate-200">
+                                    <tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Select a Timeline and click Compare.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -520,6 +798,12 @@
         let masterRegistrations = [];
         let cancelledInvoices = [];
         let currentUser = null;
+        
+        let modelGroupsDB = {}; 
+        let timelinesDB = {}; // format: { tlId: { name, d1_start, d1_end, d2_start, d2_end } }
+        let currentModelGroupTab = 'unmapped';
+        let currentEditTimelineId = null;
+
         let currentManageTab = 'invoices';
         let currentReportTab = 'summary'; // New tracker for Report Views
         let currentEditRecord = null;
@@ -530,7 +814,7 @@
         const mergedRowsPerPage = 20;
 
         const TARGET_COLUMNS = [
-            "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", 
+            "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", "Model Name", 
             "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", 
             "Engine No/Motor No", "Network Type", "City", "Permanent Reg No", "Billing Network Code"
         ];
@@ -598,6 +882,8 @@
                     usersDB = [defaultAdmin];
                     set(ref(db, 'users/' + defaultAdmin.id), defaultAdmin);
                 } else {
+                    // Prevent our hidden model groups from appearing as a user
+                    delete data['admin_settings'];
                     usersDB = Object.values(data);
                 }
                 
@@ -615,21 +901,61 @@
             onValue(ref(db, 'invoices'), (snapshot) => {
                 const data = snapshot.val();
                 masterInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
-                if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
-                if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+                
+                const reportsEl = document.getElementById('reportsSection');
+                if (reportsEl && !reportsEl.classList.contains('hidden')) {
+                    if(currentReportTab === 'compare') window.renderCompareReport();
+                    else window.renderReports();
+                }
+                
+                const manageEl = document.getElementById('manageDataSection');
+                if (manageEl && !manageEl.classList.contains('hidden')) window.renderManageData();
             });
 
             onValue(ref(db, 'registrations'), (snapshot) => {
                 const data = snapshot.val();
                 masterRegistrations = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
-                if (!document.getElementById('reportsSection').classList.contains('hidden')) window.renderReports();
-                if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+                
+                const reportsEl = document.getElementById('reportsSection');
+                if (reportsEl && !reportsEl.classList.contains('hidden')) window.renderReports();
+                
+                const manageEl = document.getElementById('manageDataSection');
+                if (manageEl && !manageEl.classList.contains('hidden')) window.renderManageData();
             });
 
-            onValue(ref(db, 'cancelled_invoices'), (snapshot) => {
+            // FIXED: Read Cancelled Invoices from the secure background folder where we are now saving them
+            onValue(ref(db, 'users/admin_settings/cancelled_invoices'), (snapshot) => {
                 const data = snapshot.val();
                 cancelledInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
-                if (!document.getElementById('manageDataSection').classList.contains('hidden')) window.renderManageData();
+                
+                const manageEl = document.getElementById('manageDataSection');
+                if (manageEl && !manageEl.classList.contains('hidden')) window.renderManageData();
+            });
+
+            // Read from the allowed users path to bypass Firebase Rules
+            onValue(ref(db, 'users/admin_settings/model_groups'), (snapshot) => {
+                modelGroupsDB = snapshot.val() || {};
+                
+                const mgEl = document.getElementById('modelGroupsSection');
+                if (mgEl && !mgEl.classList.contains('hidden')) window.renderModelGroups();
+                
+                const reportsEl = document.getElementById('reportsSection');
+                if (reportsEl && !reportsEl.classList.contains('hidden')) {
+                    if(currentReportTab === 'compare') { window.initCompareFilters(); window.renderCompareReport(); }
+                    if(currentReportTab === 'comptimeline') { window.initTimelineFilters(); window.renderTimelineReport(); }
+                }
+            });
+
+            onValue(ref(db, 'users/admin_settings/timelines'), (snapshot) => {
+                timelinesDB = snapshot.val() || {};
+                
+                const tlEl = document.getElementById('manageTimelinesSection');
+                if (tlEl && !tlEl.classList.contains('hidden')) window.renderManageTimelines();
+                
+                const reportsEl = document.getElementById('reportsSection');
+                if (reportsEl && !reportsEl.classList.contains('hidden') && currentReportTab === 'comptimeline') {
+                    window.initTimelineFilters();
+                }
             });
 
         } catch(e) {
@@ -664,7 +990,30 @@
             document.getElementById('reportEndDate').value = formatDate(lastDay);
             if(document.getElementById('manageDateFilter')) document.getElementById('manageDateFilter').value = "All";
         }
+        
+        function initCompareDates() {
+            const now = new Date();
+            const firstDayThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDayThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+            const formatDate = (date) => {
+                const d = String(date.getDate()).padStart(2, '0');
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                return `${date.getFullYear()}-${m}-${d}`;
+            };
+
+            if(document.getElementById('compR1Start')) {
+                document.getElementById('compR1Start').value = formatDate(firstDayLastMonth);
+                document.getElementById('compR1End').value = formatDate(lastDayLastMonth);
+                document.getElementById('compR2Start').value = formatDate(firstDayThisMonth);
+                document.getElementById('compR2End').value = formatDate(lastDayThisMonth);
+            }
+        }
+        
         initDefaultDates();
+        initCompareDates();
 
         // UI toggles & Navigation
         window.toggleSidebar = function() {
@@ -674,7 +1023,7 @@
         };
 
         window.showAppSection = function(sectionId) {
-            ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection'].forEach(id => {
+            ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'manageTimelinesSection'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
                 
@@ -695,8 +1044,14 @@
             }
             
             if (sectionId === 'usersSection' && currentUser?.role === 'Admin') window.renderUsersTable();
-            if (sectionId === 'reportsSection') window.renderReports();
+            if (sectionId === 'reportsSection') {
+                if(currentReportTab === 'compare') window.renderCompareReport();
+                else if(currentReportTab === 'comptimeline') window.renderTimelineReport();
+                else window.renderReports();
+            }
             if (sectionId === 'manageDataSection' && currentUser?.role === 'Admin') window.renderManageData();
+            if (sectionId === 'modelGroupsSection' && currentUser?.role === 'Admin') window.renderModelGroups();
+            if (sectionId === 'manageTimelinesSection' && currentUser?.role === 'Admin') window.renderManageTimelines();
         };
 
         window.goHome = function() {
@@ -732,6 +1087,8 @@
                 const navAdmin1 = document.getElementById('navBtn_extractorSection');
                 const navAdmin2 = document.getElementById('navBtn_manageDataSection');
                 const navAdmin3 = document.getElementById('navBtn_usersSection');
+                const navAdmin4 = document.getElementById('navBtn_modelGroupsSection'); 
+                const navAdmin5 = document.getElementById('navBtn_manageTimelinesSection'); 
                 const navUser1 = document.getElementById('navBtn_extractorSectionUser');
                 const extractBtnUser = document.getElementById('extractBtnUser');
                 const extractBtn = document.getElementById('extractBtn');
@@ -740,18 +1097,26 @@
                     navAdmin1.classList.remove('hidden'); navAdmin1.classList.add('flex');
                     navAdmin2.classList.remove('hidden'); navAdmin2.classList.add('flex');
                     navAdmin3.classList.remove('hidden'); navAdmin3.classList.add('flex');
+                    if(navAdmin4) { navAdmin4.classList.remove('hidden'); navAdmin4.classList.add('flex'); }
+                    if(navAdmin5) { navAdmin5.classList.remove('hidden'); navAdmin5.classList.add('flex'); }
                     navUser1.classList.add('hidden'); navUser1.classList.remove('flex');
                     
                     extractBtn.disabled = false; extractBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     document.getElementById('tabMerged').classList.remove('hidden');
+                    document.getElementById('tabCompare').classList.remove('hidden');
+                    document.getElementById('tabCompareTimeline').classList.remove('hidden');
                     document.getElementById('reportUserFilterContainer').classList.remove('hidden');
                 } else {
                     navAdmin1.classList.add('hidden'); navAdmin1.classList.remove('flex');
                     navAdmin2.classList.add('hidden'); navAdmin2.classList.remove('flex');
                     navAdmin3.classList.add('hidden'); navAdmin3.classList.remove('flex');
+                    if(navAdmin4) { navAdmin4.classList.add('hidden'); navAdmin4.classList.remove('flex'); }
+                    if(navAdmin5) { navAdmin5.classList.add('hidden'); navAdmin5.classList.remove('flex'); }
                     navUser1.classList.remove('hidden'); navUser1.classList.add('flex');
                     
                     document.getElementById('tabMerged').classList.add('hidden');
+                    document.getElementById('tabCompare').classList.add('hidden');
+                    document.getElementById('tabCompareTimeline').classList.add('hidden');
                     // Hide user filter for regular users
                     document.getElementById('reportUserFilterContainer').classList.add('hidden');
                 }
@@ -823,9 +1188,9 @@
 
             update(ref(db, `users/${currentUser.id}`), { pin: newPin }).then(() => {
                 window.closeChangePinModal();
-                alert("PIN changed! You will now log out.");
-                window.handleLogout();
-            }).catch(e => alert("Failed to update PIN: " + e.message));
+                showToast("PIN changed! Logging out...");
+                setTimeout(() => window.handleLogout(), 1500);
+            }).catch(e => showToast("Failed to update PIN: " + e.message));
         };
 
         window.showConfirmModal = function(title, message, actionCallback) {
@@ -906,105 +1271,171 @@
         document.getElementById('extractBtn').addEventListener('click', () => {
             const rawText = document.getElementById('rawInput').value.trim();
             if (!rawText) return showToast("Paste data first!");
-            const lines = rawText.split(/\r?\n/);
-            const separator = lines[0].includes('\t') ? '\t' : ',';
-            const headers = lines[0].split(separator).map(h => h.trim());
-            
-            const columnMapping = [];
-            TARGET_COLUMNS.forEach(col => {
-                const index = headers.findIndex(h => h.toLowerCase() === col.toLowerCase());
-                if (index !== -1) columnMapping.push({ name: col, index });
-            });
+            const btn = document.getElementById('extractBtn');
+            btn.textContent = "Processing Data...";
+            btn.disabled = true;
 
-            if (columnMapping.length === 0) return showToast("Required headers missing.");
-
-            let updates = {};
-            let count = 0;
-            let cancelledCount = 0;
-            let updatedRegCount = 0;
-            
-            extractedDataGlobal = [columnMapping.map(c => c.name)];
-            
-            const existingFrames = {};
-            masterInvoices.forEach(inv => {
-                const f = inv[sanitizeKey('Frame #')];
-                if (f) existingFrames[f] = inv;
-            });
-            
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const rowData = lines[i].split(separator);
-                let rowObj = {};
-                let rowArr = [];
-                
-                columnMapping.forEach(col => {
-                    let val = rowData[col.index] !== undefined ? rowData[col.index].trim().replace(/^"|"$/g, '') : "";
-                    if (col.name === "Permanent Reg No") {
-                        val = val.replace(/\s+/g, '');
-                        if (val.length < 5) val = "";
-                    }
-                    rowObj[sanitizeKey(col.name)] = val;
-                    rowArr.push(val);
-                });
-                
-                extractedDataGlobal.push(rowArr);
-                
-                const currentFrame = rowObj[sanitizeKey('Frame #')];
-                const currentDate = rowObj[sanitizeKey('Invoice Date')] ? rowObj[sanitizeKey('Invoice Date')].split(' ')[0] : '';
-                const currentInvNo = rowObj[sanitizeKey('Invoice #')];
-                
-                let safeKey = sanitizeKey(currentInvNo || `INV_${Date.now()}_${count}`);
-
-                if (currentFrame && existingFrames[currentFrame]) {
-                    let oldInv = existingFrames[currentFrame];
-                    let oldDate = oldInv[sanitizeKey('Invoice Date')] ? oldInv[sanitizeKey('Invoice Date')].split(' ')[0] : '';
-                    let oldReg = oldInv[sanitizeKey('Permanent Reg No')];
-                    let newReg = rowObj[sanitizeKey('Permanent Reg No')];
+            // Use a slight delay to allow the UI to show the "Processing" state before freezing the thread
+            setTimeout(() => {
+                try {
+                    const lines = rawText.split(/\r?\n/);
+                    const separator = lines[0].includes('\t') ? '\t' : ',';
+                    const headers = lines[0].split(separator).map(h => h.trim());
                     
-                    if (oldDate !== currentDate && oldInv[sanitizeKey('Invoice #')] !== currentInvNo) {
-                        let oldFbKey = oldInv.__fbKey;
-                        let cleanOld = {...oldInv};
-                        delete cleanOld.__fbKey;
+                    const columnMapping = [];
+                    // Using lenient matching for headers to ensure Model Name is caught perfectly
+                    TARGET_COLUMNS.forEach(col => {
+                        const cleanCol = col.toLowerCase().replace(/[^a-z0-9]/g, '');
+                        const index = headers.findIndex(h => h.toLowerCase().replace(/[^a-z0-9]/g, '') === cleanCol);
+                        if (index !== -1) columnMapping.push({ name: col, index });
+                    });
+
+                    if (columnMapping.length === 0) {
+                        btn.textContent = "Extract & Save to Cloud";
+                        btn.disabled = false;
+                        return showToast("Required headers missing.");
+                    }
+
+                    let invoiceUpdates = {};
+                    let cancelledUpdates = {};
+                    let count = 0;
+                    let cancelledCount = 0;
+                    let updatedRegCount = 0;
+                    let updatedDataCount = 0; 
+                    
+                    extractedDataGlobal = [columnMapping.map(c => c.name)];
+                    
+                    const existingFrames = {};
+                    masterInvoices.forEach(inv => {
+                        const f = inv[sanitizeKey('Frame #')];
+                        if (f) existingFrames[f] = inv;
+                    });
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i].trim()) continue;
+                        const rowData = lines[i].split(separator);
+                        let rowObj = {};
+                        let rowArr = [];
                         
-                        updates['/cancelled_invoices/' + oldFbKey] = cleanOld;
-                        updates['/invoices/' + oldFbKey] = null;
-                        cancelledCount++;
-                        updates['/invoices/' + safeKey] = rowObj;
-                        count++;
-                    } 
-                    else {
-                        let oldFbKey = oldInv.__fbKey;
-                        if ((!oldReg || oldReg.trim() === '') && newReg && newReg.trim().length >= 5) {
-                            updates['/invoices/' + oldFbKey + '/' + sanitizeKey('Permanent Reg No')] = newReg;
-                            updatedRegCount++;
+                        columnMapping.forEach(col => {
+                            let val = rowData[col.index] !== undefined ? rowData[col.index].trim().replace(/^"|"$/g, '') : "";
+                            if (col.name === "Permanent Reg No") {
+                                val = val.replace(/\s+/g, '');
+                                if (val.length < 5) val = "";
+                            }
+                            rowObj[sanitizeKey(col.name)] = val;
+                            rowArr.push(val);
+                        });
+                        
+                        extractedDataGlobal.push(rowArr);
+                        
+                        const currentFrame = rowObj[sanitizeKey('Frame #')];
+                        const currentDate = rowObj[sanitizeKey('Invoice Date')] ? rowObj[sanitizeKey('Invoice Date')].split(' ')[0] : '';
+                        const currentInvNo = rowObj[sanitizeKey('Invoice #')];
+                        
+                        let safeKey = sanitizeKey(currentInvNo || `INV_${Date.now()}_${count}`);
+
+                        if (currentFrame && existingFrames[currentFrame]) {
+                            let oldInv = existingFrames[currentFrame];
+                            let oldReg = oldInv[sanitizeKey('Permanent Reg No')];
+                            let newReg = rowObj[sanitizeKey('Permanent Reg No')];
+                            
+                            // If the invoice number changed for the same frame, the old bill is considered cancelled
+                            if (oldInv[sanitizeKey('Invoice #')] !== currentInvNo) {
+                                let oldFbKey = oldInv.__fbKey;
+                                let cleanOld = {...oldInv};
+                                delete cleanOld.__fbKey;
+                                
+                                cancelledUpdates[oldFbKey] = cleanOld; // Save to cancelled logic
+                                invoiceUpdates[oldFbKey] = null; // Delete from active logic
+                                cancelledCount++;
+                                invoiceUpdates[safeKey] = rowObj; // Save new
+                                count++;
+                                
+                                // Update reference in case the same frame appears again in the same upload batch
+                                existingFrames[currentFrame] = {...rowObj, __fbKey: safeKey};
+                            } 
+                            else {
+                                let oldFbKey = oldInv.__fbKey;
+                                let rowUpdated = false;
+
+                                // 1. Check for Registration updates
+                                if ((!oldReg || oldReg.trim() === '') && newReg && newReg.trim().length >= 5) {
+                                    invoiceUpdates[oldFbKey + '/' + sanitizeKey('Permanent Reg No')] = newReg;
+                                    updatedRegCount++;
+                                    rowUpdated = true;
+                                }
+
+                                // 2. Check for ANY other missing fields (like Model Name) and update them
+                                columnMapping.forEach(col => {
+                                    let sKey = sanitizeKey(col.name);
+                                    if (sKey !== sanitizeKey('Permanent Reg No')) {
+                                        let newVal = rowObj[sKey];
+                                        let oldVal = oldInv[sKey];
+                                        
+                                        // Force update if old value is missing, empty, a dash, or marked as unknown
+                                        let isOldMissing = (oldVal === undefined || oldVal === null || String(oldVal).trim() === '' || String(oldVal).trim() === '-' || String(oldVal).toLowerCase().includes('unknown'));
+                                        
+                                        if (isOldMissing && newVal && String(newVal).trim() !== '') {
+                                            invoiceUpdates[oldFbKey + '/' + sKey] = newVal;
+                                            rowUpdated = true;
+                                        }
+                                    }
+                                });
+
+                                if (rowUpdated) updatedDataCount++;
+                            }
+                        } else {
+                            invoiceUpdates[safeKey] = rowObj;
+                            count++;
                         }
                     }
-                } else {
-                    updates['/invoices/' + safeKey] = rowObj;
-                    count++;
-                }
-            }
-            
-            if(Object.keys(updates).length > 0) {
-                const btn = document.getElementById('extractBtn');
-                btn.textContent = "Syncing...";
-                update(ref(db), updates).then(() => {
+                    
+                    if(Object.keys(invoiceUpdates).length > 0 || Object.keys(cancelledUpdates).length > 0) {
+                        btn.textContent = "Syncing to Cloud...";
+                        
+                        // We bypass the root update permission error by splitting the payload and specifically targeting the correct folders 
+                        const promises = [];
+                        if (Object.keys(invoiceUpdates).length > 0) {
+                            promises.push(update(ref(db, 'invoices'), invoiceUpdates));
+                        }
+                        if (Object.keys(cancelledUpdates).length > 0) {
+                            promises.push(update(ref(db, 'users/admin_settings/cancelled_invoices'), cancelledUpdates));
+                        }
+
+                        Promise.all(promises).then(() => {
+                            btn.textContent = "Extract & Save to Cloud";
+                            btn.disabled = false;
+                            document.getElementById('rawInput').value = '';
+                            
+                            let toastMsg = `Sync Complete! `;
+                            if (count > 0) toastMsg += `${count} new added. `;
+                            if (updatedDataCount > 0) toastMsg += `${updatedDataCount} old records updated. `;
+                            if (updatedRegCount > 0) toastMsg += `${updatedRegCount} Reg auto-filled. `;
+                            if (cancelledCount > 0) toastMsg += `${cancelledCount} moved to Cancelled.`;
+                            
+                            showToast(toastMsg);
+                            renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
+                            document.getElementById('downloadBtn').disabled = false; document.getElementById('copyBtn').disabled = false;
+                            document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> new rows, <span class="font-bold text-indigo-600">${updatedDataCount}</span> rows updated.`;
+                        }).catch(err => {
+                            console.error(err);
+                            showToast("Sync Error: Firebase rules blocked this action or network failed.");
+                            btn.textContent = "Extract & Save to Cloud";
+                            btn.disabled = false;
+                        });
+                    } else {
+                        btn.textContent = "Extract & Save to Cloud";
+                        btn.disabled = false;
+                        showToast("No new invoices or missing updates found in this data.");
+                    }
+                } catch(e) {
+                    console.error(e);
+                    showToast("Error processing data.");
                     btn.textContent = "Extract & Save to Cloud";
-                    document.getElementById('rawInput').value = '';
-                    
-                    let toastMsg = `Sync Complete! `;
-                    if (count > 0) toastMsg += `${count} new records added. `;
-                    if (updatedRegCount > 0) toastMsg += `${updatedRegCount} missing Reg Numbers auto-filled. `;
-                    if (cancelledCount > 0) toastMsg += `${cancelledCount} duplicates moved to Cancelled.`;
-                    
-                    showToast(toastMsg);
-                    renderPreviewTable('previewTable', 'tableHeadRow', 'tableBody', 'emptyState', extractedDataGlobal);
-                    document.getElementById('downloadBtn').disabled = false; document.getElementById('copyBtn').disabled = false;
-                    document.getElementById('statsText').innerHTML = `<span class="font-bold">${count}</span> new rows, <span class="font-bold text-indigo-600">${updatedRegCount}</span> Reg updates.`;
-                });
-            } else {
-                showToast("No new invoices or updates found in this data.");
-            }
+                    btn.disabled = false;
+                }
+            }, 50);
         });
 
         // USER EXTRACTION (Registrations)
@@ -1017,7 +1448,7 @@
             const regNoIndex = headers.findIndex(h => h.toLowerCase() === 'registration no');
             if (regNoIndex === -1) return showToast("Missing 'Registration No' column");
 
-            let updates = {}; let count = 0;
+            let regUpdates = {}; let count = 0;
             const finalRegHeaders = [...headers, "Processed By", "Upload Date"]; // Adding Upload Date
             extractedRegDataGlobal = [finalRegHeaders];
             
@@ -1043,12 +1474,13 @@
                     finalRegHeaders.forEach((h, idx) => rowObj[sanitizeKey(h)] = cleanRow[idx]);
                     const chasisIndex = finalRegHeaders.findIndex(h => h.toLowerCase() === 'chasis no');
                     let safeKey = (chasisIndex !== -1 && cleanRow[chasisIndex]) ? sanitizeKey(cleanRow[chasisIndex]) : `REG_${Date.now()}_${count}`;
-                    updates['/registrations/' + safeKey] = rowObj; count++;
+                    regUpdates[safeKey] = rowObj; count++;
                 }
             }
             if(count > 0) {
                 const btn = document.getElementById('extractBtnUser'); btn.textContent = "Syncing...";
-                update(ref(db), updates).then(() => {
+                // Target folder specifically
+                update(ref(db, 'registrations'), regUpdates).then(() => {
                     btn.textContent = "Extract & Save to Cloud"; document.getElementById('rawInputUser').value = '';
                     showToast(`${count} valid registrations saved`);
                     renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
@@ -1159,7 +1591,7 @@
             if (currentEditType === 'users') {
                 const newName = document.getElementById('editUserName').value.trim();
                 if (newName.toLowerCase() !== currentEditRecord.name.toLowerCase() && usersDB.some(u => u.name.toLowerCase() === newName.toLowerCase())) {
-                    alert("A user with this name already exists!");
+                    showToast("A user with this name already exists!");
                     return;
                 }
                 
@@ -1179,12 +1611,14 @@
             }
 
             update(ref(db, dbPath), updatedData).then(() => {
-                showToast("Updated successfully!"); window.closeEditModal();
+                window.closeEditModal();
                 if(currentEditType === 'users' && currentEditRecord.id === currentUser.id && updatedData.name !== currentUser.name) {
-                     alert("Your username was changed. Please log in again.");
-                     window.handleLogout();
+                     showToast("Username changed. Logging out...");
+                     setTimeout(() => window.handleLogout(), 1500);
+                } else {
+                     showToast("Updated successfully!");
                 }
-            }).catch(e => alert("Update failed: " + e.message));
+            }).catch(e => showToast("Update failed: " + e.message));
         };
 
         window.handleAddUser = function() {
@@ -1233,7 +1667,7 @@
             currentReportTab = tab;
             
             // Tab visual state
-            ['tabSummary', 'tabMerged', 'tabRegReport'].forEach(id => {
+            ['tabSummary', 'tabMerged', 'tabRegReport', 'tabCompare', 'tabCompareTimeline'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
                     el.classList.remove('text-indigo-600', 'border-indigo-600');
@@ -1241,7 +1675,7 @@
                 }
             });
 
-            const activeTabId = 'tab' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : 'RegReport'));
+            const activeTabId = 'tab' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : (tab === 'compare' ? 'Compare' : (tab === 'comptimeline' ? 'CompareTimeline' : 'RegReport'))));
             const activeTab = document.getElementById(activeTabId);
             if (activeTab) {
                 activeTab.classList.add('text-indigo-600', 'border-indigo-600');
@@ -1249,16 +1683,26 @@
             }
 
             // View toggles
-            ['reportSummaryView', 'reportMergedView', 'reportRegView'].forEach(id => {
+            ['reportSummaryView', 'reportMergedView', 'reportRegView', 'reportCompareView', 'reportCompareTimelineView'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
             });
 
-            const activeViewId = 'report' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : 'Reg')) + 'View';
+            const activeViewId = 'report' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : (tab === 'compare' ? 'Compare' : (tab === 'comptimeline' ? 'CompareTimeline' : 'Reg')))) + 'View';
             const activeView = document.getElementById(activeViewId);
             if(activeView) {
                 activeView.classList.remove('hidden');
-                if(tab === 'merged') activeView.classList.add('flex');
+                if(tab === 'merged' || tab === 'compare' || tab === 'comptimeline') activeView.classList.add('flex');
+            }
+
+            // Toggle shared filters visibility
+            const sharedFilters = document.getElementById('sharedReportFilters');
+            if(tab === 'compare' || tab === 'comptimeline') {
+                sharedFilters.classList.add('hidden');
+                sharedFilters.classList.remove('flex');
+            } else {
+                sharedFilters.classList.remove('hidden');
+                sharedFilters.classList.add('flex');
             }
 
             // Filter label context update for Admin
@@ -1270,7 +1714,16 @@
             }
 
             currentMergedPage = 1;
-            window.renderReports();
+            
+            if (tab === 'compare') {
+                window.initCompareFilters();
+                window.renderCompareReport();
+            } else if (tab === 'comptimeline') {
+                window.initTimelineFilters();
+                window.renderTimelineReport();
+            } else {
+                window.renderReports();
+            }
         };
 
         window.handleReportFilterChange = function() {
@@ -1296,6 +1749,609 @@
             }
             window.renderReports();
         };
+
+        window.initCompareFilters = function() {
+            const dealerSelect = document.getElementById('compDealerFilter');
+            const modelSelect = document.getElementById('compModelFilter');
+            
+            const currDealer = dealerSelect.value;
+            const currModel = modelSelect.value;
+            
+            const dealers = new Set();
+            const models = new Set();
+            
+            masterInvoices.forEach(inv => {
+                const d = inv[sanitizeKey('Requesting Dealer')];
+                let m = inv[sanitizeKey('Model Name')];
+                if (m) {
+                    // Check if mapped in groups
+                    const mKey = sanitizeKey(m);
+                    if (modelGroupsDB[mKey]) m = modelGroupsDB[mKey].group;
+                    models.add(m);
+                }
+                if(d) dealers.add(d);
+            });
+            
+            dealerSelect.innerHTML = '<option value="All">All Dealers</option>';
+            Array.from(dealers).sort().forEach(d => dealerSelect.innerHTML += `<option value="${d}">${d}</option>`);
+            
+            modelSelect.innerHTML = '<option value="All">All Models</option>';
+            Array.from(models).sort().forEach(m => modelSelect.innerHTML += `<option value="${m}">${m}</option>`);
+            
+            if(dealers.has(currDealer)) dealerSelect.value = currDealer;
+            if(models.has(currModel)) modelSelect.value = currModel;
+        };
+
+        window.renderCompareReport = function() {
+            const r1StartVal = document.getElementById('compR1Start').value;
+            const r1EndVal = document.getElementById('compR1End').value;
+            const r2StartVal = document.getElementById('compR2Start').value;
+            const r2EndVal = document.getElementById('compR2End').value;
+            const dealerFilter = document.getElementById('compDealerFilter').value;
+            const modelFilter = document.getElementById('compModelFilter').value;
+            const viewBy = document.getElementById('compViewBy').value; // DealerSummary, ModelSummary, Pivot
+
+            const tbody = document.getElementById('compareTableBody');
+            const headLabel = document.getElementById('compTableGroupHead');
+
+            if(!r1StartVal || !r1EndVal || !r2StartVal || !r2EndVal) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Please select all date ranges.</td></tr>';
+                return;
+            }
+
+            if(viewBy === 'DealerSummary') headLabel.textContent = 'Dealer Name';
+            else if(viewBy === 'ModelSummary') headLabel.textContent = 'Model Name';
+            else headLabel.textContent = 'Dealer & Models (Pivot)';
+
+            tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Calculating...</td></tr>';
+
+            const r1Start = new Date(r1StartVal);
+            const r1End = new Date(r1EndVal);
+            const r2Start = new Date(r2StartVal);
+            const r2End = new Date(r2EndVal);
+
+            let pivotData = {};
+            let gtR1 = 0, gtR2 = 0;
+
+            // 1. Filter Database
+            let filteredInvoices = masterInvoices.filter(inv => {
+                let d = inv[sanitizeKey('Requesting Dealer')] || '';
+                let rawM = inv[sanitizeKey('Model Name')] || '';
+                let m = rawM;
+                if (rawM) {
+                    const mKey = sanitizeKey(rawM);
+                    if (modelGroupsDB[mKey]) m = modelGroupsDB[mKey].group;
+                }
+                
+                if (dealerFilter !== 'All' && d !== dealerFilter) return false;
+                if (modelFilter !== 'All' && m !== modelFilter) return false;
+                return true;
+            });
+
+            // 2. Aggregate Data
+            filteredInvoices.forEach(inv => {
+                let dateVal = inv[sanitizeKey('Invoice Date')] ? inv[sanitizeKey('Invoice Date')].split(' ')[0] : null;
+                let parsedDate = parseStandardDate(dateVal);
+                let dealer = inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer';
+                
+                let rawModel = inv[sanitizeKey('Model Name')] || 'Unknown Model';
+                let mappedModel = rawModel;
+                if (rawModel !== 'Unknown Model') {
+                    const mKey = sanitizeKey(rawModel);
+                    if (modelGroupsDB[mKey]) mappedModel = modelGroupsDB[mKey].group;
+                }
+                let model = mappedModel;
+
+                if (parsedDate && !isNaN(parsedDate)) {
+                    let inR1 = (parsedDate >= r1Start && parsedDate <= r1End);
+                    let inR2 = (parsedDate >= r2Start && parsedDate <= r2End);
+
+                    if (inR1 || inR2) {
+                        if (viewBy === 'DealerSummary') {
+                            if (!pivotData[dealer]) pivotData[dealer] = { r1: 0, r2: 0 };
+                            if (inR1) pivotData[dealer].r1++;
+                            if (inR2) pivotData[dealer].r2++;
+                        } else if (viewBy === 'ModelSummary') {
+                            if (!pivotData[model]) pivotData[model] = { r1: 0, r2: 0 };
+                            if (inR1) pivotData[model].r1++;
+                            if (inR2) pivotData[model].r2++;
+                        } else {
+                            // Pivot Logic (Dealer -> Model)
+                            if (!pivotData[dealer]) pivotData[dealer] = { r1: 0, r2: 0, models: {} };
+                            if (!pivotData[dealer].models[model]) pivotData[dealer].models[model] = { r1: 0, r2: 0 };
+                            
+                            if (inR1) { pivotData[dealer].r1++; pivotData[dealer].models[model].r1++; }
+                            if (inR2) { pivotData[dealer].r2++; pivotData[dealer].models[model].r2++; }
+                        }
+                    }
+                }
+            });
+
+            tbody.innerHTML = '';
+            
+            if (Object.keys(pivotData).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No data found in selected ranges/filters.</td></tr>';
+                return;
+            }
+
+            // HTML Row Generator
+            const generateRow = (name, c1, c2, isSubRow = false) => {
+                let variance = c2 - c1;
+                let growth = c1 === 0 ? (c2 > 0 ? Infinity : 0) : (variance / c1) * 100;
+                
+                let varClass = variance > 0 ? 'text-emerald-600' : (variance < 0 ? 'text-red-600' : 'text-slate-500');
+                let varPrefix = variance > 0 ? '+' : '';
+                
+                let growthStr = growth === Infinity ? 'N/A' : `${growth > 0 ? '+' : ''}${growth.toFixed(1)}%`;
+                let growthClass = growth > 0 ? 'text-emerald-600 bg-emerald-50' : (growth < 0 ? 'text-red-600 bg-red-50' : 'text-slate-500');
+                
+                let nameClass = isSubRow ? 'pl-8 text-slate-600 text-xs font-medium' : 'font-semibold text-slate-800';
+                let bgClass = isSubRow ? 'hover:bg-slate-50' : 'bg-slate-50 hover:bg-slate-100 border-t border-slate-200';
+                let arrow = isSubRow ? '<span class="text-slate-300 mr-2">↳</span>' : '';
+
+                return `
+                    <tr class="${bgClass} transition-colors">
+                        <td class="px-4 py-3 text-sm ${nameClass}">${arrow}${name}</td>
+                        <td class="px-4 py-3 text-sm text-right">${c1}</td>
+                        <td class="px-4 py-3 text-sm text-right font-semibold">${c2}</td>
+                        <td class="px-4 py-3 text-sm text-right font-bold ${varClass}">${varPrefix}${variance}</td>
+                        <td class="px-4 py-3 text-sm text-right ${growthClass} font-medium">${growthStr}</td>
+                    </tr>
+                `;
+            };
+
+            // 3. Render Data
+            if (viewBy === 'DealerSummary' || viewBy === 'ModelSummary') {
+                Object.keys(pivotData).sort().forEach(key => {
+                    let d = pivotData[key];
+                    gtR1 += d.r1; gtR2 += d.r2;
+                    tbody.innerHTML += generateRow(key, d.r1, d.r2, false);
+                });
+            } else {
+                // Render Pivot (Dealer -> Models)
+                Object.keys(pivotData).sort().forEach(dealer => {
+                    let d = pivotData[dealer];
+                    gtR1 += d.r1; gtR2 += d.r2;
+                    tbody.innerHTML += generateRow(dealer, d.r1, d.r2, false); // Main Dealer Row
+                    
+                    Object.keys(d.models).sort().forEach(model => {
+                        let m = d.models[model];
+                        tbody.innerHTML += generateRow(model, m.r1, m.r2, true); // Sub Model Row
+                    });
+                });
+            }
+
+            // Grand Totals
+            let gtVar = gtR2 - gtR1;
+            let gtGrowth = gtR1 === 0 ? (gtR2 > 0 ? Infinity : 0) : (gtVar / gtR1) * 100;
+            let gtVarClass = gtVar > 0 ? 'text-emerald-600' : (gtVar < 0 ? 'text-red-600' : 'text-slate-700');
+            let gtGrowthStr = gtGrowth === Infinity ? 'N/A' : `${gtGrowth > 0 ? '+' : ''}${gtGrowth.toFixed(1)}%`;
+            let gtGrowthClass = gtGrowth > 0 ? 'text-emerald-700 bg-emerald-100' : (gtGrowth < 0 ? 'text-red-700 bg-red-100' : 'text-slate-700 bg-slate-200');
+
+            tbody.innerHTML += `
+                <tr class="bg-slate-200 font-bold border-t-2 border-slate-400">
+                    <td class="px-4 py-4 uppercase text-slate-800">GRAND TOTAL</td>
+                    <td class="px-4 py-4 text-right">${gtR1}</td>
+                    <td class="px-4 py-4 text-right">${gtR2}</td>
+                    <td class="px-4 py-4 text-right ${gtVarClass}">${gtVar > 0 ? '+' : ''}${gtVar}</td>
+                    <td class="px-4 py-4 text-right ${gtGrowthClass} rounded-br-lg">${gtGrowthStr}</td>
+                </tr>
+            `;
+        }
+
+        window.exportCompareReport = function() {
+            const table = document.querySelector('#reportCompareView table');
+            if (!table) return;
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll('td, th');
+                if (cols.length === 1 && cols[0].colSpan > 1) continue; // Skip loading/empty state rows
+                for (let j = 0; j < cols.length; j++) 
+                    row.push(`"${cols[j].innerText.replace(/"/g, '""')}"`);
+                csv.push(row.join(','));
+            }
+            if(csv.length <= 1) return showToast("No data to export");
+            const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'compare_report.csv'; link.click();
+        }
+
+        // ======================= TIMELINE MANAGEMENT & REPORT =======================
+
+        window.renderManageTimelines = function() {
+            if (currentUser?.role !== 'Admin') return;
+            const tbody = document.getElementById('timelinesTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            
+            if (Object.keys(timelinesDB).length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-sm text-slate-500">No custom timelines found. Create one to get started!</td></tr>`;
+                return;
+            }
+
+            Object.entries(timelinesDB).sort((a,b) => a[1].name.localeCompare(b[1].name)).forEach(([safeKey, data]) => {
+                const tr = document.createElement('tr'); 
+                tr.className = "hover:bg-slate-50 transition-colors";
+                
+                let r1Year = data.d1_start.split('-')[0];
+                let r2Year = data.d2_start.split('-')[0];
+                let r1Str = `<span class="text-[10px] font-bold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded mr-1">${r1Year}</span> <span class="text-xs text-slate-500 border border-slate-200 bg-white px-2 py-0.5 rounded mr-1">R1</span> ${data.d1_start} to ${data.d1_end}`;
+                let r2Str = `<span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded mr-1">${r2Year}</span> <span class="text-xs text-indigo-500 border border-indigo-200 bg-indigo-50 px-2 py-0.5 rounded mr-1">R2</span> ${data.d2_start} to ${data.d2_end}`;
+
+                let actionsHtml = `
+                    <div class="flex gap-3 justify-end items-center">
+                        <button onclick="window.openTimelineModal('${safeKey}')" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors">Edit</button>
+                        <button onclick="window.deleteTimeline('${safeKey}')" class="text-red-500 hover:text-red-700 text-sm font-medium transition-colors">Delete</button>
+                    </div>`;
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-semibold text-slate-800 border-b border-slate-100">${data.name}</td>
+                    <td class="px-4 py-3 text-sm font-medium text-slate-700 border-b border-slate-100">${r1Str}</td>
+                    <td class="px-4 py-3 text-sm font-medium text-slate-700 border-b border-slate-100">${r2Str}</td>
+                    <td class="px-4 py-3 border-b border-slate-100 text-right">${actionsHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.openTimelineModal = function(tlId = null) {
+            const modal = document.getElementById('timelineModal');
+            const content = document.getElementById('timelineModalContent');
+            
+            if (tlId && timelinesDB[tlId]) {
+                currentEditTimelineId = tlId;
+                const t = timelinesDB[tlId];
+                document.getElementById('tlName').value = t.name;
+                document.getElementById('tlD1Start').value = t.d1_start;
+                document.getElementById('tlD1End').value = t.d1_end;
+                document.getElementById('tlD2Start').value = t.d2_start;
+                document.getElementById('tlD2End').value = t.d2_end;
+                document.getElementById('timelineModalTitle').innerHTML = `Edit Timeline <span class="text-xs ml-2 font-medium bg-slate-100 text-slate-500 px-2 py-1 rounded">ID: ${tlId}</span>`;
+            } else {
+                currentEditTimelineId = null;
+                document.getElementById('tlForm').reset();
+                document.getElementById('timelineModalTitle').innerHTML = `Create Timeline`;
+            }
+
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+
+        window.closeTimelineModal = function() {
+            const modal = document.getElementById('timelineModal');
+            const content = document.getElementById('timelineModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditTimelineId = null; }, 200);
+        };
+
+        window.saveTimeline = function() {
+            const name = document.getElementById('tlName').value.trim();
+            const d1_start = document.getElementById('tlD1Start').value;
+            const d1_end = document.getElementById('tlD1End').value;
+            const d2_start = document.getElementById('tlD2Start').value;
+            const d2_end = document.getElementById('tlD2End').value;
+            
+            if (!name || !d1_start || !d1_end || !d2_start || !d2_end) {
+                return showToast("Please fill all required dates and name.");
+            }
+            
+            if(d1_start > d1_end || d2_start > d2_end) {
+                return showToast("Start date must be before End date in each range.");
+            }
+
+            const safeKey = currentEditTimelineId || sanitizeKey(name) + '_' + Date.now();
+            
+            set(ref(db, `users/admin_settings/timelines/${safeKey}`), {
+                name, d1_start, d1_end, d2_start, d2_end
+            }).then(() => {
+                showToast("Timeline saved successfully!");
+                window.closeTimelineModal();
+                if(currentReportTab === 'comptimeline') window.initTimelineFilters();
+            }).catch(e => showToast("Failed to save: " + e.message));
+        };
+
+        window.deleteTimeline = function(safeKey) {
+            window.showConfirmModal("Delete Timeline", "Are you sure you want to delete this custom event? It will be removed from reports.", () => {
+                remove(ref(db, `users/admin_settings/timelines/${safeKey}`))
+                    .then(() => showToast("Timeline deleted."))
+                    .catch(e => showToast("Delete failed: " + e.message));
+            });
+        };
+
+        // --- TIMELINE REPORT LOGIC ---
+        window.initTimelineFilters = function() {
+            const tlSelect = document.getElementById('compTlSelect');
+            const dealerSelect = document.getElementById('compTlDealer');
+            const modelSelect = document.getElementById('compTlModel');
+            
+            const currTl = tlSelect.value;
+            const currDealer = dealerSelect.value;
+            const currModel = modelSelect.value;
+            
+            tlSelect.innerHTML = '<option value="" disabled selected>Select Timeline Event...</option>';
+            Object.entries(timelinesDB).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([k, t]) => {
+                tlSelect.innerHTML += `<option value="${k}">${t.name} (R1: ${t.d1_start.split('-')[0]}, R2: ${t.d2_start.split('-')[0]})</option>`;
+            });
+            if(timelinesDB[currTl]) tlSelect.value = currTl;
+            
+            // Trigger selection update to populate date overrides correctly
+            window.handleTimelineSelection();
+
+            const dealers = new Set();
+            const models = new Set();
+            
+            masterInvoices.forEach(inv => {
+                const d = inv[sanitizeKey('Requesting Dealer')];
+                let m = inv[sanitizeKey('Model Name')];
+                if (m) {
+                    const mKey = sanitizeKey(m);
+                    if (modelGroupsDB[mKey]) m = modelGroupsDB[mKey].group;
+                    models.add(m);
+                }
+                if(d) dealers.add(d);
+            });
+            
+            dealerSelect.innerHTML = '<option value="All">All Dealers</option>';
+            Array.from(dealers).sort().forEach(d => dealerSelect.innerHTML += `<option value="${d}">${d}</option>`);
+            
+            modelSelect.innerHTML = '<option value="All">All Models</option>';
+            Array.from(models).sort().forEach(m => modelSelect.innerHTML += `<option value="${m}">${m}</option>`);
+            
+            if(dealers.has(currDealer)) dealerSelect.value = currDealer;
+            if(models.has(currModel)) modelSelect.value = currModel;
+        };
+
+        window.toggleCustomTimelinePivot = function() {
+            const viewBy = document.getElementById('compTlViewBy').value;
+            const customContainer = document.getElementById('customPivotContainer');
+            if (viewBy === 'Custom') {
+                customContainer.classList.remove('hidden');
+                customContainer.classList.add('flex');
+            } else {
+                customContainer.classList.add('hidden');
+                customContainer.classList.remove('flex');
+            }
+        };
+
+        window.handleTimelineSelection = function() {
+            const tlId = document.getElementById('compTlSelect').value;
+            const overridesDiv = document.getElementById('tlDateOverrides');
+            if(tlId && timelinesDB[tlId]) {
+                const tl = timelinesDB[tlId];
+                document.getElementById('orD1Start').value = tl.d1_start;
+                document.getElementById('orD1End').value = tl.d1_end;
+                document.getElementById('orD2Start').value = tl.d2_start;
+                document.getElementById('orD2End').value = tl.d2_end;
+                overridesDiv.classList.remove('hidden');
+                overridesDiv.classList.add('flex');
+            } else {
+                if(overridesDiv) {
+                    overridesDiv.classList.add('hidden');
+                    overridesDiv.classList.remove('flex');
+                }
+            }
+        };
+
+        window.renderTimelineReport = function() {
+            const tlId = document.getElementById('compTlSelect').value;
+            const dealerFilter = document.getElementById('compTlDealer').value;
+            const modelFilter = document.getElementById('compTlModel').value;
+            const viewBy = document.getElementById('compTlViewBy').value; 
+
+            const tbody = document.getElementById('compareTimelineTableBody');
+            const headLabel = document.getElementById('compTlTableGroupHead');
+
+            if(!tlId || !timelinesDB[tlId]) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Please select a valid Timeline Event from the dropdown above.</td></tr>';
+                return;
+            }
+
+            // Determine Pivot Hierarchy dynamically
+            let hierarchy = [];
+            if (viewBy === 'DaySummary') hierarchy = ['day'];
+            else if (viewBy === 'DealerSummary') hierarchy = ['dealer'];
+            else if (viewBy === 'DealerModel') hierarchy = ['dealer', 'model'];
+            else if (viewBy === 'Custom') {
+                const l1 = document.getElementById('pivotL1').value;
+                const l2 = document.getElementById('pivotL2').value;
+                const l3 = document.getElementById('pivotL3').value;
+                if (l1 !== 'none') hierarchy.push(l1);
+                if (l2 !== 'none' && !hierarchy.includes(l2)) hierarchy.push(l2);
+                if (l3 !== 'none' && !hierarchy.includes(l3)) hierarchy.push(l3);
+            }
+
+            if (hierarchy.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-red-500">Please select at least Level 1 in Custom Pivot.</td></tr>';
+                return;
+            }
+
+            headLabel.textContent = hierarchy.map(h => h.charAt(0).toUpperCase() + h.slice(1)).join(' ➔ ');
+
+            tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Processing Timeline data...</td></tr>';
+
+            // Read from overrides rather than directly from DB
+            const d1s = parseStandardDate(document.getElementById('orD1Start').value); 
+            const d1e = parseStandardDate(document.getElementById('orD1End').value);
+            const d2s = parseStandardDate(document.getElementById('orD2Start').value); 
+            const d2e = parseStandardDate(document.getElementById('orD2End').value);
+            
+            if(!d1s || !d1e || !d2s || !d2e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-red-500">Error: Timeline has invalid dates. Please fix in overrides or Manage Timeline.</td></tr>';
+                return;
+            }
+
+            let root = { r1: 0, r2: 0, children: {} };
+
+            const getDayDiff = (dateCheck, dateStart) => {
+                return Math.floor((dateCheck - dateStart) / (1000 * 60 * 60 * 24)) + 1; 
+            };
+
+            // 1. Filter Database
+            let filteredInvoices = masterInvoices.filter(inv => {
+                let d = inv[sanitizeKey('Requesting Dealer')] || '';
+                let rawM = inv[sanitizeKey('Model Name')] || '';
+                let m = rawM;
+                if (rawM) {
+                    const mKey = sanitizeKey(rawM);
+                    if (modelGroupsDB[mKey]) m = modelGroupsDB[mKey].group;
+                }
+                if (dealerFilter !== 'All' && d !== dealerFilter) return false;
+                if (modelFilter !== 'All' && m !== modelFilter) return false;
+                return true;
+            });
+
+            // 2. Aggregate Data Automatically based on Custom Hierarchy
+            filteredInvoices.forEach(inv => {
+                let parsedDate = parseStandardDate(inv[sanitizeKey('Invoice Date')]);
+                if (!parsedDate || isNaN(parsedDate)) return;
+
+                let inR1 = parsedDate >= d1s && parsedDate <= d1e;
+                let inR2 = parsedDate >= d2s && parsedDate <= d2e;
+
+                if (!inR1 && !inR2) return;
+
+                let dayNum = inR1 ? getDayDiff(parsedDate, d1s) : getDayDiff(parsedDate, d2s);
+                let dealer = inv[sanitizeKey('Requesting Dealer')] || 'Unknown Dealer';
+                let rawModel = inv[sanitizeKey('Model Name')] || 'Unknown Model';
+                let model = rawModel;
+                if (rawModel !== 'Unknown Model') {
+                    const mKey = sanitizeKey(rawModel);
+                    if (modelGroupsDB[mKey]) model = modelGroupsDB[mKey].group;
+                }
+
+                let recordData = { day: dayNum, dealer: dealer, model: model };
+                
+                let isR1 = inR1 ? 1 : 0;
+                let isR2 = inR2 ? 1 : 0;
+                
+                root.r1 += isR1; root.r2 += isR2;
+                
+                let curr = root;
+                hierarchy.forEach(hKey => {
+                    let val = recordData[hKey];
+                    if (!curr.children[val]) {
+                        curr.children[val] = { r1: 0, r2: 0, children: {}, keyType: hKey };
+                    }
+                    curr.children[val].r1 += isR1;
+                    curr.children[val].r2 += isR2;
+                    curr = curr.children[val];
+                });
+            });
+
+            tbody.innerHTML = '';
+            
+            if (root.r1 === 0 && root.r2 === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No data found in timeline ranges for selected filters.</td></tr>';
+                return;
+            }
+
+            // HTML Row Generator with Indentation logic
+            const generateTlRow = (name, c1, c2, indentLevel, isDay = false) => {
+                let variance = c2 - c1;
+                let growth = c1 === 0 ? (c2 > 0 ? Infinity : 0) : (variance / c1) * 100;
+                
+                let varClass = variance > 0 ? 'text-emerald-600' : (variance < 0 ? 'text-red-600' : 'text-slate-500');
+                let varPrefix = variance > 0 ? '+' : '';
+                
+                let growthStr = growth === Infinity ? 'N/A' : `${growth > 0 ? '+' : ''}${growth.toFixed(1)}%`;
+                let growthClass = growth > 0 ? 'text-emerald-600 bg-emerald-50' : (growth < 0 ? 'text-red-600 bg-red-50' : 'text-slate-500');
+                
+                let padding = indentLevel === 0 ? 'px-4' : (indentLevel === 1 ? 'pl-10 pr-4' : 'pl-16 pr-4');
+                let nameClass = isDay ? 'text-slate-500 text-xs font-semibold uppercase tracking-wider' : (indentLevel === 0 ? 'font-bold text-slate-800' : 'font-medium text-slate-700');
+                let bgClass = isDay ? 'hover:bg-slate-100 bg-slate-50/50' : (indentLevel === 0 ? 'bg-slate-100/70 hover:bg-slate-200 border-t border-slate-300 shadow-sm' : 'hover:bg-slate-100 border-t border-slate-100');
+                
+                let arrow = indentLevel > 0 && !isDay ? '<span class="text-slate-400 mr-2 opacity-50">↳</span>' : (isDay && indentLevel > 0 ? '<span class="text-slate-300 mr-2">▪</span>' : '');
+
+                return `
+                    <tr class="${bgClass} transition-colors">
+                        <td class="${padding} py-2.5 text-sm ${nameClass}">${arrow}${name}</td>
+                        <td class="px-4 py-2.5 text-sm text-right font-medium">${c1}</td>
+                        <td class="px-4 py-2.5 text-sm text-right font-bold text-slate-800">${c2}</td>
+                        <td class="px-4 py-2.5 text-sm text-right font-bold ${varClass}">${varPrefix}${variance}</td>
+                        <td class="px-4 py-2.5 text-sm text-right ${growthClass} font-semibold">${growthStr}</td>
+                    </tr>
+                `;
+            };
+
+            const getDayLabel = (day) => {
+                const addD = (dateStart, dNum) => {
+                    let nd = new Date(dateStart);
+                    nd.setDate(nd.getDate() + (parseInt(dNum) - 1));
+                    return nd.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                };
+                return `Day ${day} <span class="text-[10px] text-slate-400 font-normal normal-case tracking-normal ml-2">(${addD(d1s, day)} vs ${addD(d2s, day)})</span>`;
+            };
+
+            // Recursive Tree Renderer
+            function renderPivotNode(node, name, indentLevel, isDay) {
+                let html = generateTlRow(name, node.r1, node.r2, indentLevel, isDay);
+                if (node.children && Object.keys(node.children).length > 0) {
+                    let keys = Object.keys(node.children);
+                    let firstChildType = node.children[keys[0]].keyType;
+                    
+                    if (firstChildType === 'day') {
+                        keys.sort((a,b) => parseInt(a) - parseInt(b));
+                    } else {
+                        keys.sort();
+                    }
+
+                    keys.forEach(k => {
+                        let childNode = node.children[k];
+                        let childName = childNode.keyType === 'day' ? getDayLabel(k) : k;
+                        html += renderPivotNode(childNode, childName, indentLevel + 1, childNode.keyType === 'day');
+                    });
+                }
+                return html;
+            }
+
+            // 3. Render Recursively from Top Level
+            let topKeys = Object.keys(root.children);
+            if (topKeys.length > 0 && root.children[topKeys[0]].keyType === 'day') {
+                topKeys.sort((a,b) => parseInt(a) - parseInt(b));
+            } else {
+                topKeys.sort();
+            }
+
+            topKeys.forEach(k => {
+                let childNode = root.children[k];
+                let childName = childNode.keyType === 'day' ? getDayLabel(k) : k;
+                tbody.innerHTML += renderPivotNode(childNode, childName, 0, childNode.keyType === 'day');
+            });
+
+            // Grand Totals
+            let gtR1 = root.r1; let gtR2 = root.r2;
+            let gtVar = gtR2 - gtR1;
+            let gtGrowth = gtR1 === 0 ? (gtR2 > 0 ? Infinity : 0) : (gtVar / gtR1) * 100;
+            let gtVarClass = gtVar > 0 ? 'text-emerald-600' : (gtVar < 0 ? 'text-red-600' : 'text-slate-700');
+            let gtGrowthStr = gtGrowth === Infinity ? 'N/A' : `${gtGrowth > 0 ? '+' : ''}${gtGrowth.toFixed(1)}%`;
+            let gtGrowthClass = gtGrowth > 0 ? 'text-emerald-700 bg-emerald-100' : (gtGrowth < 0 ? 'text-red-700 bg-red-100' : 'text-slate-700 bg-slate-200');
+
+            tbody.innerHTML += `
+                <tr class="bg-slate-300 font-extrabold border-t-4 border-slate-400">
+                    <td class="px-4 py-4 uppercase text-slate-900 tracking-wide">GRAND TOTAL OVERALL</td>
+                    <td class="px-4 py-4 text-right text-base">${gtR1}</td>
+                    <td class="px-4 py-4 text-right text-base">${gtR2}</td>
+                    <td class="px-4 py-4 text-right text-base ${gtVarClass}">${gtVar > 0 ? '+' : ''}${gtVar}</td>
+                    <td class="px-4 py-4 text-right text-base ${gtGrowthClass} rounded-br-lg">${gtGrowthStr}</td>
+                </tr>
+            `;
+        }
+
+        window.exportTimelineReport = function() {
+            const table = document.querySelector('#reportCompareTimelineView table');
+            if (!table) return;
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll('td, th');
+                if (cols.length === 1 && cols[0].colSpan > 1) continue; 
+                for (let j = 0; j < cols.length; j++) 
+                    row.push(`"${cols[j].innerText.replace(/[\n↳▪]/g, '').trim().replace(/"/g, '""')}"`);
+                csv.push(row.join(','));
+            }
+            if(csv.length <= 1) return showToast("No data to export");
+            const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'timeline_compare_report.csv'; link.click();
+        }
 
         window.renderReports = function() {
             const startVal = document.getElementById('reportStartDate').value;
@@ -1744,23 +2800,38 @@
         window.toggleSelectAll = function(checkbox) { document.querySelectorAll('.manage-cb').forEach(cb => cb.checked = checkbox.checked); };
 
         window.deleteSingleRecord = function(dbKey, type) {
-            window.showConfirmModal("Delete Record", "Delete this record permanently?", () => { remove(ref(db, `${type}/${dbKey}`)).then(() => showToast("Record deleted.")); });
+            window.showConfirmModal("Delete Record", "Delete this record permanently?", () => { 
+                const dbPath = type === 'cancelled_invoices' ? `users/admin_settings/cancelled_invoices/${dbKey}` : `${type}/${dbKey}`;
+                remove(ref(db, dbPath)).then(() => showToast("Record deleted.")); 
+            });
         };
         
         window.restoreCancelledRecord = function(dbKey) {
             window.showConfirmModal("Restore Invoice", "Move this invoice back to active status?", () => {
                 let item = cancelledInvoices.find(c => c.__fbKey === dbKey);
-                if(item) { let cleanItem = {...item}; delete cleanItem.__fbKey; update(ref(db), {['/invoices/' + dbKey]: cleanItem, ['/cancelled_invoices/' + dbKey]: null}).then(() => showToast("Invoice Restored!")); }
+                if(item) { 
+                    let cleanItem = {...item}; 
+                    delete cleanItem.__fbKey; 
+                    
+                    Promise.all([
+                        set(ref(db, 'invoices/' + dbKey), cleanItem),
+                        remove(ref(db, 'users/admin_settings/cancelled_invoices/' + dbKey))
+                    ]).then(() => showToast("Invoice Restored!")); 
+                }
             });
         };
 
         window.bulkDeleteSelected = function() {
             const checkboxes = document.querySelectorAll('.manage-cb:checked');
             if (checkboxes.length === 0) return showToast("No records selected.");
-            const dbType = currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab;
+            const dbType = currentManageTab === 'cancelled' ? 'users/admin_settings/cancelled_invoices' : (currentManageTab === 'registrations' ? 'registrations' : 'invoices');
             window.showConfirmModal("Delete Selected", `Delete ${checkboxes.length} selected record(s)?`, () => {
-                let updates = {}; checkboxes.forEach(cb => updates[`/${dbType}/${cb.value}`] = null);
-                update(ref(db), updates).then(() => { showToast(`${checkboxes.length} records deleted.`); document.getElementById('manageSelectAll').checked = false; });
+                let nodeUpdates = {}; 
+                checkboxes.forEach(cb => nodeUpdates[cb.value] = null);
+                update(ref(db, dbType), nodeUpdates).then(() => { 
+                    showToast(`${checkboxes.length} records deleted.`); 
+                    document.getElementById('manageSelectAll').checked = false; 
+                });
             });
         };
 
@@ -1771,7 +2842,7 @@
             executeBulkWipe();
             function executeBulkWipe() {
                 let dataArray = currentManageTab === 'invoices' ? masterInvoices : (currentManageTab === 'registrations' ? masterRegistrations : cancelledInvoices);
-                let dbType = currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab;
+                let dbType = currentManageTab === 'cancelled' ? 'users/admin_settings/cancelled_invoices' : (currentManageTab === 'registrations' ? 'registrations' : 'invoices');
                 let dateKey = currentManageTab === 'registrations' ? sanitizeKey('Receipt Dt.') : sanitizeKey('Invoice Date');
                 let uKey = currentManageTab === 'registrations' ? sanitizeKey('Processed By') : sanitizeKey('Requesting Dealer');
                 const toDelete = dataArray.filter(item => {
@@ -1780,9 +2851,154 @@
                 });
                 if (toDelete.length === 0) return showToast("No records match.");
                 window.showConfirmModal("Delete Filtered", `Delete ${toDelete.length} matching records permanently?`, () => {
-                    let updates = {}; toDelete.forEach(item => updates[`/${dbType}/${item.__fbKey}`] = null);
-                    update(ref(db), updates).then(() => showToast(`${toDelete.length} records deleted.`));
+                    let nodeUpdates = {}; 
+                    toDelete.forEach(item => nodeUpdates[item.__fbKey] = null);
+                    update(ref(db, dbType), nodeUpdates).then(() => showToast(`${toDelete.length} records deleted.`));
                 });
+            }
+        };
+
+        // MODEL GROUPS LOGIC
+        window.switchModelGroupTab = function(tab) {
+            currentModelGroupTab = tab;
+            const btnUnmapped = document.getElementById('mgTabUnmapped');
+            const btnMapped = document.getElementById('mgTabMapped');
+            const btnUpload = document.getElementById('mgTabUpload');
+            
+            btnUnmapped.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+            btnMapped.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+            btnUpload.className = "font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors";
+
+            if (tab === 'unmapped') btnUnmapped.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
+            else if (tab === 'mapped') btnMapped.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
+            else btnUpload.className = "font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors";
+
+            if (tab === 'upload') {
+                document.getElementById('mgTableContainer').classList.add('hidden');
+                document.getElementById('mgUploadContainer').classList.remove('hidden');
+                document.getElementById('mgUploadContainer').classList.add('flex');
+            } else {
+                document.getElementById('mgUploadContainer').classList.add('hidden');
+                document.getElementById('mgUploadContainer').classList.remove('flex');
+                document.getElementById('mgTableContainer').classList.remove('hidden');
+                window.renderModelGroups();
+            }
+        };
+
+        window.renderModelGroups = function() {
+            if (currentUser?.role !== 'Admin') return;
+            const tbody = document.getElementById('modelGroupsTableBody');
+            const datalist = document.getElementById('groupModelDatalist');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            
+            const uniqueRawModels = new Set();
+            masterInvoices.forEach(inv => {
+                let m = inv[sanitizeKey('Model Name')];
+                if (m && m.trim() !== '') uniqueRawModels.add(m.trim());
+            });
+
+            const existingGroups = new Set();
+            Object.values(modelGroupsDB).forEach(mapping => {
+                if (mapping.group && mapping.group.trim() !== '') existingGroups.add(mapping.group.trim());
+            });
+            
+            if(datalist) {
+                datalist.innerHTML = '';
+                Array.from(existingGroups).sort().forEach(g => {
+                    datalist.innerHTML += `<option value="${g}"></option>`;
+                });
+            }
+
+            let rowsToRender = [];
+            if (currentModelGroupTab === 'unmapped') {
+                Array.from(uniqueRawModels).sort().forEach(rawModel => {
+                    const safeKey = sanitizeKey(rawModel);
+                    if (!modelGroupsDB[safeKey]) rowsToRender.push({ key: safeKey, original: rawModel, currentGroup: '' });
+                });
+            } else if (currentModelGroupTab === 'mapped') {
+                Object.entries(modelGroupsDB).forEach(([safeKey, data]) => {
+                    rowsToRender.push({ key: safeKey, original: data.original, currentGroup: data.group });
+                });
+                rowsToRender.sort((a,b) => a.original.localeCompare(b.original));
+            }
+
+            if (rowsToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-sm text-slate-500">${currentModelGroupTab === 'unmapped' ? 'All models are successfully mapped!' : 'No models mapped yet.'}</td></tr>`;
+                return;
+            }
+
+            rowsToRender.forEach(row => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50";
+                const inputHtml = `<input type="text" id="mgInput_${row.key}" value="${row.currentGroup}" list="groupModelDatalist" class="w-full px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white" placeholder="Type or select group...">`;
+                let actionsHtml = currentModelGroupTab === 'unmapped' 
+                    ? `<button onclick="window.saveModelGroup('${row.key}', '${row.original.replace(/'/g, "\\'")}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-1.5 px-3 rounded-md text-sm font-medium shadow-sm transition-colors w-full">Save Mapping</button>`
+                    : `<div class="flex gap-2 justify-end"><button onclick="window.saveModelGroup('${row.key}', '${row.original.replace(/'/g, "\\'")}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1.5 px-3 rounded-md text-sm font-medium shadow-sm transition-colors">Update</button><button onclick="window.deleteModelGroup('${row.key}')" class="bg-red-50 hover:bg-red-100 text-red-700 py-1.5 px-3 rounded-md text-sm font-medium shadow-sm transition-colors">Remove</button></div>`;
+
+                tr.innerHTML = `<td class="px-4 py-3 text-sm font-medium text-slate-800 border-b border-slate-100">${row.original}</td><td class="px-4 py-3 border-b border-slate-100">${inputHtml}</td><td class="px-4 py-3 text-right border-b border-slate-100">${actionsHtml}</td>`;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.saveModelGroup = function(safeKey, originalName) {
+            const inputEl = document.getElementById(`mgInput_${safeKey}`);
+            if (!inputEl) return;
+            const newGroup = inputEl.value.trim();
+            if (newGroup === '') return showToast("Group Name cannot be empty.");
+            
+            // Bypass rules by saving inside the already allowed users folder
+            set(ref(db, `users/admin_settings/model_groups/${safeKey}`), { original: originalName, group: newGroup })
+                .then(() => showToast("Mapping saved successfully!"))
+                .catch(e => showToast("Failed to save: " + e.message));
+        };
+
+        window.deleteModelGroup = function(safeKey) {
+            window.showConfirmModal("Remove Mapping", "Delete this group mapping? The model will revert to unmapped.", () => {
+                remove(ref(db, `users/admin_settings/model_groups/${safeKey}`))
+                    .then(() => showToast("Mapping removed."));
+            });
+        };
+
+        window.uploadModelGroups = function() {
+            const rawText = document.getElementById('mgUploadTextarea').value.trim();
+            if (!rawText) return showToast("Please paste your mapping data first.");
+            
+            const lines = rawText.split(/\r?\n/);
+            let mgUpdates = {};
+            let count = 0;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.toLowerCase().includes('group model name')) continue; // Skip headers
+                
+                let parts = line.split('\t');
+                if (parts.length < 2) parts = line.split(','); // Fallback to comma separation
+                
+                if (parts.length >= 2) {
+                    const rawName = parts[0].trim().replace(/^"|"$/g, '');
+                    const groupName = parts[1].trim().replace(/^"|"$/g, '');
+                    
+                    if (rawName && groupName) {
+                        const safeKey = sanitizeKey(rawName);
+                        // Store keys natively for the target folder
+                        mgUpdates[safeKey] = { original: rawName, group: groupName };
+                        count++;
+                    }
+                }
+            }
+            
+            if (count > 0) {
+                // Target folder specifically
+                update(ref(db, 'users/admin_settings/model_groups'), mgUpdates).then(() => {
+                    showToast(`${count} mappings successfully saved!`);
+                    document.getElementById('mgUploadTextarea').value = '';
+                    window.switchModelGroupTab('mapped');
+                }).catch(e => {
+                    console.error(e);
+                    showToast("Permission Error: Please check Firebase Rules.");
+                });
+            } else {
+                showToast("Could not extract any valid pairs. Check format.");
             }
         };
 
