@@ -1708,32 +1708,24 @@
                     const separator = lines[0].includes('\t') ? '\t' : ',';
                     const headers = lines[0].split(separator).map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ''));
                     
-                    // Auto-detect columns
+                    // Auto-detect columns (Optimized to ignore "Reference No")
                     let idIdx = -1; // Invoice or Frame
                     let nameIdx = -1;
                     let mobileIdx = -1;
 
+                    // Pass 1: Strict Exact matches to prioritize primary columns perfectly
                     headers.forEach((h, idx) => {
-                        if (h.includes('invoice') || h.includes('reference') || h.includes('frame') || h.includes('chasis')) {
-                            if (idIdx === -1) idIdx = idx; // take the first one that matches
-                        }
-                        if (h.includes('name') || h.includes('customer')) {
-                            if (nameIdx === -1) nameIdx = idx;
-                        }
-                        if (h.includes('mobile') || h.includes('phone') || h.includes('contact')) {
-                            if (mobileIdx === -1) mobileIdx = idx;
-                        }
+                        if (h === 'invoice' || h === 'invoiceno' || h === 'frameno' || h === 'chasisno' || h === 'frame') idIdx = idx;
+                        if (h === 'customerfirstname' || h === 'customername') nameIdx = idx;
+                        if (h === 'mobilephone' || h === 'mobileno' || h === 'mobile') mobileIdx = idx;
                     });
 
-                    // Fallback to strict column matching if auto-detect fails
-                    if (idIdx === -1 || nameIdx === -1 || mobileIdx === -1) {
-                         // Try finding them using exact matches if lenient failed
-                         headers.forEach((h, idx) => {
-                             if (h === 'referenceno' || h === 'invoiceno') idIdx = idx;
-                             if (h === 'customerfirstname' || h === 'customername') nameIdx = idx;
-                             if (h === 'mobileno' || h === 'mobilephone') mobileIdx = idx;
-                         });
-                    }
+                    // Pass 2: Lenient matches if strict failed (Strictly bypassing "reference")
+                    headers.forEach((h, idx) => {
+                        if (idIdx === -1 && (h.includes('invoice') || h.includes('frame') || h.includes('chasis')) && !h.includes('reference')) idIdx = idx;
+                        if (nameIdx === -1 && (h.includes('name') || h.includes('customer'))) nameIdx = idx;
+                        if (mobileIdx === -1 && (h.includes('mobile') || h.includes('phone') || h.includes('contact'))) mobileIdx = idx;
+                    });
 
                     if (idIdx === -1 || nameIdx === -1 || mobileIdx === -1) {
                         btn.textContent = "Extract & Update Database";
@@ -1991,18 +1983,33 @@
         // DATE PARSING HELPER FOR REPORTS
         function parseStandardDate(dateStr) {
             if(!dateStr) return null;
-            let dStr = dateStr.split(' ')[0]; 
+            let dStr = String(dateStr).split(' ')[0]; 
+            if (dStr.includes('T')) dStr = dStr.split('T')[0];
+            
             let parts;
             if (dStr.includes('/')) parts = dStr.split('/');
             else if (dStr.includes('-')) parts = dStr.split('-');
-            else return new Date(dStr);
+            else {
+                let d = new Date(dStr);
+                if(!isNaN(d)) d.setHours(0,0,0,0);
+                return d;
+            }
 
             if (parts && parts.length === 3) {
-                if (parts[0].length === 4) return new Date(parts[0], parseInt(parts[1])-1, parts[2]);
-                else if (isNaN(parts[1])) return new Date(dStr);
-                else return new Date(parts[2], parseInt(parts[1])-1, parts[0]);
+                let y, m, d;
+                if (parts[0].length === 4) {
+                    y = parseInt(parts[0]); m = parseInt(parts[1]) - 1; d = parseInt(parts[2]);
+                } else {
+                    y = parseInt(parts[2]);
+                    let p0 = parseInt(parts[0]), p1 = parseInt(parts[1]);
+                    if (p1 > 12) { m = p0 - 1; d = p1; } else { m = p1 - 1; d = p0; }
+                }
+                return new Date(y, m, d, 0, 0, 0, 0); 
             }
-            return new Date(dStr);
+            
+            let parsedDate = new Date(dStr);
+            if(!isNaN(parsedDate)) parsedDate.setHours(0,0,0,0);
+            return parsedDate;
         }
 
         // REPORTS
@@ -2148,10 +2155,17 @@
 
             tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Calculating...</td></tr>';
 
-            const r1Start = new Date(r1StartVal);
-            const r1End = new Date(r1EndVal);
-            const r2Start = new Date(r2StartVal);
-            const r2End = new Date(r2EndVal);
+            const parseHTMLDate = (val, isEnd = false) => {
+                if (!val) return null;
+                const p = val.split('-');
+                if (isEnd) return new Date(p[0], parseInt(p[1])-1, p[2], 23, 59, 59, 999);
+                return new Date(p[0], parseInt(p[1])-1, p[2], 0, 0, 0, 0);
+            };
+
+            const r1Start = parseHTMLDate(r1StartVal);
+            const r1End = parseHTMLDate(r1EndVal, true);
+            const r2Start = parseHTMLDate(r2StartVal);
+            const r2End = parseHTMLDate(r2EndVal, true);
 
             let pivotData = {};
             let gtR1 = 0, gtR2 = 0;
@@ -2514,8 +2528,10 @@
             // Read from overrides rather than directly from DB
             const d1s = parseStandardDate(document.getElementById('orD1Start').value); 
             const d1e = parseStandardDate(document.getElementById('orD1End').value);
+            if(d1e) d1e.setHours(23,59,59,999);
             const d2s = parseStandardDate(document.getElementById('orD2Start').value); 
             const d2e = parseStandardDate(document.getElementById('orD2End').value);
+            if(d2e) d2e.setHours(23,59,59,999);
             
             if(!d1s || !d1e || !d2s || !d2e) {
                 tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-red-500">Error: Timeline has invalid dates. Please fix in overrides or Manage Timeline.</td></tr>';
@@ -2703,13 +2719,13 @@
             let startDate = null;
             if (startVal) {
                 const parts = startVal.split('-');
-                startDate = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+                startDate = new Date(parts[0], parseInt(parts[1])-1, parts[2], 0, 0, 0, 0);
             }
             
             let endDate = null;
             if (endVal) {
                 const parts = endVal.split('-');
-                endDate = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+                endDate = new Date(parts[0], parseInt(parts[1])-1, parts[2], 23, 59, 59, 999);
             }
 
             let userFilter = currentUser.name;
