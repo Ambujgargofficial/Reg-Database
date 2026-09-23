@@ -107,22 +107,147 @@
         </div>
     </div>
 
-    <!-- VEHICLE SEARCH PIN MODAL -->
-    <div id="searchPinModal" class="fixed inset-0 z-[260] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-opacity duration-200 opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs p-6 relative transform scale-95 transition-transform duration-200" id="searchPinModalContent" onclick="event.stopPropagation()">
-            <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 rounded-full mx-auto mb-4 text-indigo-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+    <!-- RC HANDOVER MODAL -->
+    <div id="rcHandoverModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[200] backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200" id="rcHandoverModalContent">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Handover RC to Customer
+                </h3>
+                <button type="button" onclick="window.closeRcHandoverModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <h3 class="text-xl font-bold text-center text-slate-800 mb-1">Security Check</h3>
-            <p class="text-slate-500 text-center text-sm mb-5">Number dekhne ke liye apna PIN dalein</p>
-            <form onsubmit="event.preventDefault(); window.verifySearchPin();">
-                <input type="password" id="searchPinInput" pattern="[0-9]*" inputmode="numeric" maxlength="4" class="w-full text-center text-3xl font-bold tracking-[0.5em] py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-100 mb-2 transition-all" placeholder="••••">
-                <div class="h-6 mb-2 text-center">
-                    <p id="searchPinError" class="hidden text-red-500 text-xs font-semibold animate-pulse">Galat PIN. Phir se try karein.</p>
+            <form id="rcHandoverForm" onsubmit="event.preventDefault(); window.saveRcHandover();">
+                <div class="p-6 space-y-4">
+                    <div class="bg-blue-50 text-blue-800 text-xs font-medium px-3 py-2 rounded-lg border border-blue-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Date & Time automatic save ho jayega.
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Receiver Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="rcReceiverName" class="w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 bg-white" placeholder="Name of person receiving RC" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Receiver Mobile No. <span class="text-red-500">*</span></label>
+                        <input type="tel" id="rcReceiverMobile" pattern="[0-9]{10}" maxlength="10" title="Kripya exactly 10 digit ka mobile number dalein" class="w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-mono" placeholder="9876543210" required>
+                        <p class="text-[10px] text-slate-500 mt-1">Sirf 10 ank (digits) allow hain.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Optional Remark</label>
+                        <textarea id="rcRemark" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 bg-white custom-scrollbar resize-none" placeholder="Any extra details..."></textarea>
+                    </div>
                 </div>
-                <div class="flex gap-3">
-                    <button type="button" onclick="window.closeSearchPinModal()" class="flex-1 py-3 text-slate-600 font-medium bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
-                    <button type="submit" class="flex-1 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">Unlock</button>
+                <div class="p-4 border-t bg-slate-50 flex justify-end gap-3 rounded-b-xl">
+                    <button type="button" onclick="window.closeRcHandoverModal()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-700 font-medium">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-sm">Confirm Handover</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RC RESET PIN MODAL -->
+    <div id="rcPinModal" class="fixed inset-0 z-[260] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative transform scale-95 transition-transform duration-200" id="rcPinModalContent" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4 text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-center text-slate-800 mb-1">Undo RC Status</h3>
+            <p class="text-slate-500 text-center text-sm mb-4">Galti sudharne ke liye details dalein</p>
+            <form onsubmit="event.preventDefault(); window.verifyRcPinAndReset();" class="space-y-4">
+                <div id="rcUndoScopeContainer" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kya Undo Karna Hai?</label>
+                    <select id="rcUndoScope" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                        <option value="handover">Sirf Handover (Wapas 'RC in Showroom' karein)</option>
+                        <option value="all">Poora Undo (Wapas 'Pending' karein)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Reason (Kyun Undo kar rahe hain?) <span class="text-red-500">*</span></label>
+                    <textarea id="rcUndoReason" required rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 bg-white resize-none" placeholder="Koi galti ho gayi? Batayein..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Your PIN <span class="text-red-500">*</span></label>
+                    <input type="password" id="rcPinInput" inputmode="numeric" class="w-full text-center text-2xl font-bold tracking-[0.5em] py-2 border-2 border-slate-200 rounded-lg focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-100 transition-all" placeholder="PIN">
+                </div>
+                <div class="h-4 text-center">
+                    <p id="rcPinError" class="hidden text-red-500 text-xs font-semibold animate-pulse">Galat PIN ya Reason missing.</p>
+                </div>
+                <div class="flex gap-3 mt-1">
+                    <button type="button" onclick="window.closeRcPinModal()" class="flex-1 py-2.5 text-slate-600 font-medium bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200">Confirm Undo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- HSRP HANDOVER MODAL -->
+    <div id="hsrpHandoverModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[200] backdrop-blur-sm opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200" id="hsrpHandoverModalContent">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center rounded-t-xl">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    Handover HSRP to Customer
+                </h3>
+                <button type="button" onclick="window.closeHsrpHandoverModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <form id="hsrpHandoverForm" onsubmit="event.preventDefault(); window.saveHsrpHandover();">
+                <div class="p-6 space-y-4">
+                    <div class="bg-blue-50 text-blue-800 text-xs font-medium px-3 py-2 rounded-lg border border-blue-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Date & Time automatic save ho jayega.
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Receiver Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="hsrpReceiverName" class="w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 bg-white" placeholder="Name of person receiving HSRP" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Receiver Mobile No. <span class="text-red-500">*</span></label>
+                        <input type="tel" id="hsrpReceiverMobile" pattern="[0-9]{10}" maxlength="10" title="Kripya exactly 10 digit ka mobile number dalein" class="w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-mono" placeholder="9876543210" required>
+                        <p class="text-[10px] text-slate-500 mt-1">Sirf 10 ank (digits) allow hain.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Optional Remark</label>
+                        <textarea id="hsrpRemark" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 bg-white custom-scrollbar resize-none" placeholder="Any extra details..."></textarea>
+                    </div>
+                </div>
+                <div class="p-4 border-t bg-slate-50 flex justify-end gap-3 rounded-b-xl">
+                    <button type="button" onclick="window.closeHsrpHandoverModal()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg text-slate-700 font-medium">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-sm">Confirm Handover</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- HSRP RESET PIN MODAL -->
+    <div id="hsrpPinModal" class="fixed inset-0 z-[260] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative transform scale-95 transition-transform duration-200" id="hsrpPinModalContent" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4 text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-center text-slate-800 mb-1">Undo HSRP Status</h3>
+            <p class="text-slate-500 text-center text-sm mb-4">Galti sudharne ke liye details dalein</p>
+            <form onsubmit="event.preventDefault(); window.verifyHsrpPinAndReset();" class="space-y-4">
+                <div id="hsrpUndoScopeContainer" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kya Undo Karna Hai?</label>
+                    <select id="hsrpUndoScope" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                        <option value="handover">Sirf Handover (Wapas 'HSRP in Showroom' karein)</option>
+                        <option value="all">Poora Undo (Wapas 'Pending' karein)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Reason (Kyun Undo kar rahe hain?) <span class="text-red-500">*</span></label>
+                    <textarea id="hsrpUndoReason" required rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 bg-white resize-none" placeholder="Koi galti ho gayi? Batayein..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Your PIN <span class="text-red-500">*</span></label>
+                    <input type="password" id="hsrpPinInput" inputmode="numeric" class="w-full text-center text-2xl font-bold tracking-[0.5em] py-2 border-2 border-slate-200 rounded-lg focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-100 transition-all" placeholder="PIN">
+                </div>
+                <div class="h-4 text-center">
+                    <p id="hsrpPinError" class="hidden text-red-500 text-xs font-semibold animate-pulse">Galat PIN ya Reason missing.</p>
+                </div>
+                <div class="flex gap-3 mt-1">
+                    <button type="button" onclick="window.closeHsrpPinModal()" class="flex-1 py-2.5 text-slate-600 font-medium bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200">Confirm Undo</button>
                 </div>
             </form>
         </div>
@@ -200,6 +325,26 @@
                 </div>
                 
                 <!-- Extra Data / Service Info -->
+                <div id="vdRcContainer" class="hidden">
+                    <h4 class="flex items-center text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        RC Tracking Info
+                    </h4>
+                    <div class="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm" id="vdRcContent">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <div id="vdHsrpContainer" class="hidden">
+                    <h4 class="flex items-center text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 mt-4">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        HSRP Tracking Info
+                    </h4>
+                    <div class="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm" id="vdHsrpContent">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
                 <div id="vdExtraContainer" class="hidden">
                     <h4 class="flex items-center text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
@@ -1010,6 +1155,7 @@
         let currentMergedPage = 1;
         let currentRegMode = 'receipt'; // Mode for Reg Report ('upload' or 'receipt')
         const mergedRowsPerPage = 20;
+        let currentRcDbPath = null; // Store path for RC updates
 
         const TARGET_COLUMNS = [
             "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", "Model Name", 
@@ -3119,33 +3265,51 @@
             let dateKey = currentManageTab === 'registrations' ? sanitizeKey('Receipt Dt.') : sanitizeKey('Invoice Date');
             let userKey = currentManageTab === 'registrations' ? sanitizeKey('Processed By') : sanitizeKey('Requesting Dealer');
 
-            const dates = new Set(dataArray.map(r => r[dateKey] ? r[dateKey].split(' ')[0] : '').filter(Boolean));
+            // Fast Unique Set Extraction
+            const dates = new Set();
+            const users = new Set();
+            dataArray.forEach(r => {
+                if(r[dateKey]) dates.add(r[dateKey].split(' ')[0]);
+                if(r[userKey]) users.add(r[userKey]);
+            });
+
+            // Optimized Dropdown Rendering (No layout thrashing)
             let currDate = dateSelect.value || "All";
-            dateSelect.innerHTML = '<option value="All">All Dates</option>';
-            Array.from(dates).sort().reverse().forEach(d => dateSelect.innerHTML += `<option value="${d}">${d}</option>`);
+            let dateHtml = '<option value="All">All Dates</option>';
+            Array.from(dates).sort().reverse().forEach(d => dateHtml += `<option value="${d}">${d}</option>`);
+            dateSelect.innerHTML = dateHtml;
             if (dates.has(currDate)) dateSelect.value = currDate;
 
-            const users = new Set(dataArray.map(r => r[userKey]).filter(Boolean));
             let currUser = userSelect.value || "All";
-            userSelect.innerHTML = '<option value="All">All Users/Dealers</option>';
-            Array.from(users).sort().forEach(u => userSelect.innerHTML += `<option value="${u}">${u}</option>`);
-            if(users.has(currUser)) userSelect.value = currUser;
+            let userHtml = '<option value="All">All Users/Dealers</option>';
+            Array.from(users).sort().forEach(u => userHtml += `<option value="${u}">${u}</option>`);
+            userSelect.innerHTML = userHtml;
+            if (users.has(currUser)) userSelect.value = currUser;
 
-            const tbody = document.getElementById('manageTableBody'); tbody.innerHTML = '';
+            const tbody = document.getElementById('manageTableBody'); 
+            let tbodyHtml = ''; // Use memory buffer instead of direct DOM manipulation
+
+            const filterDate = dateSelect.value;
+            const filterUser = userSelect.value;
 
             const filteredData = dataArray.filter(item => {
-                const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : ''; const iUser = item[userKey] || '';
-                if (dateSelect.value !== 'All' && iDate !== dateSelect.value) return false;
-                if (userSelect.value !== 'All' && iUser !== userSelect.value) return false;
+                const iDate = item[dateKey] ? item[dateKey].split(' ')[0] : ''; 
+                const iUser = item[userKey] || '';
+                if (filterDate !== 'All' && iDate !== filterDate) return false;
+                if (filterUser !== 'All' && iUser !== filterUser) return false;
                 return true;
             });
 
-            if (filteredData.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No records found.</td></tr>`; return; }
+            if (filteredData.length === 0) { 
+                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No records found.</td></tr>`; 
+                return; 
+            }
 
-            const limit = Math.min(filteredData.length, 200);
+            const limit = Math.min(filteredData.length, 200); // 200 Row Limit to save browser memory
             for (let i = 0; i < limit; i++) {
-                const item = filteredData[i]; const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50";
-                const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-'; const displayUser = item[userKey] || '-';
+                const item = filteredData[i]; 
+                const displayDate = item[dateKey] ? item[dateKey].split(' ')[0] : '-'; 
+                const displayUser = item[userKey] || '-';
                 
                 let displayIdentifier = '';
                 if (currentManageTab === 'invoices' || currentManageTab === 'cancelled') {
@@ -3158,12 +3322,19 @@
                 if (currentManageTab === 'cancelled') actionsHtml += `<button onclick="window.restoreCancelledRecord('${item.__fbKey}')" class="text-emerald-600 hover:text-emerald-800 text-sm font-medium mr-3">Restore</button>`;
                 actionsHtml += `<button onclick="window.deleteSingleRecord('${item.__fbKey}', '${currentManageTab === 'cancelled' ? 'cancelled_invoices' : currentManageTab}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Delete</button>`;
 
-                tr.innerHTML = `<td class="px-4 py-3 text-center border-b border-slate-100"><input type="checkbox" value="${item.__fbKey}" class="manage-cb rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4"></td>
+                tbodyHtml += `<tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-center border-b border-slate-100"><input type="checkbox" value="${item.__fbKey}" class="manage-cb rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer w-4 h-4"></td>
                                 <td class="px-4 py-3 text-sm border-b border-slate-100">${displayDate}</td><td class="px-4 py-3 text-sm border-b border-slate-100">${displayUser}</td>
-                                <td class="px-4 py-3 text-sm border-b border-slate-100">${displayIdentifier}</td><td class="px-4 py-3 text-right border-b border-slate-100">${actionsHtml}</td>`;
-                tbody.appendChild(tr);
+                                <td class="px-4 py-3 text-sm border-b border-slate-100">${displayIdentifier}</td><td class="px-4 py-3 text-right border-b border-slate-100">${actionsHtml}</td>
+                              </tr>`;
             }
-            if (filteredData.length > limit) tbody.innerHTML += `<tr><td colspan="5" class="px-4 py-4 text-center text-xs text-slate-500 bg-slate-50">Showing first ${limit} of ${filteredData.length} records.</td></tr>`;
+            
+            if (filteredData.length > limit) {
+                tbodyHtml += `<tr><td colspan="5" class="px-4 py-4 text-center text-xs text-slate-500 bg-slate-50">Showing first ${limit} of ${filteredData.length} records.</td></tr>`;
+            }
+            
+            // Paint everything to DOM at once (Crash Preventer)
+            tbody.innerHTML = tbodyHtml;
         };
 
         window.toggleSelectAll = function(checkbox) { document.querySelectorAll('.manage-cb').forEach(cb => cb.checked = checkbox.checked); };
@@ -3415,6 +3586,19 @@
             }
         };
 
+        const getNowTimestamp = () => {
+            const now = new Date();
+            const d = String(now.getDate()).padStart(2, '0');
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const y = now.getFullYear();
+            let hrs = now.getHours();
+            const ampm = hrs >= 12 ? 'PM' : 'AM';
+            hrs = hrs % 12;
+            hrs = hrs ? hrs : 12;
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            return `${d}-${m}-${y} ${hrs}:${mins} ${ampm}`;
+        };
+
         window.clearVehicleSearch = function() {
             document.getElementById('vehicleSearchInput').value = '';
             document.getElementById('clearSearchBtn').classList.add('hidden');
@@ -3557,6 +3741,67 @@
                 const invNo = getVal(['Invoice #']);
                 const invDate = getVal(['Invoice Date']);
                 
+                // --- RC TRACKING DATA ---
+                const rcStatus = getVal(['RC Status']) || '';
+                const rcRecDate = getVal(['RC Received Date']) || '';
+                const rcDelDate = getVal(['RC Handover Date']) || '';
+                const dbPath = item._source === 'registration' ? `registrations/${item.__fbKey}` : `invoices/${item.__fbKey}`;
+                
+                let rcHtml = '';
+                if (rcStatus === 'Delivered') {
+                    rcHtml = `<div class="mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 flex justify-between items-center text-xs shadow-sm">
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-emerald-700 font-bold flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> RC Delivered</span>
+                                    <span class="text-emerald-600/80 font-medium text-[10px] ml-5">${rcDelDate}</span>
+                                </div>
+                              </div>`;
+                } else if (rcStatus === 'Received') {
+                    rcHtml = `<div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-2.5 flex justify-between items-center text-xs shadow-sm">
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-blue-700 font-bold flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> RC in Showroom</span>
+                                    <span class="text-blue-600/80 font-medium text-[10px] ml-5">${rcRecDate}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.stopPropagation(); window.openRcHandoverModal('${dbPath}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded shadow-sm transition-colors font-semibold">Handover</button>
+                                </div>
+                              </div>`;
+                } else {
+                    rcHtml = `<div class="mt-4 bg-slate-50 border border-slate-200 rounded-lg p-2.5 flex justify-between items-center text-xs">
+                                <span class="text-slate-500 font-medium">RC Status: Pending</span>
+                                <button onclick="event.stopPropagation(); window.markRcReceived('${dbPath}')" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded shadow-sm transition-colors font-semibold">Mark Received</button>
+                              </div>`;
+                }
+
+                // --- HSRP TRACKING DATA ---
+                const hsrpStatus = getVal(['HSRP Status']) || '';
+                const hsrpRecDate = getVal(['HSRP Received Date']) || '';
+                const hsrpDelDate = getVal(['HSRP Handover Date']) || '';
+                
+                let hsrpHtml = '';
+                if (hsrpStatus === 'Delivered') {
+                    hsrpHtml = `<div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 flex justify-between items-center text-xs shadow-sm">
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-emerald-700 font-bold flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> HSRP Delivered</span>
+                                    <span class="text-emerald-600/80 font-medium text-[10px] ml-5">${hsrpDelDate}</span>
+                                </div>
+                              </div>`;
+                } else if (hsrpStatus === 'Received') {
+                    hsrpHtml = `<div class="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-2.5 flex justify-between items-center text-xs shadow-sm">
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-blue-700 font-bold flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> HSRP in Showroom</span>
+                                    <span class="text-blue-600/80 font-medium text-[10px] ml-5">${hsrpRecDate}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.stopPropagation(); window.openHsrpHandoverModal('${dbPath}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded shadow-sm transition-colors font-semibold">Handover</button>
+                                </div>
+                              </div>`;
+                } else {
+                    hsrpHtml = `<div class="mt-2 bg-slate-50 border border-slate-200 rounded-lg p-2.5 flex justify-between items-center text-xs">
+                                <span class="text-slate-500 font-medium">HSRP Status: Pending</span>
+                                <button onclick="event.stopPropagation(); window.markHsrpReceived('${dbPath}')" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded shadow-sm transition-colors font-semibold">Mark Received</button>
+                              </div>`;
+                }
+                
                 const spanId = `searchPhone_${idx}`;
                 
                 // Construct Phone HTML
@@ -3607,6 +3852,8 @@
                                         ${window.formatDateSearch(invDate)}
                                     </div>
                                 </div>
+                                ${rcHtml}
+                                ${hsrpHtml}
                             </div>
                         </div>
                     </div>
@@ -3681,6 +3928,73 @@
                 document.getElementById('vdFrameNo').textContent = getVal(['Frame #', 'Chasis No']) || "-";
                 document.getElementById('vdEngineNo').textContent = getVal(['Engine No/Motor No']) || "-";
 
+                // --- RC Tracking Info Populate ---
+                const rcStatus = getVal(['RC Status']);
+                const dbPath = item._source === 'registration' ? `registrations/${item.__fbKey}` : `invoices/${item.__fbKey}`;
+                if (rcStatus) {
+                    document.getElementById('vdRcContainer').classList.remove('hidden');
+                    let rcDetailsHtml = `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Current Status:</span> <span class="font-bold ${rcStatus === 'Delivered' ? 'text-emerald-600' : 'text-blue-600'} text-right">${rcStatus}</span></div>`;
+                    
+                    if (getVal(['RC Received Date'])) {
+                        rcDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Received from RTO:</span> <span class="font-medium text-slate-800 text-right">${getVal(['RC Received Date'])}</span></div>`;
+                    }
+                    if (rcStatus === 'Delivered') {
+                        rcDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Delivered On:</span> <span class="font-medium text-slate-800 text-right">${getVal(['RC Handover Date'])}</span></div>`;
+                        rcDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Receiver Name:</span> <span class="font-medium text-slate-800 text-right">${getVal(['RC Receiver Name'])}</span></div>`;
+                        rcDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Receiver Mobile:</span> <span class="font-medium font-mono text-slate-800 text-right">${getVal(['RC Receiver Mobile'])}</span></div>`;
+                        if (getVal(['RC Remark'])) {
+                            rcDetailsHtml += `<div class="flex justify-between py-1 mt-1 pt-2 border-t border-slate-100"><span class="text-slate-500">Remark:</span> <span class="font-medium text-slate-700 text-right max-w-[60%] break-words italic">"${getVal(['RC Remark'])}"</span></div>`;
+                        }
+                    }
+                    
+                    // Add Undo Button to Modal
+                    rcDetailsHtml += `
+                        <div class="mt-4 flex justify-end">
+                             <button onclick="window.promptRcReset('${dbPath}', '${rcStatus}')" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg transition-colors border border-red-200 text-sm font-semibold shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                                Reset / Undo Status
+                             </button>
+                        </div>
+                    `;
+
+                    document.getElementById('vdRcContent').innerHTML = rcDetailsHtml;
+                } else {
+                    document.getElementById('vdRcContainer').classList.add('hidden');
+                }
+
+                // --- HSRP Tracking Info Populate ---
+                const hsrpStatus = getVal(['HSRP Status']);
+                if (hsrpStatus) {
+                    document.getElementById('vdHsrpContainer').classList.remove('hidden');
+                    let hsrpDetailsHtml = `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Current Status:</span> <span class="font-bold ${hsrpStatus === 'Delivered' ? 'text-emerald-600' : 'text-blue-600'} text-right">${hsrpStatus}</span></div>`;
+                    
+                    if (getVal(['HSRP Received Date'])) {
+                        hsrpDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Received at Showroom:</span> <span class="font-medium text-slate-800 text-right">${getVal(['HSRP Received Date'])}</span></div>`;
+                    }
+                    if (hsrpStatus === 'Delivered') {
+                        hsrpDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Delivered On:</span> <span class="font-medium text-slate-800 text-right">${getVal(['HSRP Handover Date'])}</span></div>`;
+                        hsrpDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Receiver Name:</span> <span class="font-medium text-slate-800 text-right">${getVal(['HSRP Receiver Name'])}</span></div>`;
+                        hsrpDetailsHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Receiver Mobile:</span> <span class="font-medium font-mono text-slate-800 text-right">${getVal(['HSRP Receiver Mobile'])}</span></div>`;
+                        if (getVal(['HSRP Remark'])) {
+                            hsrpDetailsHtml += `<div class="flex justify-between py-1 mt-1 pt-2 border-t border-slate-100"><span class="text-slate-500">Remark:</span> <span class="font-medium text-slate-700 text-right max-w-[60%] break-words italic">"${getVal(['HSRP Remark'])}"</span></div>`;
+                        }
+                    }
+                    
+                    // Add Undo Button to Modal
+                    hsrpDetailsHtml += `
+                        <div class="mt-4 flex justify-end">
+                             <button onclick="window.promptHsrpReset('${dbPath}', '${hsrpStatus}')" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg transition-colors border border-red-200 text-sm font-semibold shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                                Reset / Undo Status
+                             </button>
+                        </div>
+                    `;
+
+                    document.getElementById('vdHsrpContent').innerHTML = hsrpDetailsHtml;
+                } else {
+                    document.getElementById('vdHsrpContainer').classList.add('hidden');
+                }
+
                 // Extra Data (Service / DSE / Network)
                 let extraHtml = '';
                 const dse = getVal(['Assigned To (DSE) Name']);
@@ -3741,12 +4055,306 @@
             }
         };
 
-        window.closeSearchPinModal = function() {
-            // Deprecated - No longer used
+        // --- RC TRACKING FUNCTIONS ---
+        window.markRcReceived = function(dbPath) {
+            window.showConfirmModal("Mark RC Received", "Are you sure you have received this RC from RTO?", () => {
+                const updateData = {
+                    [sanitizeKey('RC Status')]: 'Received',
+                    [sanitizeKey('RC Received Date')]: getNowTimestamp()
+                };
+                update(ref(db, dbPath), updateData).then(() => {
+                    showToast("RC marked as Received!");
+                    setTimeout(() => window.handleVehicleSearch(), 500); // Refresh search
+                }).catch(e => showToast("Error: " + e.message));
+            });
         };
 
-        window.verifySearchPin = function() {
-            // Deprecated - No longer used
+        window.openRcHandoverModal = function(dbPath) {
+            currentRcDbPath = dbPath;
+            document.getElementById('rcHandoverForm').reset();
+            const modal = document.getElementById('rcHandoverModal');
+            const content = document.getElementById('rcHandoverModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+
+        window.closeRcHandoverModal = function() {
+            const modal = document.getElementById('rcHandoverModal');
+            const content = document.getElementById('rcHandoverModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentRcDbPath = null; }, 200);
+        };
+
+        window.saveRcHandover = function() {
+            if(!currentRcDbPath) return;
+            const rName = document.getElementById('rcReceiverName').value.trim();
+            const rMobile = document.getElementById('rcReceiverMobile').value.trim();
+            const rRemark = document.getElementById('rcRemark').value.trim();
+
+            if(rMobile.length !== 10) return showToast("Mobile number must be exactly 10 digits!");
+
+            const updateData = {
+                [sanitizeKey('RC Status')]: 'Delivered',
+                [sanitizeKey('RC Handover Date')]: getNowTimestamp(),
+                [sanitizeKey('RC Receiver Name')]: rName,
+                [sanitizeKey('RC Receiver Mobile')]: rMobile,
+                [sanitizeKey('RC Remark')]: rRemark
+            };
+
+            const btn = document.querySelector('#rcHandoverForm button[type="submit"]');
+            btn.disabled = true; btn.textContent = "Saving...";
+
+            update(ref(db, currentRcDbPath), updateData).then(() => {
+                window.closeRcHandoverModal();
+                showToast("RC Handover details saved successfully!");
+                setTimeout(() => window.handleVehicleSearch(), 500); // Refresh search UI to show Delivered status
+            }).catch(e => {
+                showToast("Error: " + e.message);
+            }).finally(() => {
+                btn.disabled = false; btn.textContent = "Confirm Handover";
+            });
+        };
+
+        let currentRcResetPath = null;
+        let currentRcResetStatus = null;
+
+        window.promptRcReset = function(dbPath, currentStatus) {
+            currentRcResetPath = dbPath;
+            currentRcResetStatus = currentStatus;
+            
+            document.getElementById('rcPinInput').value = '';
+            document.getElementById('rcUndoReason').value = '';
+            document.getElementById('rcPinError').classList.add('hidden');
+            
+            const scopeContainer = document.getElementById('rcUndoScopeContainer');
+            const scopeSelect = document.getElementById('rcUndoScope');
+            
+            if (currentStatus === 'Delivered') {
+                scopeContainer.classList.remove('hidden');
+                scopeSelect.value = 'handover';
+            } else {
+                scopeContainer.classList.add('hidden');
+                scopeSelect.value = 'all'; // Default strictly to 'all' if only received
+            }
+
+            const modal = document.getElementById('rcPinModal');
+            const content = document.getElementById('rcPinModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+
+        window.closeRcPinModal = function() {
+            const modal = document.getElementById('rcPinModal');
+            const content = document.getElementById('rcPinModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentRcResetPath = null; currentRcResetStatus = null; }, 200);
+        };
+
+        window.verifyRcPinAndReset = function() {
+            if (!currentRcResetPath) return;
+            const enteredPin = document.getElementById('rcPinInput').value.trim();
+            const reason = document.getElementById('rcUndoReason').value.trim();
+            const scope = document.getElementById('rcUndoScope').value;
+            const errorEl = document.getElementById('rcPinError');
+
+            if (enteredPin !== String(currentUser.pin)) {
+                errorEl.textContent = "Galat PIN. Phir se try karein.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            
+            if (!reason) {
+                errorEl.textContent = "Reason likhna zaroori hai.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            const undoLog = `[${getNowTimestamp()}] Undone by ${currentUser.name} - Reason: ${reason}`;
+            let updateData = {};
+
+            if (scope === 'handover' && currentRcResetStatus === 'Delivered') {
+                // Revert Handover only, stay as 'Received'
+                updateData = {
+                    [sanitizeKey('RC Status')]: 'Received',
+                    [sanitizeKey('RC Handover Date')]: null,
+                    [sanitizeKey('RC Receiver Name')]: null,
+                    [sanitizeKey('RC Receiver Mobile')]: null,
+                    [sanitizeKey('RC Remark')]: null,
+                    [sanitizeKey('RC Undo Log')]: undoLog
+                };
+            } else {
+                // Revert completely to Pending
+                updateData = {
+                    [sanitizeKey('RC Status')]: null,
+                    [sanitizeKey('RC Received Date')]: null,
+                    [sanitizeKey('RC Handover Date')]: null,
+                    [sanitizeKey('RC Receiver Name')]: null,
+                    [sanitizeKey('RC Receiver Mobile')]: null,
+                    [sanitizeKey('RC Remark')]: null,
+                    [sanitizeKey('RC Undo Log')]: undoLog
+                };
+            }
+            
+            // Close details modal so when search refreshes, user can click again to see new status cleanly
+            window.closeVehicleDetailsModal();
+
+            update(ref(db, currentRcResetPath), updateData).then(() => {
+                window.closeRcPinModal();
+                showToast("RC Status successfully reset!");
+                setTimeout(() => window.handleVehicleSearch(), 500); // Refresh search UI
+            }).catch(e => {
+                showToast("Error: " + e.message);
+            });
+        };
+
+        // --- HSRP TRACKING FUNCTIONS ---
+        let currentHsrpDbPath = null;
+        let currentHsrpResetPath = null;
+        let currentHsrpResetStatus = null;
+
+        window.markHsrpReceived = function(dbPath) {
+            window.showConfirmModal("Mark HSRP Received", "Are you sure you have received this HSRP Number Plate at showroom?", () => {
+                const updateData = {
+                    [sanitizeKey('HSRP Status')]: 'Received',
+                    [sanitizeKey('HSRP Received Date')]: getNowTimestamp()
+                };
+                update(ref(db, dbPath), updateData).then(() => {
+                    showToast("HSRP marked as Received!");
+                    setTimeout(() => window.handleVehicleSearch(), 500); // Refresh search
+                }).catch(e => showToast("Error: " + e.message));
+            });
+        };
+
+        window.openHsrpHandoverModal = function(dbPath) {
+            currentHsrpDbPath = dbPath;
+            document.getElementById('hsrpHandoverForm').reset();
+            const modal = document.getElementById('hsrpHandoverModal');
+            const content = document.getElementById('hsrpHandoverModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+
+        window.closeHsrpHandoverModal = function() {
+            const modal = document.getElementById('hsrpHandoverModal');
+            const content = document.getElementById('hsrpHandoverModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentHsrpDbPath = null; }, 200);
+        };
+
+        window.saveHsrpHandover = function() {
+            if(!currentHsrpDbPath) return;
+            const rName = document.getElementById('hsrpReceiverName').value.trim();
+            const rMobile = document.getElementById('hsrpReceiverMobile').value.trim();
+            const rRemark = document.getElementById('hsrpRemark').value.trim();
+
+            if(rMobile.length !== 10) return showToast("Mobile number must be exactly 10 digits!");
+
+            const updateData = {
+                [sanitizeKey('HSRP Status')]: 'Delivered',
+                [sanitizeKey('HSRP Handover Date')]: getNowTimestamp(),
+                [sanitizeKey('HSRP Receiver Name')]: rName,
+                [sanitizeKey('HSRP Receiver Mobile')]: rMobile,
+                [sanitizeKey('HSRP Remark')]: rRemark
+            };
+
+            const btn = document.querySelector('#hsrpHandoverForm button[type="submit"]');
+            btn.disabled = true; btn.textContent = "Saving...";
+
+            update(ref(db, currentHsrpDbPath), updateData).then(() => {
+                window.closeHsrpHandoverModal();
+                showToast("HSRP Handover details saved successfully!");
+                setTimeout(() => window.handleVehicleSearch(), 500); // Refresh search UI
+            }).catch(e => {
+                showToast("Error: " + e.message);
+            }).finally(() => {
+                btn.disabled = false; btn.textContent = "Confirm Handover";
+            });
+        };
+
+        window.promptHsrpReset = function(dbPath, currentStatus) {
+            currentHsrpResetPath = dbPath;
+            currentHsrpResetStatus = currentStatus;
+            
+            document.getElementById('hsrpPinInput').value = '';
+            document.getElementById('hsrpUndoReason').value = '';
+            document.getElementById('hsrpPinError').classList.add('hidden');
+            
+            const scopeContainer = document.getElementById('hsrpUndoScopeContainer');
+            const scopeSelect = document.getElementById('hsrpUndoScope');
+            
+            if (currentStatus === 'Delivered') {
+                scopeContainer.classList.remove('hidden');
+                scopeSelect.value = 'handover';
+            } else {
+                scopeContainer.classList.add('hidden');
+                scopeSelect.value = 'all'; 
+            }
+
+            const modal = document.getElementById('hsrpPinModal');
+            const content = document.getElementById('hsrpPinModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
+        };
+
+        window.closeHsrpPinModal = function() {
+            const modal = document.getElementById('hsrpPinModal');
+            const content = document.getElementById('hsrpPinModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentHsrpResetPath = null; currentHsrpResetStatus = null; }, 200);
+        };
+
+        window.verifyHsrpPinAndReset = function() {
+            if (!currentHsrpResetPath) return;
+            const enteredPin = document.getElementById('hsrpPinInput').value.trim();
+            const reason = document.getElementById('hsrpUndoReason').value.trim();
+            const scope = document.getElementById('hsrpUndoScope').value;
+            const errorEl = document.getElementById('hsrpPinError');
+
+            if (enteredPin !== String(currentUser.pin)) {
+                errorEl.textContent = "Galat PIN. Phir se try karein.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            
+            if (!reason) {
+                errorEl.textContent = "Reason likhna zaroori hai.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            const undoLog = `[${getNowTimestamp()}] Undone by ${currentUser.name} - Reason: ${reason}`;
+            let updateData = {};
+
+            if (scope === 'handover' && currentHsrpResetStatus === 'Delivered') {
+                updateData = {
+                    [sanitizeKey('HSRP Status')]: 'Received',
+                    [sanitizeKey('HSRP Handover Date')]: null,
+                    [sanitizeKey('HSRP Receiver Name')]: null,
+                    [sanitizeKey('HSRP Receiver Mobile')]: null,
+                    [sanitizeKey('HSRP Remark')]: null,
+                    [sanitizeKey('HSRP Undo Log')]: undoLog
+                };
+            } else {
+                updateData = {
+                    [sanitizeKey('HSRP Status')]: null,
+                    [sanitizeKey('HSRP Received Date')]: null,
+                    [sanitizeKey('HSRP Handover Date')]: null,
+                    [sanitizeKey('HSRP Receiver Name')]: null,
+                    [sanitizeKey('HSRP Receiver Mobile')]: null,
+                    [sanitizeKey('HSRP Remark')]: null,
+                    [sanitizeKey('HSRP Undo Log')]: undoLog
+                };
+            }
+            
+            window.closeVehicleDetailsModal();
+
+            update(ref(db, currentHsrpResetPath), updateData).then(() => {
+                window.closeHsrpPinModal();
+                showToast("HSRP Status successfully reset!");
+                setTimeout(() => window.handleVehicleSearch(), 500);
+            }).catch(e => {
+                showToast("Error: " + e.message);
+            });
         };
 
     </script>
