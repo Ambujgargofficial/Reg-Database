@@ -3424,8 +3424,16 @@
             document.getElementById('searchLoadingState').classList.add('hidden');
             document.getElementById('searchDefaultState').classList.remove('hidden');
             
-            // Update info text
-            const totalRecs = masterInvoices.length + masterRegistrations.length;
+            // Update info text based on User Role (Admin sees all, Users see only their own count)
+            let totalRecs = 0;
+            if (currentUser && currentUser.role !== 'Admin') {
+                const uName = currentUser.name.toLowerCase();
+                const invCount = masterInvoices.filter(inv => (inv[sanitizeKey('Requesting Dealer')] || '').toLowerCase() === uName).length;
+                const regCount = masterRegistrations.filter(reg => (reg[sanitizeKey('Processed By')] || '').toLowerCase() === uName).length;
+                totalRecs = invCount + regCount;
+            } else {
+                totalRecs = masterInvoices.length + masterRegistrations.length;
+            }
             document.getElementById('searchDbInfo').textContent = `Database loaded: ${totalRecs} records maujood hain`;
         };
 
@@ -3443,12 +3451,23 @@
 
             clearTimeout(searchTimeout);
 
+            // Access Control Logic - Filter Database Before Searching
+            let searchableInvoices = masterInvoices;
+            let searchableRegistrations = masterRegistrations;
+
+            if (currentUser && currentUser.role !== 'Admin') {
+                const uName = currentUser.name.toLowerCase();
+                searchableInvoices = masterInvoices.filter(inv => (inv[sanitizeKey('Requesting Dealer')] || '').toLowerCase() === uName);
+                searchableRegistrations = masterRegistrations.filter(reg => (reg[sanitizeKey('Processed By')] || '').toLowerCase() === uName);
+            }
+
             if (term.length < 3) {
                 resultsList.classList.add('hidden');
                 noResultsState.classList.add('hidden');
                 loadingState.classList.add('hidden');
                 defaultState.classList.remove('hidden');
-                const totalRecs = masterInvoices.length + masterRegistrations.length;
+                
+                const totalRecs = searchableInvoices.length + searchableRegistrations.length;
                 document.getElementById('searchDbInfo').textContent = `Database loaded: ${totalRecs} records maujood hain`;
                 return;
             }
@@ -3464,7 +3483,7 @@
                 let seenFrames = new Set();
 
                 // 1. Search in Invoices First (Primary source of truth)
-                masterInvoices.forEach(inv => {
+                searchableInvoices.forEach(inv => {
                     let regNo = (inv[sanitizeKey('Permanent Reg No')] || '').toLowerCase();
                     let name = (inv[sanitizeKey('Customer Name')] || inv[sanitizeKey('Customer First Name')] || '').toLowerCase();
                     let phone = (inv[sanitizeKey('Mobile No')] || inv[sanitizeKey('Mobile Phone #')] || '').toLowerCase();
@@ -3487,7 +3506,7 @@
                 });
 
                 // 2. Search in Registrations for things that might NOT have an invoice
-                masterRegistrations.forEach(reg => {
+                searchableRegistrations.forEach(reg => {
                     let regNo = (reg[sanitizeKey('Registration No')] || '').toLowerCase();
                     let name = (reg[sanitizeKey('Customer Name')] || '').toLowerCase();
                     let frame = (reg[sanitizeKey('Chasis No')] || '').toLowerCase();
