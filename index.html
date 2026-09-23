@@ -107,6 +107,104 @@
         </div>
     </div>
 
+    <!-- VEHICLE SEARCH PIN MODAL -->
+    <div id="searchPinModal" class="fixed inset-0 z-[260] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs p-6 relative transform scale-95 transition-transform duration-200" id="searchPinModalContent" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 rounded-full mx-auto mb-4 text-indigo-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-center text-slate-800 mb-1">Security Check</h3>
+            <p class="text-slate-500 text-center text-sm mb-5">Number dekhne ke liye apna PIN dalein</p>
+            <form onsubmit="event.preventDefault(); window.verifySearchPin();">
+                <input type="password" id="searchPinInput" pattern="[0-9]*" inputmode="numeric" maxlength="4" class="w-full text-center text-3xl font-bold tracking-[0.5em] py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-100 mb-2 transition-all" placeholder="••••">
+                <div class="h-6 mb-2 text-center">
+                    <p id="searchPinError" class="hidden text-red-500 text-xs font-semibold animate-pulse">Galat PIN. Phir se try karein.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button type="button" onclick="window.closeSearchPinModal()" class="flex-1 py-3 text-slate-600 font-medium bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">Unlock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VEHICLE DETAILS MODAL -->
+    <div id="vehicleDetailsModal" class="fixed inset-0 z-[250] hidden items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200 opacity-0">
+        <div class="bg-white w-full max-w-lg sm:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col transform translate-y-full sm:translate-y-10 sm:scale-95 transition-all duration-300" id="vehicleDetailsModalContent">
+            <div class="flex justify-between items-center p-5 border-b bg-slate-50 rounded-t-3xl sm:rounded-t-2xl">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Gaadi Ki Details</h2>
+                    <p class="text-xs text-slate-500" id="vdRegNo">UP00XX0000</p>
+                </div>
+                <button onclick="window.closeVehicleDetailsModal()" class="bg-slate-200 p-2 rounded-full hover:bg-slate-300 transition-colors">
+                    <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto max-h-[75vh] custom-scrollbar space-y-5">
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                    <div class="text-center mb-4">
+                        <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <svg class="text-indigo-600 w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"></path></svg>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800" id="vdModelName">Model Name</h3>
+                        <p class="text-sm text-slate-500" id="vdVariantColor">Variant - Color</p>
+                    </div>
+                    
+                    <div class="flex justify-between py-2 border-b border-indigo-200/50">
+                        <span class="text-slate-500 text-sm font-medium">Grahak Ka Naam</span>
+                        <span class="text-slate-800 text-sm font-semibold text-right max-w-[60%] break-words" id="vdCustomerName">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-indigo-200/50 items-center">
+                        <span class="text-slate-500 text-sm font-medium">Sampark (Contact)</span>
+                        <div class="text-right flex items-center gap-2" id="vdPhoneContainer">
+                            <!-- Phone masked content injected via JS -->
+                        </div>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-indigo-200/50">
+                        <span class="text-slate-500 text-sm font-medium">Inv No.</span>
+                        <span class="text-slate-800 text-sm font-semibold" id="vdInvNo">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-indigo-200/50">
+                        <span class="text-slate-500 text-sm font-medium">Inv Date</span>
+                        <span class="text-slate-800 text-sm font-semibold" id="vdInvDate">-</span>
+                    </div>
+                    <div class="flex justify-between py-2" id="vdHypoContainer">
+                        <span class="text-slate-500 text-sm font-medium">Hypothecation</span>
+                        <span class="text-slate-800 text-sm font-semibold text-right max-w-[60%] break-words" id="vdHypo">-</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="flex items-center text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg> 
+                        Identification
+                    </h4>
+                    <div class="bg-white border rounded-xl p-4 shadow-sm">
+                        <div class="flex justify-between py-2 border-b border-slate-100">
+                            <span class="text-slate-500 text-sm font-medium">Frame / Chassis No.</span>
+                            <span class="text-slate-800 text-sm font-semibold" id="vdFrameNo">-</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-slate-500 text-sm font-medium">Engine No.</span>
+                            <span class="text-slate-800 text-sm font-semibold" id="vdEngineNo">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Extra Data / Service Info -->
+                <div id="vdExtraContainer" class="hidden">
+                    <h4 class="flex items-center text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        Additional Info
+                    </h4>
+                    <div class="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm" id="vdExtraContent">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- TIMELINE MODAL -->
     <div id="timelineModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-[150] backdrop-blur-sm opacity-0 transition-opacity duration-200">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col transform scale-95 transition-transform duration-200" id="timelineModalContent">
@@ -223,6 +321,12 @@
         </div>
 
         <nav class="flex-1 p-3 space-y-2 overflow-y-auto custom-scrollbar">
+            <!-- Shared Search Button (All Users) -->
+            <button id="navBtn_searchSection" onclick="window.showAppSection('searchSection')" class="w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Vehicle Search</span>
+            </button>
+
             <!-- Admin Buttons -->
             <button id="navBtn_extractorSection" onclick="window.showAppSection('extractorSection')" class="w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
@@ -256,6 +360,11 @@
             </button>
 
             <!-- Shared Buttons -->
+            <button id="navBtn_extractorCusSection" onclick="window.showAppSection('extractorCusSection')" class="w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Upload Cus Data</span>
+            </button>
+
             <button id="navBtn_reportsSection" onclick="window.showAppSection('reportsSection')" class="w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Reports</span>
@@ -278,6 +387,51 @@
     <main id="mainContentArea" class="flex-1 overflow-y-auto custom-scrollbar relative h-full w-full bg-slate-50/50 hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
         
+            <!-- VEHICLE SEARCH SECTION (All Users) -->
+            <section id="searchSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col h-full min-h-[600px] transition-all duration-300 relative">
+                <!-- Header -->
+                <div class="bg-indigo-700 p-6 rounded-t-xl shadow-lg relative z-10 shrink-0">
+                    <h1 class="text-white text-2xl font-bold tracking-tight mb-2">Vehicle Search</h1>
+                    <p class="text-indigo-100 text-sm mb-5">Reg No, Naam, Mobile ya Frame # se details dhundhein</p>
+                    <div class="relative">
+                        <input type="text" id="vehicleSearchInput" onkeyup="window.handleVehicleSearch()" placeholder="Search Karein (Reg No, Naam, Mobile, Frame #)" class="w-full pl-12 pr-10 py-4 rounded-xl shadow-xl text-slate-700 text-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all placeholder-slate-400">
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <button id="clearSearchBtn" onclick="window.clearVehicleSearch()" class="hidden absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Area -->
+                <div class="p-6 overflow-y-auto custom-scrollbar flex-grow bg-slate-50 relative">
+                    <!-- Default State -->
+                    <div id="searchDefaultState" class="text-center text-slate-400 mt-10">
+                        <div class="mx-auto mb-4 w-16 h-16 text-slate-300 flex items-center justify-center">
+                            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"></path></svg>
+                        </div>
+                        <p class="text-lg font-medium text-slate-500">Search Ke Liye Taiyar</p>
+                        <p class="text-xs mt-2 text-slate-400" id="searchDbInfo">Database loading...</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="searchLoadingState" class="hidden text-center mt-10">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-2"></div>
+                        <p class="text-slate-500 text-sm">Records dhoondh raha hai...</p>
+                    </div>
+
+                    <!-- No Results State -->
+                    <div id="searchNoResultsState" class="hidden bg-white p-8 rounded-xl shadow-sm text-center mt-2 border border-slate-100">
+                        <p class="text-slate-600 font-medium">Koi record nahi mila</p>
+                        <p class="text-slate-400 text-sm mt-1">Doosra Registration No, Naam, ya Frame # try karein</p>
+                    </div>
+
+                    <!-- Results List -->
+                    <div id="searchResultsList" class="space-y-4 hidden pb-10">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </section>
+
             <!-- EXTRACTOR SECTION (Admin) -->
             <section id="extractorSection" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col lg:flex-row gap-0 transition-all duration-300">
                 <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
@@ -340,6 +494,40 @@
                             <table id="previewTableUser" class="w-full text-left border-collapse text-sm hidden">
                                 <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20"><tr id="tableHeadRowUser"></tr></thead>
                                 <tbody id="tableBodyUser" class="divide-y divide-slate-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CUSTOMER DATA EXTRACTOR (Shared) -->
+            <section id="extractorCusSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col lg:flex-row gap-0 transition-all duration-300">
+                <div class="w-full lg:w-1/3 p-6 bg-slate-50 border-r border-slate-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-semibold">1. Paste Customer Data</h2>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-medium">Update Invoices</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Paste raw data containing <span class="font-semibold text-slate-700">Invoice/Frame</span>, <span class="font-semibold text-slate-700">Customer Name</span> & <span class="font-semibold text-slate-700">Mobile</span>.</p>
+                    <textarea id="rawInputCus" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none custom-scrollbar" placeholder="Paste columns here... The system will auto-detect Name, Mobile, and Frame/Invoice #."></textarea>
+                    <button id="extractBtnCus" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors">Extract & Update Database</button>
+                </div>
+                <div class="w-full lg:w-2/3 p-6 flex flex-col h-full min-h-[400px]">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h2 class="text-lg font-semibold">2. Preview & Export</h2>
+                            <p id="statsTextCus" class="text-sm text-slate-500">Awaiting data...</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="copyBtnCus" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium">Copy</button>
+                            <button id="downloadBtnCus" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">Download</button>
+                        </div>
+                    </div>
+                    <div class="flex-grow border border-slate-200 rounded-lg overflow-hidden bg-white shadow-inner flex flex-col relative h-[500px]">
+                        <div id="emptyStateCus" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10"><p class="text-sm font-medium">Extracted customer data updates will appear here</p></div>
+                        <div class="overflow-auto w-full h-full custom-scrollbar">
+                            <table id="previewTableCus" class="w-full text-left border-collapse text-sm hidden">
+                                <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-20"><tr id="tableHeadRowCus"></tr></thead>
+                                <tbody id="tableBodyCus" class="divide-y divide-slate-200"></tbody>
                             </table>
                         </div>
                     </div>
@@ -803,6 +991,8 @@
         let timelinesDB = {}; // format: { tlId: { name, d1_start, d1_end, d2_start, d2_end } }
         let currentModelGroupTab = 'unmapped';
         let currentEditTimelineId = null;
+        let searchTimeout = null;
+        let currentPhoneUnmaskTargetId = null;
 
         let currentManageTab = 'invoices';
         let currentReportTab = 'summary'; // New tracker for Report Views
@@ -816,11 +1006,13 @@
         const TARGET_COLUMNS = [
             "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", "Model Name", 
             "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", 
-            "Engine No/Motor No", "Network Type", "City", "Permanent Reg No", "Billing Network Code"
+            "Engine No/Motor No", "Network Type", "City", "Permanent Reg No", "Billing Network Code",
+            "Customer Name", "Mobile No"
         ];
 
         let extractedDataGlobal = [];
         let extractedRegDataGlobal = [];
+        let extractedCusDataGlobal = [];
         let currentMergedExport = [];
         let currentPendingExport = [];
         let currentDrillDownData = [];
@@ -1026,7 +1218,7 @@
         };
 
         window.showAppSection = function(sectionId) {
-            ['extractorSection', 'extractorSectionUser', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'manageTimelinesSection'].forEach(id => {
+            ['searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'manageTimelinesSection'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
                 
@@ -1059,7 +1251,7 @@
 
         window.goHome = function() {
             if (currentUser?.role === 'Admin') window.showAppSection('extractorSection');
-            else window.showAppSection('extractorSectionUser');
+            else window.showAppSection('searchSection');
         };
 
         // AUTH & MODALS
@@ -1088,6 +1280,7 @@
                 document.getElementById('currentUserRole').textContent = user.role;
                 document.getElementById('navAvatar').textContent = user.name.charAt(0);
                 
+                const navSearch = document.getElementById('navBtn_searchSection');
                 const navAdmin1 = document.getElementById('navBtn_extractorSection');
                 const navAdmin2 = document.getElementById('navBtn_manageDataSection');
                 const navAdmin3 = document.getElementById('navBtn_usersSection');
@@ -1097,6 +1290,8 @@
                 const extractBtnUser = document.getElementById('extractBtnUser');
                 const extractBtn = document.getElementById('extractBtn');
                 
+                if(navSearch) { navSearch.classList.remove('hidden'); navSearch.classList.add('flex'); }
+
                 if (user.role === 'Admin') {
                     navAdmin1.classList.remove('hidden'); navAdmin1.classList.add('flex');
                     navAdmin2.classList.remove('hidden'); navAdmin2.classList.add('flex');
@@ -1162,6 +1357,7 @@
             document.getElementById('loginScreen').classList.remove('hidden');
             loginUsernameInput.value = ''; document.getElementById('loginPin').value = '';
             extractedDataGlobal = []; extractedRegDataGlobal = [];
+            window.clearVehicleSearch(); // Clear search on logout
             showToast("Logged out successfully");
         };
 
@@ -1431,6 +1627,7 @@
                     } else {
                         btn.textContent = "Extract & Save to Cloud";
                         btn.disabled = false;
+                        document.getElementById('rawInput').value = '';
                         showToast("No new invoices or missing updates found in this data.");
                     }
                 } catch(e) {
@@ -1491,7 +1688,149 @@
                     document.getElementById('downloadBtnUser').disabled = false; document.getElementById('copyBtnUser').disabled = false;
                     document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved.`;
                 });
+            } else {
+                document.getElementById('rawInputUser').value = '';
+                showToast("No new or valid registrations found.");
             }
+        });
+
+        // CUSTOMER DATA EXTRACTION (Shared)
+        document.getElementById('extractBtnCus').addEventListener('click', () => {
+            const rawText = document.getElementById('rawInputCus').value.trim();
+            if (!rawText) return showToast("Paste data first!");
+            const btn = document.getElementById('extractBtnCus');
+            btn.textContent = "Processing Data...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const lines = rawText.split(/\r?\n/);
+                    const separator = lines[0].includes('\t') ? '\t' : ',';
+                    const headers = lines[0].split(separator).map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ''));
+                    
+                    // Auto-detect columns
+                    let idIdx = -1; // Invoice or Frame
+                    let nameIdx = -1;
+                    let mobileIdx = -1;
+
+                    headers.forEach((h, idx) => {
+                        if (h.includes('invoice') || h.includes('reference') || h.includes('frame') || h.includes('chasis')) {
+                            if (idIdx === -1) idIdx = idx; // take the first one that matches
+                        }
+                        if (h.includes('name') || h.includes('customer')) {
+                            if (nameIdx === -1) nameIdx = idx;
+                        }
+                        if (h.includes('mobile') || h.includes('phone') || h.includes('contact')) {
+                            if (mobileIdx === -1) mobileIdx = idx;
+                        }
+                    });
+
+                    // Fallback to strict column matching if auto-detect fails
+                    if (idIdx === -1 || nameIdx === -1 || mobileIdx === -1) {
+                         // Try finding them using exact matches if lenient failed
+                         headers.forEach((h, idx) => {
+                             if (h === 'referenceno' || h === 'invoiceno') idIdx = idx;
+                             if (h === 'customerfirstname' || h === 'customername') nameIdx = idx;
+                             if (h === 'mobileno' || h === 'mobilephone') mobileIdx = idx;
+                         });
+                    }
+
+                    if (idIdx === -1 || nameIdx === -1 || mobileIdx === -1) {
+                        btn.textContent = "Extract & Update Database";
+                        btn.disabled = false;
+                        return showToast("Could not detect required columns (Invoice/Frame, Name, Mobile). Please check headers.");
+                    }
+
+                    let updatePayload = {};
+                    let count = 0;
+                    extractedCusDataGlobal = [["Identifier", "Customer Name", "Mobile No", "Status"]];
+
+                    // Create lookup maps for faster matching
+                    const invoiceMap = new Map();
+                    const frameMap = new Map();
+                    
+                    masterInvoices.forEach(inv => {
+                        const invNo = inv[sanitizeKey('Invoice #')];
+                        const frame = inv[sanitizeKey('Frame #')];
+                        if (invNo) invoiceMap.set(invNo.toLowerCase(), inv.__fbKey);
+                        if (frame) frameMap.set(frame.toLowerCase(), inv.__fbKey);
+                    });
+
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i].trim()) continue;
+                        const rowData = lines[i].split(separator);
+                        
+                        let identifier = rowData[idIdx] ? rowData[idIdx].trim() : "";
+                        let name = rowData[nameIdx] ? rowData[nameIdx].trim().replace(/^"|"$/g, '') : "";
+                        let mobile = rowData[mobileIdx] ? rowData[mobileIdx].trim().replace(/\D/g, '') : ""; // only keep digits
+
+                        if (!identifier) continue;
+
+                        let targetKey = invoiceMap.get(identifier.toLowerCase()) || frameMap.get(identifier.toLowerCase());
+
+                        if (targetKey) {
+                            let updated = false;
+                            
+                            // Get existing record to check if we are actually making a change
+                            let existingRecord = masterInvoices.find(r => r.__fbKey === targetKey);
+                            
+                            // Map generic 'Customer Name' and 'Mobile No' back to the primary keys used in the DB
+                            const nameKey = sanitizeKey('Customer Name');
+                            const mobileKey = sanitizeKey('Mobile No');
+
+                            // Only update if the new value is not empty and is different from the existing one
+                            if (name && (!existingRecord || existingRecord[nameKey] !== name)) {
+                                updatePayload[`${targetKey}/${nameKey}`] = name;
+                                updated = true;
+                            }
+                            if (mobile && (!existingRecord || existingRecord[mobileKey] !== mobile)) {
+                                updatePayload[`${targetKey}/${mobileKey}`] = mobile;
+                                updated = true;
+                            }
+
+                            if (updated) {
+                                count++;
+                                extractedCusDataGlobal.push([identifier, name, mobile, "Updated"]);
+                            } else {
+                                extractedCusDataGlobal.push([identifier, name, mobile, "No Change"]);
+                            }
+                        } else {
+                            extractedCusDataGlobal.push([identifier, name, mobile, "Not Found in DB"]);
+                        }
+                    }
+
+                    if (Object.keys(updatePayload).length > 0) {
+                        btn.textContent = "Syncing to Cloud...";
+                        update(ref(db, 'invoices'), updatePayload).then(() => {
+                            btn.textContent = "Extract & Update Database";
+                            btn.disabled = false;
+                            document.getElementById('rawInputCus').value = '';
+                            showToast(`${count} records updated successfully!`);
+                            
+                            renderPreviewTable('previewTableCus', 'tableHeadRowCus', 'tableBodyCus', 'emptyStateCus', extractedCusDataGlobal);
+                            document.getElementById('downloadBtnCus').disabled = false; document.getElementById('copyBtnCus').disabled = false;
+                            document.getElementById('statsTextCus').innerHTML = `<span class="font-bold text-emerald-600">${count}</span> rows updated in database.`;
+                        }).catch(err => {
+                            console.error(err);
+                            showToast("Sync Error: Failed to update database.");
+                            btn.textContent = "Extract & Update Database";
+                            btn.disabled = false;
+                        });
+                    } else {
+                        btn.textContent = "Extract & Update Database";
+                        btn.disabled = false;
+                        document.getElementById('rawInputCus').value = '';
+                        showToast("No new updates found in this data.");
+                        renderPreviewTable('previewTableCus', 'tableHeadRowCus', 'tableBodyCus', 'emptyStateCus', extractedCusDataGlobal);
+                        document.getElementById('downloadBtnCus').disabled = false; document.getElementById('copyBtnCus').disabled = false;
+                    }
+                } catch (e) {
+                    console.error(e);
+                    showToast("Error processing data.");
+                    btn.textContent = "Extract & Update Database";
+                    btn.disabled = false;
+                }
+            }, 50);
         });
 
         function renderPreviewTable(tableId, headId, bodyId, emptyId, data) {
@@ -2598,13 +2937,14 @@
                      const statusColor = type === 'reg' ? 'emerald' : 'orange';
                      const statusText = type === 'reg' ? 'Registered' : 'Pending';
                      
-                     const headers = ["Invoice Date", "Dealer", "Invoice #", "Frame #", "Assigned DSE", "Status"];
+                     const headers = ["Invoice Date", "Dealer", "Invoice #", "Frame #", "Customer Name", "Mobile No", "Status"];
                      const dataRows = records.map(r => [
                          (r[sanitizeKey('Invoice Date')] || '').split(' ')[0],
                          r[sanitizeKey('Requesting Dealer')] || '-',
                          r[sanitizeKey('Invoice #')] || '-',
                          r[sanitizeKey('Frame #')] || '-',
-                         r[sanitizeKey('Assigned To (DSE) Name')] || '-',
+                         r[sanitizeKey('Customer Name')] || '-',
+                         r[sanitizeKey('Mobile No')] || '-',
                          `<span class="text-${statusColor}-600 font-medium">${statusText}</span>`
                      ]);
                      
@@ -3018,6 +3358,7 @@
 
         document.getElementById('downloadBtn').addEventListener('click', () => exportCSV(extractedDataGlobal, 'extracted_vehicle_data.csv'));
         document.getElementById('downloadBtnUser').addEventListener('click', () => exportCSV(extractedRegDataGlobal, 'extracted_registration_data.csv'));
+        document.getElementById('downloadBtnCus').addEventListener('click', () => exportCSV(extractedCusDataGlobal, 'extracted_customer_updates.csv'));
         window.downloadPendingCSV = () => exportCSV(currentPendingExport, `Pending_${currentUser.name.replace(/\s+/g,'_')}.csv`);
         window.downloadMergedCSV = () => exportCSV(currentMergedExport, 'merged_master_data.csv');
 
@@ -3030,6 +3371,358 @@
         }
         document.getElementById('copyBtn').addEventListener('click', () => clipboardCopy(extractedDataGlobal));
         document.getElementById('copyBtnUser').addEventListener('click', () => clipboardCopy(extractedRegDataGlobal));
+
+
+        // ======================= VEHICLE SEARCH NATIVE IMPLEMENTATION =======================
+
+        window.formatDateSearch = function(dateString) {
+            if (!dateString) return "N/A";
+            try {
+                const date = new Date(dateString.split(' ')[0]); // Handle timestamps
+                if (!isNaN(date.getTime())) {
+                    const d = String(date.getDate()).padStart(2, '0');
+                    const m = String(date.getMonth() + 1).padStart(2, '0');
+                    return `${d}-${m}-${date.getFullYear()}`;
+                }
+                return String(dateString);
+            } catch (e) {
+                return String(dateString);
+            }
+        };
+
+        window.clearVehicleSearch = function() {
+            document.getElementById('vehicleSearchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            document.getElementById('searchResultsList').classList.add('hidden');
+            document.getElementById('searchResultsList').innerHTML = '';
+            document.getElementById('searchNoResultsState').classList.add('hidden');
+            document.getElementById('searchLoadingState').classList.add('hidden');
+            document.getElementById('searchDefaultState').classList.remove('hidden');
+            
+            // Update info text
+            const totalRecs = masterInvoices.length + masterRegistrations.length;
+            document.getElementById('searchDbInfo').textContent = `Database loaded: ${totalRecs} records maujood hain`;
+        };
+
+        window.handleVehicleSearch = function() {
+            const input = document.getElementById('vehicleSearchInput');
+            const term = input.value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const defaultState = document.getElementById('searchDefaultState');
+            const loadingState = document.getElementById('searchLoadingState');
+            const noResultsState = document.getElementById('searchNoResultsState');
+            const resultsList = document.getElementById('searchResultsList');
+
+            if (term.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+
+            clearTimeout(searchTimeout);
+
+            if (term.length < 3) {
+                resultsList.classList.add('hidden');
+                noResultsState.classList.add('hidden');
+                loadingState.classList.add('hidden');
+                defaultState.classList.remove('hidden');
+                const totalRecs = masterInvoices.length + masterRegistrations.length;
+                document.getElementById('searchDbInfo').textContent = `Database loaded: ${totalRecs} records maujood hain`;
+                return;
+            }
+
+            defaultState.classList.add('hidden');
+            noResultsState.classList.add('hidden');
+            resultsList.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+
+            searchTimeout = setTimeout(() => {
+                // Combine and search logic
+                let results = [];
+                let seenFrames = new Set();
+
+                // 1. Search in Invoices First (Primary source of truth)
+                masterInvoices.forEach(inv => {
+                    let regNo = (inv[sanitizeKey('Permanent Reg No')] || '').toLowerCase();
+                    let name = (inv[sanitizeKey('Customer Name')] || inv[sanitizeKey('Customer First Name')] || '').toLowerCase();
+                    let phone = (inv[sanitizeKey('Mobile No')] || inv[sanitizeKey('Mobile Phone #')] || '').toLowerCase();
+                    let frame = (inv[sanitizeKey('Frame #')] || '').toLowerCase();
+
+                    if (regNo.includes(term) || name.includes(term) || phone.includes(term) || frame.includes(term)) {
+                        // We found a match in invoice. Try to attach Registration data if available
+                        let enrichedRecord = { ...inv, _source: 'invoice' };
+                        let matchedReg = masterRegistrations.find(r => (r[sanitizeKey('Chasis No')] || '').toLowerCase() === frame && frame !== '');
+                        if (matchedReg) {
+                            enrichedRecord._regData = matchedReg;
+                            // Ensure Registration No takes precedence if missing in invoice
+                            if(!enrichedRecord[sanitizeKey('Permanent Reg No')]) {
+                                enrichedRecord[sanitizeKey('Permanent Reg No')] = matchedReg[sanitizeKey('Registration No')];
+                            }
+                        }
+                        results.push(enrichedRecord);
+                        if(frame) seenFrames.add(frame);
+                    }
+                });
+
+                // 2. Search in Registrations for things that might NOT have an invoice
+                masterRegistrations.forEach(reg => {
+                    let regNo = (reg[sanitizeKey('Registration No')] || '').toLowerCase();
+                    let name = (reg[sanitizeKey('Customer Name')] || '').toLowerCase();
+                    let frame = (reg[sanitizeKey('Chasis No')] || '').toLowerCase();
+
+                    // Avoid duplicating if we already added this frame via Invoice search
+                    if (frame && seenFrames.has(frame)) return;
+
+                    if (regNo.includes(term) || name.includes(term) || frame.includes(term)) {
+                        results.push({ ...reg, _source: 'registration', _regData: reg });
+                        if(frame) seenFrames.add(frame);
+                    }
+                });
+
+                loadingState.classList.add('hidden');
+
+                if (results.length === 0) {
+                    noResultsState.classList.remove('hidden');
+                } else {
+                    renderSearchResults(results);
+                    resultsList.classList.remove('hidden');
+                }
+            }, 300);
+        };
+
+        function renderSearchResults(results) {
+            const list = document.getElementById('searchResultsList');
+            list.innerHTML = '';
+            
+            // Limit to 50 results to prevent UI freezing on generic searches like "123"
+            const displayResults = results.slice(0, 50);
+
+            displayResults.forEach((item, idx) => {
+                // Safely extract values regardless of source (invoice vs reg)
+                const getVal = (keys) => {
+                    for(let k of keys) {
+                        let safeK = sanitizeKey(k);
+                        if(item[safeK]) return item[safeK];
+                        if(item._regData && item._regData[safeK]) return item._regData[safeK];
+                    }
+                    return "";
+                };
+
+                const regNo = getVal(['Permanent Reg No', 'Registration No']) || "N/A";
+                const name = getVal(['Customer Name', 'Customer First Name', 'Account']) || "Unknown Name";
+                const phone = getVal(['Mobile No', 'Mobile Phone #']);
+                const model = getVal(['Model Name']);
+                const frame = getVal(['Frame #', 'Chasis No']) || "N/A";
+                const invNo = getVal(['Invoice #']);
+                const invDate = getVal(['Invoice Date']);
+                
+                const spanId = `searchPhone_${idx}`;
+                
+                // Construct Phone HTML
+                let phoneHtml = `<span class="text-slate-400 italic text-sm">Contact nahi hai</span>`;
+                if (phone) {
+                    const masked = "******" + phone.slice(-4);
+                    phoneHtml = `
+                        <div class="flex items-center gap-2" onclick="event.stopPropagation(); window.requestSearchPhoneUnmask('${spanId}', '${phone}')">
+                            <span id="${spanId}" class="font-medium font-mono text-slate-700">${masked}</span>
+                            <button type="button" class="p-1.5 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-colors focus:outline-none" title="Poora Number Dekhein">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // Construct Card HTML safely storing the entire object data using encodeURIComponent
+                const safeItemData = encodeURIComponent(JSON.stringify(item));
+
+                const cardHtml = `
+                    <div onclick="window.openVehicleDetailsModal('${safeItemData}')" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform duration-100 cursor-pointer hover:shadow-md">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="bg-amber-100 text-amber-800 px-3 py-1 rounded-lg text-sm font-bold tracking-wide border border-amber-200">${regNo}</div>
+                            <svg class="text-slate-300 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-slate-700">
+                                <svg class="w-4 h-4 mr-3 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <span class="font-semibold text-lg truncate">${name}</span>
+                            </div>
+                            <div class="flex items-center text-slate-500">
+                                <svg class="w-4 h-4 mr-3 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                ${phoneHtml}
+                            </div>
+                            
+                            <div class="text-slate-500 text-xs pt-2 border-t mt-3 space-y-2">
+                                <div class="flex flex-col gap-1">
+                                    <div><span class="font-medium text-slate-400">Model Name : </span><span class="font-bold text-slate-700 uppercase tracking-wide">${model || "N/A"}</span></div>
+                                </div>
+                                <div class="uppercase tracking-wider pt-1 border-t border-slate-100 mt-1">Frame: ${frame}</div>
+                                <div class="flex flex-wrap items-center gap-2 mt-1">
+                                    <div class="flex items-center bg-slate-100 px-2 py-0.5 rounded text-slate-600">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+                                        Inv: ${invNo || "N/A"}
+                                    </div>
+                                    <div class="flex items-center text-slate-500">
+                                        <svg class="w-3 h-3 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                        ${window.formatDateSearch(invDate)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += cardHtml;
+            });
+
+            if (results.length > 50) {
+                list.innerHTML += `<div class="text-center text-slate-400 text-xs py-4">Showing first 50 results. Please refine search.</div>`;
+            }
+        }
+
+        window.openVehicleDetailsModal = function(safeDataStr) {
+            try {
+                const item = JSON.parse(decodeURIComponent(safeDataStr));
+                
+                const getVal = (keys) => {
+                    for(let k of keys) {
+                        let safeK = sanitizeKey(k);
+                        if(item[safeK]) return item[safeK];
+                        if(item._regData && item._regData[safeK]) return item._regData[safeK];
+                    }
+                    return "";
+                };
+
+                document.getElementById('vdRegNo').textContent = getVal(['Permanent Reg No', 'Registration No']) || "N/A";
+                document.getElementById('vdModelName').textContent = getVal(['Model Name']) || "N/A";
+                
+                let variant = getVal(['Model Variant']) || "";
+                let color = getVal(['Color']) || "";
+                let varColStr = [variant, color].filter(Boolean).join(" - ");
+                document.getElementById('vdVariantColor').textContent = varColStr || "Variant info missing";
+
+                document.getElementById('vdCustomerName').textContent = getVal(['Customer Name', 'Customer First Name', 'Account']) || "-";
+                
+                // Phone Masking Logic for Details Modal
+                const phone = getVal(['Mobile No', 'Mobile Phone #']);
+                const phoneContainer = document.getElementById('vdPhoneContainer');
+                if(phone) {
+                    const masked = "******" + phone.slice(-4);
+                    phoneContainer.innerHTML = `
+                        <span id="vdPhoneSpan" class="font-medium font-mono text-slate-700">${masked}</span>
+                        <button type="button" onclick="window.requestSearchPhoneUnmask('vdPhoneSpan', '${phone}')" class="p-1.5 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    `;
+                } else {
+                    phoneContainer.innerHTML = `<span class="text-slate-400 italic">N/A</span>`;
+                }
+
+                document.getElementById('vdInvNo').textContent = getVal(['Invoice #']) || "-";
+                document.getElementById('vdInvDate').textContent = window.formatDateSearch(getVal(['Invoice Date']));
+                
+                const hypo = getVal(['Hypothecation', 'Financier']);
+                if(hypo) {
+                    document.getElementById('vdHypoContainer').classList.remove('hidden');
+                    document.getElementById('vdHypo').textContent = hypo;
+                } else {
+                    document.getElementById('vdHypoContainer').classList.add('hidden');
+                }
+
+                document.getElementById('vdFrameNo').textContent = getVal(['Frame #', 'Chasis No']) || "-";
+                document.getElementById('vdEngineNo').textContent = getVal(['Engine No/Motor No']) || "-";
+
+                // Extra Data (Service / DSE / Network)
+                let extraHtml = '';
+                const dse = getVal(['Assigned To (DSE) Name']);
+                if(dse) extraHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Sales Exec:</span> <span class="font-medium text-slate-800 text-right">${dse}</span></div>`;
+                
+                const ntwk = getVal(['Network Name', 'Billing Network Code']);
+                if(ntwk) extraHtml += `<div class="flex justify-between py-1 border-b border-slate-50 last:border-0"><span class="text-slate-500">Dealer:</span> <span class="font-medium text-slate-800 text-right">${ntwk}</span></div>`;
+
+                if(extraHtml !== '') {
+                    document.getElementById('vdExtraContainer').classList.remove('hidden');
+                    document.getElementById('vdExtraContent').innerHTML = extraHtml;
+                } else {
+                    document.getElementById('vdExtraContainer').classList.add('hidden');
+                }
+
+                const modal = document.getElementById('vehicleDetailsModal');
+                const content = document.getElementById('vehicleDetailsModalContent');
+                modal.classList.remove('hidden'); modal.classList.add('flex');
+                
+                // Small delay for smooth animation
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        content.classList.remove('translate-y-full', 'sm:scale-95');
+                        content.classList.add('translate-y-0', 'sm:scale-100');
+                    }, 10);
+                });
+
+            } catch(e) {
+                console.error("Modal Error", e);
+                showToast("Error opening details.");
+            }
+        };
+
+        window.closeVehicleDetailsModal = function() {
+            const modal = document.getElementById('vehicleDetailsModal');
+            const content = document.getElementById('vehicleDetailsModalContent');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('translate-y-0', 'sm:scale-100');
+            content.classList.add('translate-y-full', 'sm:scale-95');
+            
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+                modal.classList.remove('flex'); 
+            }, 300);
+        };
+
+        // Phone Unmasking Logic using User's exact PIN
+        window.requestSearchPhoneUnmask = function(spanId, fullNumber) {
+            currentPhoneUnmaskTargetId = { id: spanId, number: fullNumber };
+            document.getElementById('searchPinInput').value = '';
+            document.getElementById('searchPinError').classList.add('hidden');
+            
+            const modal = document.getElementById('searchPinModal');
+            const content = document.getElementById('searchPinModalContent');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { 
+                setTimeout(() => { 
+                    modal.classList.remove('opacity-0'); 
+                    content.classList.remove('scale-95'); 
+                    document.getElementById('searchPinInput').focus();
+                }, 10); 
+            });
+        };
+
+        window.closeSearchPinModal = function() {
+            const modal = document.getElementById('searchPinModal');
+            const content = document.getElementById('searchPinModalContent');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentPhoneUnmaskTargetId = null; }, 200);
+        };
+
+        window.verifySearchPin = function() {
+            const pin = document.getElementById('searchPinInput').value;
+            const errorEl = document.getElementById('searchPinError');
+            
+            // Verify against logged in user's PIN securely
+            if (String(pin) === String(currentUser.pin)) {
+                if (currentPhoneUnmaskTargetId) {
+                    const targetSpan = document.getElementById(currentPhoneUnmaskTargetId.id);
+                    if(targetSpan) {
+                        targetSpan.textContent = currentPhoneUnmaskTargetId.number;
+                        // Hide the button next to it
+                        if(targetSpan.nextElementSibling && targetSpan.nextElementSibling.tagName === 'BUTTON') {
+                            targetSpan.nextElementSibling.classList.add('hidden');
+                        }
+                    }
+                }
+                window.closeSearchPinModal();
+            } else {
+                errorEl.classList.remove('hidden');
+                document.getElementById('searchPinInput').value = '';
+                document.getElementById('searchPinInput').focus();
+            }
+        };
 
     </script>
 </body>
