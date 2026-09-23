@@ -161,12 +161,20 @@
                         </div>
                     </div>
                     <div class="flex justify-between py-2 border-b border-indigo-200/50">
+                        <span class="text-slate-500 text-sm font-medium">Pata (Address)</span>
+                        <span class="text-slate-800 text-sm font-medium text-right max-w-[60%] break-words leading-tight" id="vdAddress">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-indigo-200/50">
                         <span class="text-slate-500 text-sm font-medium">Inv No.</span>
                         <span class="text-slate-800 text-sm font-semibold" id="vdInvNo">-</span>
                     </div>
                     <div class="flex justify-between py-2 border-b border-indigo-200/50">
                         <span class="text-slate-500 text-sm font-medium">Inv Date</span>
                         <span class="text-slate-800 text-sm font-semibold" id="vdInvDate">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-indigo-200/50">
+                        <span class="text-slate-500 text-sm font-medium">Purchase Type</span>
+                        <span class="text-slate-800 text-sm font-semibold" id="vdPurchaseType">-</span>
                     </div>
                     <div class="flex justify-between py-2" id="vdHypoContainer">
                         <span class="text-slate-500 text-sm font-medium">Hypothecation</span>
@@ -1005,9 +1013,10 @@
 
         const TARGET_COLUMNS = [
             "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", "Model Name", 
-            "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", 
-            "Engine No/Motor No", "Network Type", "City", "Permanent Reg No", "Billing Network Code",
-            "Customer Name", "Mobile No"
+            "Model Variant", "Color", "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", 
+            "Engine No/Motor No", "Network Type", "City", "Address Line 1", "Address Line 2", 
+            "Permanent Reg No", "Billing Network Code", "Customer Name", "Mobile No",
+            "Financier", "Hypothecation"
         ];
 
         let extractedDataGlobal = [];
@@ -3629,9 +3638,19 @@
                     phoneContainer.innerHTML = `<span class="text-slate-400 italic">N/A</span>`;
                 }
 
+                // Populate Address
+                let add1 = getVal(['Address Line 1']) || "";
+                let add2 = getVal(['Address Line 2']) || "";
+                let city = getVal(['City']) || "";
+                let fullAddress = [add1, add2, city].filter(p => p.trim() !== "").join(", ");
+                document.getElementById('vdAddress').textContent = fullAddress || "-";
+
                 document.getElementById('vdInvNo').textContent = getVal(['Invoice #']) || "-";
                 document.getElementById('vdInvDate').textContent = window.formatDateSearch(getVal(['Invoice Date']));
                 
+                // Populate Purchase Type
+                document.getElementById('vdPurchaseType').textContent = getVal(['Purchase Type']) || "-";
+
                 const hypo = getVal(['Hypothecation', 'Financier']);
                 if(hypo) {
                     document.getElementById('vdHypoContainer').classList.remove('hidden');
@@ -3691,53 +3710,24 @@
             }, 300);
         };
 
-        // Phone Unmasking Logic using User's exact PIN
+        // Phone Unmasking Logic (PIN system completely removed - Direct Reveal)
         window.requestSearchPhoneUnmask = function(spanId, fullNumber) {
-            currentPhoneUnmaskTargetId = { id: spanId, number: fullNumber };
-            document.getElementById('searchPinInput').value = '';
-            document.getElementById('searchPinError').classList.add('hidden');
-            
-            const modal = document.getElementById('searchPinModal');
-            const content = document.getElementById('searchPinModalContent');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            requestAnimationFrame(() => { 
-                setTimeout(() => { 
-                    modal.classList.remove('opacity-0'); 
-                    content.classList.remove('scale-95'); 
-                    document.getElementById('searchPinInput').focus();
-                }, 10); 
-            });
+            const targetSpan = document.getElementById(spanId);
+            if(targetSpan) {
+                targetSpan.textContent = fullNumber;
+                // Button (Eye icon) ko hide kar dega
+                if(targetSpan.nextElementSibling && targetSpan.nextElementSibling.tagName === 'BUTTON') {
+                    targetSpan.nextElementSibling.classList.add('hidden');
+                }
+            }
         };
 
         window.closeSearchPinModal = function() {
-            const modal = document.getElementById('searchPinModal');
-            const content = document.getElementById('searchPinModalContent');
-            modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentPhoneUnmaskTargetId = null; }, 200);
+            // Deprecated - No longer used
         };
 
         window.verifySearchPin = function() {
-            const pin = document.getElementById('searchPinInput').value;
-            const errorEl = document.getElementById('searchPinError');
-            
-            // Verify against logged in user's PIN securely
-            if (String(pin) === String(currentUser.pin)) {
-                if (currentPhoneUnmaskTargetId) {
-                    const targetSpan = document.getElementById(currentPhoneUnmaskTargetId.id);
-                    if(targetSpan) {
-                        targetSpan.textContent = currentPhoneUnmaskTargetId.number;
-                        // Hide the button next to it
-                        if(targetSpan.nextElementSibling && targetSpan.nextElementSibling.tagName === 'BUTTON') {
-                            targetSpan.nextElementSibling.classList.add('hidden');
-                        }
-                    }
-                }
-                window.closeSearchPinModal();
-            } else {
-                errorEl.classList.remove('hidden');
-                document.getElementById('searchPinInput').value = '';
-                document.getElementById('searchPinInput').focus();
-            }
+            // Deprecated - No longer used
         };
 
     </script>
