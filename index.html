@@ -2379,6 +2379,10 @@
                 }
             });
 
+            // Store pure data for smart CSV Export
+            window.__lastComparePivotData = pivotData;
+            window.__lastCompareViewBy = viewBy;
+
             tbody.innerHTML = '';
             
             if (Object.keys(pivotData).length === 0) {
@@ -2452,19 +2456,49 @@
         }
 
         window.exportCompareReport = function() {
-            const table = document.querySelector('#reportCompareView table');
-            if (!table) return;
+            if (!window.__lastComparePivotData) return showToast("No data to export");
+            const pivotData = window.__lastComparePivotData;
+            const viewBy = window.__lastCompareViewBy;
+
             let csv = [];
-            const rows = table.querySelectorAll('tr');
-            for (let i = 0; i < rows.length; i++) {
-                let row = [], cols = rows[i].querySelectorAll('td, th');
-                if (cols.length === 1 && cols[0].colSpan > 1) continue; // Skip loading/empty state rows
-                for (let j = 0; j < cols.length; j++) 
-                    row.push(`"${cols[j].innerText.replace(/"/g, '""')}"`);
-                csv.push(row.join(','));
+            if (viewBy === 'DealerSummary') csv.push(['Dealer Name', 'Range 1 Count', 'Range 2 Count', 'Variance', 'Growth %']);
+            else if (viewBy === 'ModelSummary') csv.push(['Model Name', 'Range 1 Count', 'Range 2 Count', 'Variance', 'Growth %']);
+            else csv.push(['Dealer Name', 'Model Name', 'Range 1 Count', 'Range 2 Count', 'Variance', 'Growth %']);
+
+            let gtR1 = 0, gtR2 = 0;
+            
+            const getMetrics = (c1, c2) => {
+                let variance = c2 - c1;
+                let growth = c1 === 0 ? (c2 > 0 ? Infinity : 0) : (variance / c1) * 100;
+                let growthStr = growth === Infinity ? 'N/A' : `${growth > 0 ? '+' : ''}${growth.toFixed(1)}%`;
+                return [c1, c2, variance, `"${growthStr}"`];
+            };
+
+            if (viewBy === 'DealerSummary' || viewBy === 'ModelSummary') {
+                Object.keys(pivotData).sort().forEach(key => {
+                    let d = pivotData[key];
+                    gtR1 += d.r1; gtR2 += d.r2;
+                    csv.push([`"${key}"`, ...getMetrics(d.r1, d.r2)]);
+                });
+            } else {
+                Object.keys(pivotData).sort().forEach(dealer => {
+                    let d = pivotData[dealer];
+                    gtR1 += d.r1; gtR2 += d.r2;
+                    // Only push leaf nodes (models) to flatten the CSV and prevent double rows
+                    Object.keys(d.models).sort().forEach(model => {
+                        let m = d.models[model];
+                        csv.push([`"${dealer}"`, `"${model}"`, ...getMetrics(m.r1, m.r2)]);
+                    });
+                });
             }
+            
+            let gtRow = ['"GRAND TOTAL"'];
+            if (viewBy === 'Pivot') gtRow.push('""'); // Empty cell for Model Column in Grand Total
+            gtRow.push(...getMetrics(gtR1, gtR2));
+            csv.push(gtRow);
+
             if(csv.length <= 1) return showToast("No data to export");
-            const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob([csv.map(r => r.join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'compare_report.csv'; link.click();
         }
 
@@ -2751,6 +2785,12 @@
                 });
             });
 
+            // Store pure data for smart CSV Export
+            window.__lastTimelineRoot = root;
+            window.__lastTimelineHierarchy = hierarchy;
+            window.__lastTimelineD1S = d1s;
+            window.__lastTimelineD2S = d2s;
+
             tbody.innerHTML = '';
             
             if (root.r1 === 0 && root.r2 === 0) {
@@ -2851,19 +2891,69 @@
         }
 
         window.exportTimelineReport = function() {
-            const table = document.querySelector('#reportCompareTimelineView table');
-            if (!table) return;
+            if (!window.__lastTimelineRoot || !window.__lastTimelineHierarchy) return showToast("No data to export");
+            const root = window.__lastTimelineRoot;
+            const hierarchy = window.__lastTimelineHierarchy;
+
             let csv = [];
-            const rows = table.querySelectorAll('tr');
-            for (let i = 0; i < rows.length; i++) {
-                let row = [], cols = rows[i].querySelectorAll('td, th');
-                if (cols.length === 1 && cols[0].colSpan > 1) continue; 
-                for (let j = 0; j < cols.length; j++) 
-                    row.push(`"${cols[j].innerText.replace(/[\n↳▪]/g, '').trim().replace(/"/g, '""')}"`);
-                csv.push(row.join(','));
+            let headers = hierarchy.map(h => h.charAt(0).toUpperCase() + h.slice(1));
+            headers.push('Range 1 Count', 'Range 2 Count', 'Variance', 'Growth %');
+            csv.push(headers.map(h => `"${h}"`));
+            
+            const getMetrics = (c1, c2) => {
+                let variance = c2 - c1;
+                let growth = c1 === 0 ? (c2 > 0 ? Infinity : 0) : (variance / c1) * 100;
+                let growthStr = growth === Infinity ? 'N/A' : `${growth > 0 ? '+' : ''}${growth.toFixed(1)}%`;
+                return [c1, c2, variance, `"${growthStr}"`];
+            };
+
+            const addD = (dateStart, dNum) => {
+                let nd = new Date(dateStart);
+                nd.setDate(nd.getDate() + (parseInt(dNum) - 1));
+                return nd.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+            };
+
+            // Recursive extraction to flatten multi-level hierarchy
+            function traverse(node, currentPath) {
+                if (!node.children || Object.keys(node.children).length === 0) {
+                    let row = currentPath.map(p => `"${p}"`);
+                    row.push(...getMetrics(node.r1, node.r2));
+                    csv.push(row);
+                    return;
+                }
+
+                let keys = Object.keys(node.children);
+                let firstChildType = node.children[keys[0]].keyType;
+                if (firstChildType === 'day') keys.sort((a,b) => parseInt(a) - parseInt(b));
+                else keys.sort();
+
+                keys.forEach(k => {
+                    let childName = k;
+                    if (firstChildType === 'day') {
+                        childName = `Day ${k} (${addD(window.__lastTimelineD1S, k)} vs ${addD(window.__lastTimelineD2S, k)})`; 
+                    }
+                    traverse(node.children[k], [...currentPath, childName]);
+                });
             }
+
+            if (Object.keys(root.children).length > 0) {
+                let topKeys = Object.keys(root.children);
+                if (root.children[topKeys[0]].keyType === 'day') topKeys.sort((a,b) => parseInt(a) - parseInt(b));
+                else topKeys.sort();
+
+                topKeys.forEach(k => {
+                    let childName = root.children[k].keyType === 'day' ? `Day ${k} (${addD(window.__lastTimelineD1S, k)} vs ${addD(window.__lastTimelineD2S, k)})` : k;
+                    traverse(root.children[k], [childName]);
+                });
+            }
+
+            let gtRow = ['"GRAND TOTAL"'];
+            for(let i=1; i<hierarchy.length; i++) gtRow.push('""');
+            gtRow.push(...getMetrics(root.r1, root.r2));
+            csv.push(gtRow);
+
             if(csv.length <= 1) return showToast("No data to export");
-            const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob([csv.map(r => r.join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'timeline_compare_report.csv'; link.click();
         }
 
