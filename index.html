@@ -4242,6 +4242,14 @@
                 return registrationCity && String(registrationCity).trim() ? String(registrationCity).trim() : '-';
             };
 
+            const getInvoiceField = (inv, fieldName) => {
+                const invoiceValue = inv[sanitizeKey(fieldName)] || inv[fieldName];
+                if (invoiceValue && String(invoiceValue).trim()) return String(invoiceValue).trim();
+                const reg = getLinkedRegistration(inv);
+                const registrationValue = reg && (reg[sanitizeKey(fieldName)] || reg[fieldName]);
+                return registrationValue && String(registrationValue).trim() ? String(registrationValue).trim() : '-';
+            };
+
             // Summary metrics
             let totalInvoices = filteredInvoices.length;
             let registeredCount = 0;
@@ -4293,7 +4301,7 @@
                 const title = `${isAll ? 'All Dealers' : targetDealer} - ${typeLabel}`;
                 const subtitle = `Total: ${matching.length} records`;
                 
-                const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model Name', 'Frame #', 'Customer Name', 'Mobile No', 'City', 'Registration No'];
+                const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model Name', 'Frame #', 'Customer Name', 'Mobile No', 'City', 'Registration No', 'Purchase Type', 'Financier', 'Hypothecation'];
                 const dataRows = matching.map(inv => [
                     inv[sanitizeKey('Invoice #')] || inv['Invoice #'] || '-',
                     inv[sanitizeKey('Invoice Date')] || inv['Invoice Date'] || '-',
@@ -4303,7 +4311,10 @@
                     inv[sanitizeKey('Customer Name')] || inv['Customer Name'] || '-',
                     inv[sanitizeKey('Mobile No')] || inv['Mobile No'] || '-',
                     getInvoiceCity(inv),
-                    getInvoiceRegistrationNo(inv) || 'Pending'
+                    getInvoiceRegistrationNo(inv) || 'Pending',
+                    getInvoiceField(inv, 'Purchase Type'),
+                    getInvoiceField(inv, 'Financier'),
+                    getInvoiceField(inv, 'Hypothecation')
                 ]);
                 
                 window.openDrillDownModal(title, subtitle, headers, dataRows);
@@ -4533,7 +4544,14 @@
                 currentMergedExport.push(rowArr);
 
                 if (!regNo || regNo.trim() === '') {
-                    currentPendingExport.push([...rowArr.slice(0, 7), getInvoiceCity(inv), rowArr[7]]);
+                    currentPendingExport.push([
+                        ...rowArr.slice(0, 7),
+                        getInvoiceCity(inv),
+                        rowArr[7],
+                        getInvoiceField(inv, 'Purchase Type'),
+                        getInvoiceField(inv, 'Financier'),
+                        getInvoiceField(inv, 'Hypothecation')
+                    ]);
                 }
             });
 
@@ -4613,7 +4631,7 @@
 
         window.downloadPendingCSV = function() {
             if (currentPendingExport.length === 0) return showToast("No pending records to export");
-            const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model', 'Frame #', 'Customer Name', 'Mobile No', 'City', 'Registration No'];
+            const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model', 'Frame #', 'Customer Name', 'Mobile No', 'City', 'Registration No', 'Purchase Type', 'Financier', 'Hypothecation'];
             let toExport = currentPendingExport;
             if (currentUser?.role !== 'Admin') {
                 toExport = currentPendingExport.filter(row => {
