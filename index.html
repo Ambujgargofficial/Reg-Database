@@ -4208,6 +4208,39 @@
                 return true;
             });
 
+            // Match registrations by chassis so reports agree with the merged/pending export,
+            // even when the registration was uploaded after its invoice.
+            const normalizeChassis = value => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            const regMap = new Map();
+            masterRegistrations.forEach(reg => {
+                const chassis = reg[sanitizeKey('Chasis No')] || reg['Chasis No'] || reg[sanitizeKey('Chassis No')] || reg['Chassis No'];
+                const registrationNo = reg[sanitizeKey('Registration No')] || reg['Registration No'];
+                const key = normalizeChassis(chassis);
+                if (key && registrationNo && String(registrationNo).trim()) regMap.set(key, reg);
+                else if (key && !regMap.has(key)) regMap.set(key, reg);
+            });
+
+            const getLinkedRegistration = inv => {
+                const chassis = inv[sanitizeKey('Frame #')] || inv['Frame #'] || inv[sanitizeKey('Chasis No')] || inv['Chasis No'];
+                return regMap.get(normalizeChassis(chassis)) || null;
+            };
+
+            const getInvoiceRegistrationNo = inv => {
+                const directRegNo = inv[sanitizeKey('Permanent Reg No')] || inv['Permanent Reg No'];
+                if (directRegNo && String(directRegNo).trim()) return String(directRegNo).trim();
+                const reg = getLinkedRegistration(inv);
+                const linkedRegNo = reg && (reg[sanitizeKey('Registration No')] || reg['Registration No']);
+                return linkedRegNo && String(linkedRegNo).trim() ? String(linkedRegNo).trim() : '';
+            };
+
+            const getInvoiceCity = inv => {
+                const invoiceCity = inv[sanitizeKey('City')] || inv['City'];
+                if (invoiceCity && String(invoiceCity).trim()) return String(invoiceCity).trim();
+                const reg = getLinkedRegistration(inv);
+                const registrationCity = reg && (reg[sanitizeKey('City')] || reg['City']);
+                return registrationCity && String(registrationCity).trim() ? String(registrationCity).trim() : '-';
+            };
+
             // Summary metrics
             let totalInvoices = filteredInvoices.length;
             let registeredCount = 0;
@@ -4215,8 +4248,8 @@
             let pendingRows = [];
 
             filteredInvoices.forEach(inv => {
-                const regNo = inv[sanitizeKey('Permanent Reg No')];
-                if (regNo && regNo.trim() !== '') {
+                const regNo = getInvoiceRegistrationNo(inv);
+                if (regNo) {
                     registeredCount++;
                 } else {
                     pendingCount++;
@@ -4232,12 +4265,6 @@
             if (elTotalPending) elTotalPending.textContent = pendingCount;
             const elTotalRegUploads = document.getElementById('summaryTotalRegUploads');
             if (elTotalRegUploads) elTotalRegUploads.textContent = filteredRegistrations.length;
-
-            const regMap = new Map();
-            masterRegistrations.forEach(r => {
-                const ch = r[sanitizeKey('Chasis No')];
-                if (ch) regMap.set(String(ch).toLowerCase().trim(), r);
-            });
 
             // Save filtered records globally for drilldown inspection
             window.__currentFilteredInvoices = filteredInvoices;
@@ -4255,8 +4282,7 @@
                         const d = (inv[sanitizeKey('Requesting Dealer')] || inv['Requesting Dealer'] || 'Unknown Dealer').trim();
                         if (d !== targetDealer) return false;
                     }
-                    const rNo = inv[sanitizeKey('Permanent Reg No')] || inv['Permanent Reg No'];
-                    const isReg = rNo && String(rNo).trim() !== '';
+                    const isReg = !!getInvoiceRegistrationNo(inv);
                     if (type === 'registered') return isReg;
                     if (type === 'pending') return !isReg;
                     return true;
@@ -4266,7 +4292,7 @@
                 const title = `${isAll ? 'All Dealers' : targetDealer} - ${typeLabel}`;
                 const subtitle = `Total: ${matching.length} records`;
                 
-                const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model Name', 'Frame #', 'Customer Name', 'Mobile No', 'Registration No'];
+                const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model Name', 'Frame #', 'Customer Name', 'Mobile No', 'City', 'Registration No'];
                 const dataRows = matching.map(inv => [
                     inv[sanitizeKey('Invoice #')] || inv['Invoice #'] || '-',
                     inv[sanitizeKey('Invoice Date')] || inv['Invoice Date'] || '-',
@@ -4275,7 +4301,8 @@
                     inv[sanitizeKey('Frame #')] || inv['Frame #'] || '-',
                     inv[sanitizeKey('Customer Name')] || inv['Customer Name'] || '-',
                     inv[sanitizeKey('Mobile No')] || inv['Mobile No'] || '-',
-                    inv[sanitizeKey('Permanent Reg No')] || inv['Permanent Reg No'] || 'Pending'
+                    getInvoiceCity(inv),
+                    getInvoiceRegistrationNo(inv) || 'Pending'
                 ]);
                 
                 window.openDrillDownModal(title, subtitle, headers, dataRows);
@@ -4348,8 +4375,8 @@
                             dealerSummaryMap[d] = { total: 0, reg: 0, pend: 0 };
                         }
                         dealerSummaryMap[d].total++;
-                        const rNo = inv[sanitizeKey('Permanent Reg No')] || inv['Permanent Reg No'];
-                        if (rNo && String(rNo).trim() !== '') {
+                        const rNo = getInvoiceRegistrationNo(inv);
+                        if (rNo) {
                             dealerSummaryMap[d].reg++;
                         } else {
                             dealerSummaryMap[d].pend++;
@@ -4488,8 +4515,8 @@
 
             filteredInvoices.forEach(inv => {
                 const frame = inv[sanitizeKey('Frame #')] || '';
-                const regData = regMap.get(frame.toLowerCase().trim());
-                const regNo = inv[sanitizeKey('Permanent Reg No')] || (regData ? regData[sanitizeKey('Registration No')] : '') || '';
+                const regData = getLinkedRegistration(inv);
+                const regNo = getInvoiceRegistrationNo(inv) || (regData ? regData[sanitizeKey('Registration No')] : '') || '';
                 const dealer = inv[sanitizeKey('Requesting Dealer')] || '';
                 const invNo = inv[sanitizeKey('Invoice #')] || '';
                 const invDate = inv[sanitizeKey('Invoice Date')] || '';
@@ -4501,7 +4528,7 @@
                 currentMergedExport.push(rowArr);
 
                 if (!regNo || regNo.trim() === '') {
-                    currentPendingExport.push(rowArr);
+                    currentPendingExport.push([...rowArr.slice(0, 7), getInvoiceCity(inv), rowArr[7]]);
                 }
             });
 
@@ -4536,7 +4563,7 @@
                     pagedInvoices.forEach(inv => {
                         const frame = inv[sanitizeKey('Frame #')] || '';
                         const regData = regMap.get(frame.toLowerCase().trim());
-                        const regNo = inv[sanitizeKey('Permanent Reg No')] || (regData ? regData[sanitizeKey('Registration No')] : '') || '';
+                        const regNo = getInvoiceRegistrationNo(inv) || (regData ? regData[sanitizeKey('Registration No')] : '') || '';
 
                         const tr = document.createElement('tr');
                         tr.className = 'hover:bg-slate-50 transition-colors';
@@ -4581,7 +4608,7 @@
 
         window.downloadPendingCSV = function() {
             if (currentPendingExport.length === 0) return showToast("No pending records to export");
-            const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model', 'Frame #', 'Customer Name', 'Mobile No', 'Registration No'];
+            const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model', 'Frame #', 'Customer Name', 'Mobile No', 'City', 'Registration No'];
             let toExport = currentPendingExport;
             if (currentUser?.role !== 'Admin') {
                 toExport = currentPendingExport.filter(row => {
