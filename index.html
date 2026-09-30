@@ -2347,6 +2347,7 @@
             if (dStr.includes('T')) dStr = dStr.split('T')[0];
             
             const monthMap = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+            const normalizeYear = year => year < 100 ? (year < 50 ? 2000 + year : 1900 + year) : year;
             let parts = dStr.includes('/') ? dStr.split('/') : (dStr.includes('-') ? dStr.split('-') : null);
             if (parts && parts.length === 3) {
                 let p0 = parts[0].trim(), p1 = parts[1].trim(), p2 = parts[2].trim();
@@ -2354,7 +2355,7 @@
                 if (monthMap[mKey] !== undefined) {
                     let d = parseInt(p0, 10);
                     let m = monthMap[mKey];
-                    let y = parseInt(p2, 10);
+                    let y = normalizeYear(parseInt(p2, 10));
                     if (!isNaN(y) && !isNaN(d)) return new Date(y, m, d, 0, 0, 0, 0);
                 }
                 if (p0.length === 4) {
@@ -2362,8 +2363,8 @@
                     let m = parseInt(p1, 10) - 1;
                     let d = parseInt(p2, 10);
                     if (!isNaN(y) && !isNaN(m) && !isNaN(d)) return new Date(y, m, d, 0, 0, 0, 0);
-                } else if (p2.length === 4) {
-                    let y = parseInt(p2, 10);
+                } else if (p2.length === 4 || p2.length === 2) {
+                    let y = normalizeYear(parseInt(p2, 10));
                     let n0 = parseInt(p0, 10), n1 = parseInt(p1, 10);
                     let m, d;
                     if (n1 > 12) { m = n0 - 1; d = n1; } else { m = n1 - 1; d = n0; }
