@@ -3791,8 +3791,11 @@
         window.resetProjectionEdits = function() {
             if (window.__projectionOverrides) window.__projectionOverrides.clear();
             if (window.__projectionModelTotals) window.__projectionModelTotals.clear();
+            const targetProjectionInput = document.getElementById('projTargetProjection');
+            if (targetProjectionInput) targetProjectionInput.value = '';
+            window.calculateYTDGrowth(true);
             window.renderProjectionReport();
-            showToast('Model projections reset to the Target Projection split.');
+            showToast('Target Growth recalculated and Target Projection reset to Auto.');
         };
 
         window.renderProjectionReport = function() {
