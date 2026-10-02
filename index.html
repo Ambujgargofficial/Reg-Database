@@ -515,6 +515,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Model Groups</span>
             </button>
+
+            <button id="navBtn_hypoMappingSection" onclick="window.showAppSection('hypoMappingSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Hypo Mapping</span>
+            </button>
             
             <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -785,6 +790,36 @@
                 </div>
             </section>
 
+            <section id="hypoMappingSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
+                <div class="p-6 border-b border-slate-200 bg-slate-50">
+                    <h2 class="text-lg font-semibold text-slate-800">Hypothecation Mapping</h2>
+                    <p class="text-sm text-slate-500">Map raw invoice Hypothecation values to the New Hypothecation categories used by Fin Ratio.</p>
+                </div>
+                <div class="p-6 flex flex-col gap-4">
+                    <div class="flex gap-4 border-b border-slate-200 pb-2">
+                        <button id="hmTabUnmapped" onclick="window.switchHypoMappingTab('unmapped')" class="font-medium text-indigo-600 border-b-2 border-indigo-600 px-2 pb-1 transition-colors">Unmapped Values</button>
+                        <button id="hmTabMapped" onclick="window.switchHypoMappingTab('mapped')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Mapped Values</button>
+                        <button id="hmTabUpload" onclick="window.switchHypoMappingTab('upload')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Bulk Paste Mapping</button>
+                    </div>
+                    <div id="hmTableContainer" class="border border-slate-200 rounded-lg overflow-hidden custom-scrollbar max-h-[500px] overflow-y-auto bg-white">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead class="bg-slate-100 text-slate-700 sticky top-0 shadow-sm z-10"><tr>
+                                <th class="px-4 py-3 font-semibold border-b">Raw Hypothecation</th>
+                                <th class="px-4 py-3 font-semibold border-b w-1/2">New Hypothecation</th>
+                                <th class="px-4 py-3 font-semibold border-b text-right">Action</th>
+                            </tr></thead>
+                            <tbody id="hypoMappingTableBody" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                    <datalist id="hmGroupDatalist"><option value="BAJAJ"></option><option value="BANDHAN"></option><option value="CHOLA MANDALAM"></option><option value="HDB FINANCE"></option><option value="HDFC"></option><option value="IDFC"></option><option value="MUTHOOT"></option><option value="NOT APLICABLE"></option><option value="OTHER"></option><option value="SHRIRAM"></option><option value="TATA CAPITAL"></option><option value="UJJIVAN"></option></datalist>
+                    <div id="hmUploadContainer" class="hidden flex-col gap-4 border border-slate-200 rounded-lg p-6 bg-slate-50">
+                        <p class="text-sm text-slate-600">Paste two columns from Excel: <b>Hypothecation</b> then <b>New Hypothecation</b>.</p>
+                        <textarea id="hmUploadTextarea" class="w-full h-64 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none custom-scrollbar" placeholder="BAJAJ FINANCE LIMITED&#9;BAJAJ&#10;HDFC BANK LTD&#9;HDFC"></textarea>
+                        <button onclick="window.uploadHypoMappings()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors w-fit">Save Hypo Mappings</button>
+                    </div>
+                </div>
+            </section>
+
             <!-- USER MANAGEMENT (Admin only) -->
             <section id="usersSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
@@ -860,6 +895,7 @@
                         <button id="tabCompare" onclick="window.switchReportTab('compare')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Compare Invoice</button>
                         <button id="tabCompareTimeline" onclick="window.switchReportTab('comptimeline')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Timeline Compare</button>
                         <button id="tabProjection" onclick="window.switchReportTab('projection')" class="hidden font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Retail Projection</button>
+                        <button id="tabFinRatio" onclick="window.switchReportTab('finratio')" class="font-medium text-slate-500 hover:text-slate-700 px-2 pb-1 transition-colors">Fin Ratio</button>
                     </div>
 
                     <div id="sharedReportFilters" class="flex flex-wrap gap-4 items-end bg-slate-50 p-4 rounded-xl border border-slate-200">
@@ -900,6 +936,26 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <div id="reportFinRatioView" class="hidden flex-col gap-4 w-full">
+                        <div class="flex flex-wrap justify-between items-center gap-3">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">Finance Ratio by Hypothecation</h3>
+                                <p id="finRatioDateLabel" class="text-sm text-slate-500">All invoice dates</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="window.clearFinRatioDateRange()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm">All Data</button>
+                                <button onclick="window.exportFinRatioCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-4 rounded-md text-sm shadow-sm">Export CSV</button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
+                            <table id="finRatioTable" class="w-full text-left border-collapse text-sm min-w-max">
+                                <thead id="finRatioTableHead" class="bg-indigo-500 text-white"></thead>
+                                <tbody id="finRatioTableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-slate-500">Finance Ratio = (Total Invoices − blank Hypothecation invoices) ÷ Total Invoices.</p>
                     </div>
                         
                     <!-- Reg Report View Container (Matching Screenshot 2 & 3) -->
@@ -1157,6 +1213,11 @@
                                         <label class="block text-xs font-bold text-indigo-700 mb-1">Target Growth %</label>
                                         <input type="number" id="projTargetGrowth" step="0.1" value="0" class="w-24 px-3 py-1.5 border-2 border-indigo-300 rounded-md text-sm font-bold text-indigo-800 outline-none focus:ring-2 focus:ring-indigo-500 bg-indigo-50 text-right">
                                     </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-emerald-700 mb-1">Target Projection</label>
+                                        <input type="number" id="projTargetProjection" min="0" step="1" placeholder="Auto" oninput="window.updateTargetProjection()" class="w-28 px-3 py-1.5 border-2 border-emerald-300 rounded-md text-sm font-bold text-emerald-800 outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50 text-right">
+                                    </div>
+                                    <button type="button" onclick="window.resetProjectionEdits()" class="mb-0.5 px-2.5 py-1.5 text-xs font-semibold text-slate-700 border border-slate-300 bg-white rounded-md hover:bg-slate-100">Reset Model Projection</button>
                                 </div>
                             </div>
                             
@@ -1211,6 +1272,7 @@
                                         <th class="px-4 py-3 font-semibold border-b w-1/4">Dealer Name</th>
                                         <th class="px-4 py-3 font-semibold border-b w-1/4">Model Name</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">CYTD Contrib %</th>
+                                        <th class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">Overall Model Contribution</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-slate-600">PYTD Count</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-slate-600">CYTD Count</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">Growth %</th>
@@ -1221,7 +1283,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="projTableBody" class="divide-y divide-slate-200">
-                                    <tr><td colspan="8" class="px-4 py-8 text-center text-sm text-slate-500">Select Base Event and Target Growth, then Generate Projection.</td></tr>
+                                    <tr><td colspan="9" class="px-4 py-8 text-center text-sm text-slate-500">Select Base Event and Target Growth. Enter Target Projection to edit model-wise counts, then Generate Projection.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1297,8 +1359,11 @@
         let currentUser = null;
         
         let modelGroupsDB = {}; 
+        let hypoMappingsDB = {};
+        let hypoMappingsLoaded = false;
         let timelinesDB = {}; 
         let currentModelGroupTab = 'unmapped';
+        let currentHypoMappingTab = 'unmapped';
         let currentEditTimelineId = null;
         let searchTimeout = null;
 
@@ -1325,7 +1390,61 @@
         let extractedCusDataGlobal = [];
         let currentMergedExport = [];
         let currentPendingExport = [];
+        let currentFinRatioExport = [];
         let currentDrillDownData = [];
+
+        const DEFAULT_HYPO_MAPPING_ROWS = `BAJAJ FINANCE LIMITED\tBAJAJ
+    BAJAJ FINANCE LTD\tBAJAJ
+    BANDHAN BANK\tBANDHAN
+    BANDHAN BANK LTD\tBANDHAN
+    BANDHAN BANK LTD,CHANDI CHHAK BRANCH,CUTTACK-753001\tBANDHAN
+    BANDHAN BANK LTD,CUTTACK BRANCH-753001\tBANDHAN
+    BANDHAN BANK LTD.\tBANDHAN
+    BHANDHAN BANK LTD.\tBANDHAN
+    BANK OF BARODA\tOTHER
+    BANK OF BARODA , KUDWAL BANARAS - BULANDSHAHR\tOTHER
+    CANARA BANK\tOTHER
+    CENTRAL BANK OF INDIA - BULANDSHAHR\tOTHER
+    CHOLA MANDALAM\tCHOLA MANDALAM
+    CHOLAMANDALAM INVESTMENT AND FINANCE CO. LTD.\tCHOLA MANDALAM
+    CHOLAMANDALAM INVESTMENT AND FINANCE COMPANY LIMITED\tCHOLA MANDALAM
+    HDB FINANCE SERVICES\tHDB FINANCE
+    HDB FINANCIAL SERVICES LTD\tHDB FINANCE
+    HDB FINANCIAL SERVICES LTD,\tHDB FINANCE
+    HDB FINANCIAL SERVICES LTD, 2ND FLOOR, CHAITHANYA BUILDINGS, K K ROAD, KADAVANTHRA, KOCHI, 682017\tHDB FINANCE
+    HDB FINANCIAL SERVICES LTD.\tHDB FINANCE
+    HDB FINANCIAL SERVICES LTD..\tHDB FINANCE
+    HDFC BANK LTD\tHDFC
+    IDFC FIRST BANK\tIDFC
+    IDFC FIRST BANK LTD\tIDFC
+    IDFC FIRST BANK LTD.\tIDFC
+    INDIAN BANK - BULANDSHAHR\tOTHER
+    INDIAN OVER SEAS BANK\tOTHER
+    L.I.C. OF INDIA - DIBAI\tOTHER
+    LIC OF INDIA\tOTHER
+    LIC OF INDIA (BULANDSHAHR)\tOTHER
+    MUTHOOT CAPITAL SERVICES LTD\tMUTHOOT
+    NOT APLICABLE\tNOT APLICABLE
+    OTHER\tOTHER
+    PUNJAB NATIONAL BANK\tOTHER
+    PUNJAB NATIONAL BANK - BRANCH KALI NADI CHANDPUR (BULANDSHAHR)\tOTHER
+    PUNJAB NATIONAL BANK - YAMUNAPURAM,BULANDSHAHR\tOTHER
+    PUNJAB NATIONAL BANK , JATPURA (BULANDSHAHR)\tOTHER
+    PUNJAB NATIONAL BANK, KHAIR- ALIGARH\tOTHER
+    PUNJAB NATIONAL BANK, LALLA BABU CHAURAHA-BULANDSHAHR\tOTHER
+    PUNJAB NATIONAL BANK, MOTIBAGH - BULANDSHAHR\tOTHER
+    SHRI KSHETRA DHARMASTHALA RURAL DEVELOPMENT PROJECT\tOTHER
+    SHRIRAM FINANCE LIMITED\tSHRIRAM
+    TATA CAPITAL LTD.\tTATA CAPITAL
+    UJJIVAN SMALL FINANCE\tUJJIVAN
+    UJJIVAN SMALL FINANCE BANK LTD\tUJJIVAN
+    UJJIVAN SMALL FINANCE BANK LTD.\tUJJIVAN
+    UNION BANK OF INDIA\tOTHER
+    ZILA SAHKARI BANK LTD , BULANDSHAHR (BRANCH:- D.A.V COLLEGE BULANDSHAHR)\tOTHER`;
+        const DEFAULT_HYPO_MAPPINGS = DEFAULT_HYPO_MAPPING_ROWS.split('\n').map(line => {
+            const [original, group] = line.split('\t');
+            return { original: original.trim(), group: group.trim() };
+        });
 
         window.renderUsersTable = function() {
             const tbody = document.getElementById('usersTableBody');
@@ -1410,6 +1529,7 @@
                     if(currentReportTab === 'compare') window.renderCompareReport();
                     else if(currentReportTab === 'comptimeline') window.renderTimelineReport();
                     else if(currentReportTab === 'projection') window.renderProjectionReport();
+                    else if(currentReportTab === 'finratio') window.renderFinRatioReport();
                     else window.renderReports();
                 }
                 
@@ -1461,6 +1581,17 @@
                     if(currentReportTab === 'comptimeline') { window.initTimelineFilters(); window.renderTimelineReport(); }
                     if(currentReportTab === 'projection') { window.initProjectionFilters(); }
                 }
+            });
+
+            onValue(ref(db, 'users/admin_settings/hypo_mappings'), (snapshot) => {
+                hypoMappingsDB = snapshot.val() || {};
+                hypoMappingsLoaded = true;
+                if (currentUser?.role === 'Admin') ensureDefaultHypoMappingsPersisted();
+                if (!currentUser) return;
+                const mappingSection = document.getElementById('hypoMappingSection');
+                if (mappingSection && !mappingSection.classList.contains('hidden')) window.renderHypoMappings();
+                const reportsEl = document.getElementById('reportsSection');
+                if (reportsEl && !reportsEl.classList.contains('hidden') && currentReportTab === 'finratio') window.renderFinRatioReport();
             });
 
             onValue(ref(db, 'users/admin_settings/timelines'), (snapshot) => {
@@ -1539,7 +1670,7 @@
         };
 
         window.showAppSection = function(sectionId) {
-            ['searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'manageTimelinesSection'].forEach(id => {
+            ['searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'hypoMappingSection', 'manageTimelinesSection'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
                 
@@ -1564,10 +1695,12 @@
                 if(currentReportTab === 'compare') window.renderCompareReport();
                 else if(currentReportTab === 'comptimeline') window.renderTimelineReport();
                 else if(currentReportTab === 'projection') window.renderProjectionReport();
+                else if(currentReportTab === 'finratio') window.renderFinRatioReport();
                 else window.renderReports();
             }
             if (sectionId === 'manageDataSection' && currentUser?.role === 'Admin') window.switchManageTab(currentManageTab || 'invoices');
             if (sectionId === 'modelGroupsSection' && currentUser?.role === 'Admin') window.switchModelGroupTab(currentModelGroupTab || 'unmapped');
+            if (sectionId === 'hypoMappingSection' && currentUser?.role === 'Admin') window.switchHypoMappingTab(currentHypoMappingTab || 'unmapped');
             if (sectionId === 'manageTimelinesSection' && currentUser?.role === 'Admin') window.renderManageTimelines();
             if (sectionId === 'searchSection' && typeof window.updateSearchDbInfo === 'function') window.updateSearchDbInfo();
         };
@@ -1598,6 +1731,7 @@
             if (user) {
                 document.getElementById('loginError').classList.add('hidden');
                 currentUser = user;
+                if (hypoMappingsLoaded) ensureDefaultHypoMappingsPersisted();
                 document.getElementById('currentUserDisplay').textContent = user.name;
                 document.getElementById('currentUserRole').textContent = user.role;
                 document.getElementById('navAvatar').textContent = user.name.charAt(0);
@@ -1623,6 +1757,8 @@
                     document.getElementById('navBtn_usersSection').classList.add('flex');
                     document.getElementById('navBtn_modelGroupsSection').classList.remove('hidden');
                     document.getElementById('navBtn_modelGroupsSection').classList.add('flex');
+                    document.getElementById('navBtn_hypoMappingSection').classList.remove('hidden');
+                    document.getElementById('navBtn_hypoMappingSection').classList.add('flex');
                     document.getElementById('navBtn_manageTimelinesSection').classList.remove('hidden');
                     document.getElementById('navBtn_manageTimelinesSection').classList.add('flex');
                     document.getElementById('navBtn_extractorSectionUser').classList.add('hidden');
@@ -1643,6 +1779,8 @@
                     document.getElementById('navBtn_usersSection').classList.remove('flex');
                     document.getElementById('navBtn_modelGroupsSection').classList.add('hidden');
                     document.getElementById('navBtn_modelGroupsSection').classList.remove('flex');
+                    document.getElementById('navBtn_hypoMappingSection').classList.add('hidden');
+                    document.getElementById('navBtn_hypoMappingSection').classList.remove('flex');
                     document.getElementById('navBtn_manageTimelinesSection').classList.add('hidden');
                     document.getElementById('navBtn_manageTimelinesSection').classList.remove('flex');
                     document.getElementById('navBtn_extractorSectionUser').classList.remove('hidden');
@@ -2441,7 +2579,7 @@
         window.switchReportTab = function(tab) {
             currentReportTab = tab;
             
-            ['tabSummary', 'tabMerged', 'tabRegReport', 'tabCompare', 'tabCompareTimeline', 'tabProjection'].forEach(id => {
+            ['tabSummary', 'tabMerged', 'tabRegReport', 'tabCompare', 'tabCompareTimeline', 'tabProjection', 'tabFinRatio'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
                     el.classList.remove('text-indigo-600', 'border-indigo-600');
@@ -2449,23 +2587,23 @@
                 }
             });
 
-            const activeTabId = 'tab' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : (tab === 'compare' ? 'Compare' : (tab === 'comptimeline' ? 'CompareTimeline' : (tab === 'projection' ? 'Projection' : 'RegReport')))));
+            const activeTabId = 'tab' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : (tab === 'compare' ? 'Compare' : (tab === 'comptimeline' ? 'CompareTimeline' : (tab === 'projection' ? 'Projection' : (tab === 'finratio' ? 'FinRatio' : 'RegReport'))))));
             const activeTab = document.getElementById(activeTabId);
             if (activeTab) {
                 activeTab.classList.add('text-indigo-600', 'border-indigo-600');
                 activeTab.classList.remove('text-slate-500');
             }
 
-            ['reportSummaryView', 'reportMergedView', 'reportRegView', 'reportCompareView', 'reportCompareTimelineView', 'reportProjectionView'].forEach(id => {
+            ['reportSummaryView', 'reportMergedView', 'reportRegView', 'reportCompareView', 'reportCompareTimelineView', 'reportProjectionView', 'reportFinRatioView'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
             });
 
-            const activeViewId = 'report' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : (tab === 'compare' ? 'Compare' : (tab === 'comptimeline' ? 'CompareTimeline' : (tab === 'projection' ? 'Projection' : 'Reg'))))) + 'View';
+            const activeViewId = 'report' + (tab === 'summary' ? 'Summary' : (tab === 'merged' ? 'Merged' : (tab === 'compare' ? 'Compare' : (tab === 'comptimeline' ? 'CompareTimeline' : (tab === 'projection' ? 'Projection' : (tab === 'finratio' ? 'FinRatio' : 'Reg')))))) + 'View';
             const activeView = document.getElementById(activeViewId);
             if(activeView) {
                 activeView.classList.remove('hidden');
-                if(tab === 'merged' || tab === 'compare' || tab === 'comptimeline' || tab === 'projection') activeView.classList.add('flex');
+                if(tab === 'merged' || tab === 'compare' || tab === 'comptimeline' || tab === 'projection' || tab === 'finratio') activeView.classList.add('flex');
             }
 
             const sharedFilters = document.getElementById('sharedReportFilters');
@@ -2476,6 +2614,9 @@
                 sharedFilters.classList.remove('hidden');
                 sharedFilters.classList.add('flex');
             }
+
+            const pendingDownloadButton = document.getElementById('downloadPendingBtn');
+            if (pendingDownloadButton) pendingDownloadButton.classList.toggle('hidden', tab === 'finratio');
 
             const filterLabel = document.getElementById('reportUserFilterLabel') || document.querySelector('#reportUserFilterContainer label');
             if (filterLabel) {
@@ -2503,6 +2644,8 @@
                 window.initProjectionFilters();
                 window.initProjectionDates();
                 window.calculateYTDGrowth(true);
+            } else if (tab === 'finratio') {
+                window.renderFinRatioReport();
             } else {
                 window.renderReports();
             }
@@ -2510,7 +2653,16 @@
 
         window.handleReportFilterChange = function() {
             currentMergedPage = 1;
-            window.renderReports();
+            if (currentReportTab === 'finratio') window.renderFinRatioReport();
+            else window.renderReports();
+        };
+
+        window.clearFinRatioDateRange = function() {
+            const startInput = document.getElementById('reportStartDate');
+            const endInput = document.getElementById('reportEndDate');
+            if (startInput) startInput.value = '';
+            if (endInput) endInput.value = '';
+            window.renderFinRatioReport();
         };
 
         window.changeMergedPage = function(newPage) {
@@ -3275,10 +3427,11 @@
             const formatDate = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 
             const cyStart = new Date(cyStartYear, 3, 1); 
-            const cyEnd = now;
+            const cyEnd = new Date(now);
+            cyEnd.setDate(cyEnd.getDate() - 1);
 
             const pyStart = new Date(cyStartYear - 1, 3, 1);
-            const pyEnd = new Date(now);
+            const pyEnd = new Date(cyEnd);
             pyEnd.setFullYear(pyEnd.getFullYear() - 1);
 
             if(document.getElementById('projCYTDStart')) {
@@ -3629,6 +3782,19 @@
             }
         };
 
+        window.updateTargetProjection = function() {
+            if (window.__projectionOverrides) window.__projectionOverrides.clear();
+            if (window.__projectionModelTotals) window.__projectionModelTotals.clear();
+            window.renderProjectionReport();
+        };
+
+        window.resetProjectionEdits = function() {
+            if (window.__projectionOverrides) window.__projectionOverrides.clear();
+            if (window.__projectionModelTotals) window.__projectionModelTotals.clear();
+            window.renderProjectionReport();
+            showToast('Model projections reset to the Target Projection split.');
+        };
+
         window.renderProjectionReport = function() {
             if (!currentUser) return;
             const baseSVal = document.getElementById('projBaseStart')?.value || '';
@@ -3708,7 +3874,7 @@
             if (base1Header) base1Header.textContent = useBase2 ? 'Base1 Event (Last Yr)' : 'Base Event (Last Yr)';
             if (base2Header) base2Header.classList.toggle('hidden', !useBase2);
             if (baseTotalHeader) baseTotalHeader.classList.toggle('hidden', !useBase2);
-            const columnCount = (useBase2 ? 10 : 8) + splitColumns.length;
+            const columnCount = (useBase2 ? 11 : 9) + splitColumns.length;
             const projectionSplitCells = (projection, base1, base2, growthPercent) => projectionSplitValues(projection, base1, base2, growthPercent).map(value => `<td class="px-4 py-2.5 text-sm text-right font-bold text-indigo-800 bg-indigo-50/50">${value}</td>`).join('');
             const projectionBaseCells = (base1, base2, total, cellClass) => useBase2
                 ? `<td class="${cellClass}">${base1}</td><td class="${cellClass}">${base2}</td><td class="${cellClass}">${total}</td>`
@@ -3726,6 +3892,35 @@
             
             const tbody = document.getElementById('projTableBody');
             if (!tbody) return;
+            tbody.onchange = event => {
+                const input = event.target;
+                if (!input.matches('[data-proj-model-count]')) return;
+                const dealer = input.dataset.projDealer;
+                const model = input.dataset.projModel;
+                const value = Math.max(0, Math.round(Number(input.value) || 0));
+                if (!(window.__projectionOverrides instanceof Map)) window.__projectionOverrides = new Map();
+                if (!(window.__projectionModelTotals instanceof Map)) window.__projectionModelTotals = new Map();
+                const previousValue = Math.max(0, Math.round(Number(input.dataset.projPrevious) || 0));
+                const targetValue = Math.max(0, Math.round(Number(document.getElementById('projTargetProjection')?.value) || 0));
+                const cappedValue = Math.min(value, targetValue);
+                input.value = String(cappedValue);
+                window.__projectionOverrides.set(JSON.stringify([dealer, model]), cappedValue);
+                const previousModelTotal = window.__projectionModelTotals.get(model);
+                if (dealer === 'ALL COMBINED') {
+                    window.__projectionModelTotals.set(model, cappedValue);
+                } else if (dealerFilter === 'All') {
+                    const matchingInputs = Array.from(tbody.querySelectorAll('[data-proj-model-count]'))
+                        .filter(candidate => candidate.dataset.projModel === model);
+                    const modelProjectionTotal = matchingInputs.reduce((sum, candidate) => {
+                        const candidateValue = candidate === input ? cappedValue : Math.max(0, Math.round(Number(candidate.value) || 0));
+                        return sum + candidateValue;
+                    }, 0);
+                    window.__projectionModelTotals.set(model, modelProjectionTotal);
+                } else {
+                    window.__projectionModelTotals.set(model, Math.max(0, (previousModelTotal ?? previousValue) + cappedValue - previousValue));
+                }
+                window.renderProjectionReport();
+            };
 
             if(!baseSVal || !baseEVal || (useBase2 && (!base2SVal || !base2EVal)) || !pysVal || !pyeVal || !cysVal || !cyeVal) {
                 tbody.innerHTML = `<tr><td colspan="${columnCount}" class="px-4 py-8 text-center text-sm text-slate-500">Please select all active Base Event dates and both YTD date ranges.</td></tr>`;
@@ -3744,6 +3939,11 @@
             const ps = getD(pysVal, false); const pe = getD(pyeVal, true);
             const cs = getD(cysVal, false); const ce = getD(cyeVal, true);
             const targetGrowth = parseFloat(growthInput) || 0;
+            const targetProjectionValue = document.getElementById('projTargetProjection')?.value.trim() || '';
+            const targetProjectionNumber = Number(targetProjectionValue);
+            const targetProjection = targetProjectionValue !== '' && Number.isFinite(targetProjectionNumber)
+                ? Math.max(0, Math.round(targetProjectionNumber))
+                : null;
 
             tbody.innerHTML = `<tr><td colspan="${columnCount}" class="px-4 py-8 text-center text-sm text-slate-500">Calculating Projection...</td></tr>`;
 
@@ -3808,63 +4008,172 @@
                 return;
             }
 
-            let grandBase1 = 0; let grandBase2 = 0; let grandBase = 0; let grandPY = 0; let grandCY = 0; let grandProj = 0;
+            const projectionAllocationRows = [];
+            let projectionWeightTotal = 0;
+            Object.entries(dealersData).forEach(([dealer, dealerData]) => {
+                Object.entries(dealerData.models).forEach(([model, modelData]) => {
+                    if (modelData.base <= 0 && modelData.cy <= 0) return;
+                    const weight = modelData.cy;
+                    projectionAllocationRows.push({ dealer, model, weight });
+                    projectionWeightTotal += weight;
+                });
+            });
+
+            const manualProjectionByDealerModel = new Map();
+            if (targetProjection !== null && projectionAllocationRows.length > 0) {
+                const allocations = projectionAllocationRows.map(row => {
+                    const exact = projectionWeightTotal > 0
+                        ? targetProjection * row.weight / projectionWeightTotal
+                        : targetProjection / projectionAllocationRows.length;
+                    const value = Math.floor(exact);
+                    return { ...row, value, remainder: exact - value };
+                });
+                let remaining = targetProjection - allocations.reduce((sum, row) => sum + row.value, 0);
+                allocations.slice().sort((a, b) => b.remainder - a.remainder).forEach(row => {
+                    if (remaining <= 0) return;
+                    row.value++;
+                    remaining--;
+                });
+                allocations.forEach(row => {
+                    if (!manualProjectionByDealerModel.has(row.dealer)) manualProjectionByDealerModel.set(row.dealer, new Map());
+                    manualProjectionByDealerModel.get(row.dealer).set(row.model, row.value);
+                });
+            }
+            if (!(window.__projectionOverrides instanceof Map)) window.__projectionOverrides = new Map();
+            const getProjectionOverrideKey = (dealer, model) => JSON.stringify([dealer, model]);
+            const aggregateModelAllocations = new Map();
+            if (dealerFilter === 'All') {
+                const aggregateModels = new Set(projectionAllocationRows.map(row => row.model));
+                aggregateModels.forEach(model => {
+                    const aggregateKey = getProjectionOverrideKey('ALL COMBINED', model);
+                    if (!window.__projectionOverrides.has(aggregateKey)) return;
+                    const desiredTotal = Math.max(0, Math.round(Number(window.__projectionOverrides.get(aggregateKey)) || 0));
+                    const dealerRows = projectionAllocationRows.filter(row => row.model === model);
+                    const baselineWeights = dealerRows.map(row => manualProjectionByDealerModel.get(row.dealer)?.get(model) || 0);
+                    let weightTotal = baselineWeights.reduce((sum, weight) => sum + weight, 0);
+                    if (weightTotal === 0) {
+                        dealerRows.forEach((row, index) => baselineWeights[index] = row.weight);
+                        weightTotal = baselineWeights.reduce((sum, weight) => sum + weight, 0);
+                    }
+                    if (weightTotal === 0) {
+                        dealerRows.forEach((row, index) => baselineWeights[index] = 1);
+                        weightTotal = dealerRows.length;
+                    }
+                    const allocations = dealerRows.map((row, index) => {
+                        const exact = desiredTotal * baselineWeights[index] / weightTotal;
+                        const value = Math.floor(exact);
+                        return { row, value, remainder: exact - value };
+                    });
+                    let remaining = desiredTotal - allocations.reduce((sum, allocation) => sum + allocation.value, 0);
+                    allocations.slice().sort((a, b) => b.remainder - a.remainder).forEach(allocation => {
+                        if (remaining <= 0) return;
+                        allocation.value++;
+                        remaining--;
+                    });
+                    allocations.forEach(allocation => aggregateModelAllocations.set(
+                        getProjectionOverrideKey(allocation.row.dealer, model), allocation.value
+                    ));
+                });
+            }
+            const getManualModelProjection = (dealer, model) => {
+                const key = getProjectionOverrideKey(dealer, model);
+                if (window.__projectionOverrides.has(key)) return window.__projectionOverrides.get(key);
+                if (aggregateModelAllocations.has(key)) return aggregateModelAllocations.get(key);
+                return manualProjectionByDealerModel.get(dealer)?.get(model) || 0;
+            };
+
+            const projectionByDealer = new Map();
+            let grandProj = 0;
+            Object.keys(dealersData).sort().forEach(dealer => {
+                const dObj = dealersData[dealer];
+                const modelProjArr = Object.keys(dObj.models)
+                    .filter(model => dObj.models[model].base > 0 || dObj.models[model].cy > 0)
+                    .sort()
+                    .map(model => {
+                        const mObj = dObj.models[model];
+                        const ratio = dObj.cyTotal > 0
+                            ? mObj.cy / dObj.cyTotal
+                            : (dObj.baseTotal > 0 ? mObj.base / dObj.baseTotal : 0);
+                        const modelGrowth = mObj.py > 0 ? ((mObj.cy - mObj.py) / mObj.py) * 100 : null;
+                        const appliedGrowth = modelGrowth === null ? targetGrowth : modelGrowth;
+                        const rawProjection = mObj.base * (1 + (appliedGrowth / 100));
+                        const modelProj = targetProjection === null
+                            ? Math.round(rawProjection)
+                            : getManualModelProjection(dealer, model);
+                        return { name: model, base1: mObj.base1, base2: mObj.base2, base: mObj.base, py: mObj.py, cy: mObj.cy, proj: modelProj, rawProjection, growth: modelGrowth, appliedGrowth, ratio: ratio * 100 };
+                    });
+                let dealerProjTotal = modelProjArr.reduce((sum, model) => sum + model.proj, 0);
+
+                if (targetProjection === null) {
+                    const targetDealerTotal = Math.round(dObj.baseTotal * (1 + (targetGrowth / 100)));
+                    let roundingDifference = targetDealerTotal - dealerProjTotal;
+                    while (roundingDifference !== 0 && modelProjArr.length > 0) {
+                        const direction = roundingDifference > 0 ? 1 : -1;
+                        const eligibleModels = modelProjArr
+                            .filter(model => direction > 0 || model.proj > 0)
+                            .sort((a, b) => {
+                                const aRemainder = a.rawProjection - Math.floor(a.rawProjection);
+                                const bRemainder = b.rawProjection - Math.floor(b.rawProjection);
+                                return direction > 0 ? bRemainder - aRemainder : aRemainder - bRemainder;
+                            });
+                        if (!eligibleModels.length) break;
+                        eligibleModels[0].proj += direction;
+                        dealerProjTotal += direction;
+                        roundingDifference -= direction;
+                    }
+                }
+
+                projectionByDealer.set(dealer, { models: modelProjArr, total: dealerProjTotal });
+                grandProj += dealerProjTotal;
+            });
+
+            const projectionTotalByModel = new Map();
+            projectionByDealer.forEach(dealerProjection => {
+                dealerProjection.models.forEach(model => {
+                    projectionTotalByModel.set(model.name, (projectionTotalByModel.get(model.name) || 0) + model.proj);
+                });
+            });
+            if (!(window.__projectionModelTotals instanceof Map)) window.__projectionModelTotals = new Map();
+            if ((dealerFilter === 'All' || isCombined) && modelFilter === 'All') {
+                projectionTotalByModel.forEach((total, model) => window.__projectionModelTotals.set(model, total));
+            }
+            const getOverallModelContribution = (model, count) => {
+                const modelTotal = dealerFilter === 'All' || isCombined
+                    ? (projectionTotalByModel.get(model) ?? window.__projectionModelTotals.get(model) ?? 0)
+                    : (window.__projectionModelTotals.get(model) ?? projectionTotalByModel.get(model) ?? 0);
+                return modelTotal > 0 ? `${((count / modelTotal) * 100).toFixed(1)}%` : '0.0%';
+            };
+            const getProjectionContribution = (count, total = grandProj) => total > 0
+                ? `${((count / total) * 100).toFixed(1)}%`
+                : '0.0%';
+            let grandBase1 = 0; let grandBase2 = 0; let grandBase = 0; let grandPY = 0; let grandCY = 0;
+            const projectionCountCell = (dealer, model, count, cellClass) => targetProjection !== null
+                ? `<input type="number" min="0" max="${targetProjection}" step="1" value="${count}" data-proj-model-count="true" data-proj-dealer="${escapeProjectionHtml(dealer)}" data-proj-model="${escapeProjectionHtml(model)}" data-proj-previous="${count}" aria-label="Projection count for ${escapeProjectionHtml(model)} at ${escapeProjectionHtml(dealer)}" class="w-20 max-w-full border border-emerald-200 rounded px-1 py-1 text-right font-bold text-emerald-800 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 ${cellClass}">`
+                : count;
 
             Object.keys(dealersData).sort().forEach(dealer => {
                 let dObj = dealersData[dealer];
-                let dealerProjTotal = 0;
-                let modelProjArr = [];
-
-                Object.keys(dObj.models).filter(model => dObj.models[model].base > 0 || dObj.models[model].cy > 0).sort().forEach(model => {
-                    let mObj = dObj.models[model];
-                    let ratio = 0;
-                    if (dObj.cyTotal > 0) {
-                        ratio = mObj.cy / dObj.cyTotal;
-                    } else if (dObj.baseTotal > 0) {
-                        ratio = mObj.base / dObj.baseTotal;
-                    }
-
-                    const modelGrowth = mObj.py > 0 ? ((mObj.cy - mObj.py) / mObj.py) * 100 : null;
-                    const appliedGrowth = modelGrowth === null ? targetGrowth : modelGrowth;
-                    const rawProjection = mObj.base * (1 + (appliedGrowth / 100));
-                    const modelProj = Math.round(rawProjection);
-                    dealerProjTotal += modelProj;
-                    modelProjArr.push({ name: model, base1: mObj.base1, base2: mObj.base2, base: mObj.base, py: mObj.py, cy: mObj.cy, proj: modelProj, rawProjection, growth: modelGrowth, appliedGrowth, ratio: ratio * 100 });
-                });
-
-                // Reconcile per-model rounding with the editable overall target so row totals match the target count.
-                const targetDealerTotal = Math.round(dObj.baseTotal * (1 + (targetGrowth / 100)));
-                let roundingDifference = targetDealerTotal - dealerProjTotal;
-                while (roundingDifference !== 0 && modelProjArr.length > 0) {
-                    const direction = roundingDifference > 0 ? 1 : -1;
-                    const eligibleModels = modelProjArr
-                        .filter(model => direction > 0 || model.proj > 0)
-                        .sort((a, b) => {
-                            const aRemainder = a.rawProjection - Math.floor(a.rawProjection);
-                            const bRemainder = b.rawProjection - Math.floor(b.rawProjection);
-                            return direction > 0 ? bRemainder - aRemainder : aRemainder - bRemainder;
-                        });
-                    if (eligibleModels.length === 0) break;
-                    eligibleModels[0].proj += direction;
-                    roundingDifference -= direction;
-                    dealerProjTotal += direction;
-                }
-                
-                modelProjArr.sort((a,b) => a.name.localeCompare(b.name));
+                const dealerProjection = projectionByDealer.get(dealer) || { models: [], total: 0 };
+                const dealerProjTotal = dealerProjection.total;
+                const modelProjArr = dealerProjection.models;
 
                 modelProjArr.forEach(m => {
                     const growthLabel = m.growth === null ? 'N/A' : `${m.growth.toFixed(1)}%`;
-                    window.__lastProjectionData.push([dealer, m.name, m.ratio.toFixed(1)+'%', m.py, m.cy, growthLabel, m.base1, m.base2, m.base, m.proj, ...projectionSplitValues(m.proj, m.base1, m.base2, m.appliedGrowth)]);
+                    const overallModelContribution = isCombined
+                        ? getProjectionContribution(m.proj)
+                        : getOverallModelContribution(m.name, m.proj);
+                    window.__lastProjectionData.push([dealer, m.name, m.ratio.toFixed(1)+'%', m.py, m.cy, growthLabel, m.base1, m.base2, m.base, m.proj, overallModelContribution, ...projectionSplitValues(m.proj, m.base1, m.base2, m.appliedGrowth)]);
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50 bg-white border-t border-slate-100">
                             <td class="px-4 py-2.5 text-sm font-semibold text-slate-800">${dealer === 'ALL COMBINED' ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">ALL COMBINED</span>' : dealer}</td>
                             <td class="px-4 py-2.5 text-sm font-medium text-slate-700">${m.name}</td>
                             <td class="px-4 py-2.5 text-sm text-right font-medium text-indigo-600 bg-indigo-50/30">${m.ratio.toFixed(1)}%</td>
+                            <td class="px-4 py-2.5 text-sm text-right font-medium text-indigo-700 bg-indigo-50/30">${overallModelContribution}</td>
                             <td class="px-4 py-2.5 text-sm text-right text-slate-600">${m.py}</td>
                             <td class="px-4 py-2.5 text-sm text-right text-slate-600">${m.cy}</td>
                             <td class="px-4 py-2.5 text-sm text-right font-semibold text-indigo-600">${growthLabel}</td>
                             ${projectionBaseCells(m.base1, m.base2, m.base, 'px-4 py-2.5 text-sm text-right text-slate-600 font-bold')}
-                            <td class="px-4 py-2.5 text-sm text-right font-bold text-emerald-800 bg-yellow-50">${m.proj}</td>
+                            <td class="px-4 py-2.5 text-sm text-right font-bold text-emerald-800 bg-yellow-50">${projectionCountCell(dealer, m.name, m.proj, 'bg-yellow-50')}</td>
                             ${projectionSplitCells(m.proj, m.base1, m.base2, m.appliedGrowth)}
                         </tr>
                     `;
@@ -3875,17 +4184,18 @@
                 grandBase += dObj.baseTotal;
                 grandPY += dObj.pyTotal;
                 grandCY += dObj.cyTotal;
-                grandProj += dealerProjTotal;
                 
                 const grandTotalLabel = dealer === 'ALL COMBINED' ? 'ALL COMBINED TOTAL' : `${dealer} TOTAL`;
                 const dealerGrowthLabel = dObj.pyTotal > 0 ? `${(((dObj.cyTotal - dObj.pyTotal) / dObj.pyTotal) * 100).toFixed(1)}%` : 'N/A';
                 const dealerAppliedGrowth = dObj.pyTotal > 0 ? ((dObj.cyTotal - dObj.pyTotal) / dObj.pyTotal) * 100 : targetGrowth;
-                window.__lastProjectionData.push([dealer, grandTotalLabel, '100%', dObj.pyTotal, dObj.cyTotal, dealerGrowthLabel, dObj.base1Total, dObj.base2Total, dObj.baseTotal, dealerProjTotal, ...projectionSplitValues(dealerProjTotal, dObj.base1Total, dObj.base2Total, dealerAppliedGrowth)]);
+                const dealerOverallContribution = getProjectionContribution(dealerProjTotal);
+                window.__lastProjectionData.push([dealer, grandTotalLabel, '100%', dObj.pyTotal, dObj.cyTotal, dealerGrowthLabel, dObj.base1Total, dObj.base2Total, dObj.baseTotal, dealerProjTotal, dealerOverallContribution, ...projectionSplitValues(dealerProjTotal, dObj.base1Total, dObj.base2Total, dealerAppliedGrowth)]);
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-100 bg-slate-50 border-t-2 border-slate-300">
                         <td class="px-4 py-3 text-sm font-bold text-slate-800">${dealer === 'ALL COMBINED' ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-200 text-indigo-900">ALL COMBINED</span>' : dealer}</td>
                         <td class="px-4 py-3 text-sm font-bold text-slate-800">${grandTotalLabel}</td>
                         <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700 bg-indigo-50/50">100%</td>
+                        <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700 bg-indigo-50/50">${dealerOverallContribution}</td>
                         <td class="px-4 py-3 text-sm text-right text-slate-800 font-bold">${dObj.pyTotal}</td>
                         <td class="px-4 py-3 text-sm text-right text-slate-800 font-bold">${dObj.cyTotal}</td>
                         <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700">${dealerGrowthLabel}</td>
@@ -3905,7 +4215,7 @@
                 let combinedPYTotal = 0;
                 let combinedCYTotal = 0;
                 
-                Object.values(dealersData).forEach(dObj => {
+                Object.entries(dealersData).forEach(([dealer, dObj]) => {
                     combinedBase1Total += dObj.base1Total;
                     combinedBase2Total += dObj.base2Total;
                     combinedBaseTotal += dObj.baseTotal;
@@ -3918,15 +4228,12 @@
                         combinedModels[mName].base += mObj.base;
                         combinedModels[mName].py += mObj.py;
                         combinedModels[mName].cy += mObj.cy;
-                        if (mObj.base > 0 || mObj.cy > 0) {
-                            const modelGrowth = mObj.py > 0 ? ((mObj.cy - mObj.py) / mObj.py) * 100 : null;
-                            const appliedGrowth = modelGrowth === null ? targetGrowth : modelGrowth;
-                            combinedModels[mName].proj += Math.round(mObj.base * (1 + (appliedGrowth / 100)));
-                        }
+                        const dealerModelProjection = projectionByDealer.get(dealer)?.models.find(model => model.name === mName);
+                        if (dealerModelProjection) combinedModels[mName].proj += dealerModelProjection.proj;
                     });
                 });
 
-                let combinedProjTotal = grandProj;
+                let combinedProjTotal = Object.values(combinedModels).reduce((sum, model) => sum + model.proj, 0);
                 let combModelArr = [];
                 Object.keys(combinedModels).filter(model => combinedModels[model].base > 0 || combinedModels[model].cy > 0).sort().forEach(model => {
                     let mObj = combinedModels[model];
@@ -3948,12 +4255,14 @@
 
                 combModelArr.forEach(m => {
                     const growthLabel = m.growth === null ? 'N/A' : `${m.growth.toFixed(1)}%`;
-                    window.__lastProjectionData.push(['ALL COMBINED', m.name, m.ratio.toFixed(1)+'%', m.py, m.cy, growthLabel, m.base1, m.base2, m.base, m.proj, ...projectionSplitValues(m.proj, m.base1, m.base2, m.appliedGrowth)]);
+                    const overallModelContribution = getProjectionContribution(m.proj, combinedProjTotal);
+                    window.__lastProjectionData.push(['ALL COMBINED', m.name, m.ratio.toFixed(1)+'%', m.py, m.cy, growthLabel, m.base1, m.base2, m.base, m.proj, overallModelContribution, ...projectionSplitValues(m.proj, m.base1, m.base2, m.appliedGrowth)]);
                     tbody.innerHTML += `
                         <tr class="hover:bg-indigo-50/50 bg-indigo-50/20 border-t border-indigo-100">
                             <td class="px-4 py-2 text-sm font-bold text-indigo-700">ALL COMBINED</td>
                             <td class="px-4 py-2 text-sm font-semibold text-slate-800">${m.name}</td>
                             <td class="px-4 py-2 text-sm text-right font-medium text-indigo-600 bg-indigo-100/40">${m.ratio.toFixed(1)}%</td>
+                            <td class="px-4 py-2 text-sm text-right font-medium text-indigo-700 bg-indigo-100/40">${overallModelContribution}</td>
                             <td class="px-4 py-2 text-sm text-right text-slate-700">${m.py}</td>
                             <td class="px-4 py-2 text-sm text-right text-slate-700">${m.cy}</td>
                             <td class="px-4 py-2 text-sm text-right font-semibold text-indigo-600">${growthLabel}</td>
@@ -3966,12 +4275,14 @@
 
                 const combinedGrowthLabel = combinedPYTotal > 0 ? `${(((combinedCYTotal - combinedPYTotal) / combinedPYTotal) * 100).toFixed(1)}%` : 'N/A';
                 const combinedAppliedGrowth = combinedPYTotal > 0 ? ((combinedCYTotal - combinedPYTotal) / combinedPYTotal) * 100 : targetGrowth;
-                window.__lastProjectionData.push(['ALL COMBINED', 'COMBINED GRAND TOTAL', '100%', combinedPYTotal, combinedCYTotal, combinedGrowthLabel, combinedBase1Total, combinedBase2Total, combinedBaseTotal, combinedProjTotal, ...projectionSplitValues(combinedProjTotal, combinedBase1Total, combinedBase2Total, combinedAppliedGrowth)]);
+                const combinedOverallContribution = getProjectionContribution(combinedProjTotal);
+                window.__lastProjectionData.push(['ALL COMBINED', 'COMBINED GRAND TOTAL', '100%', combinedPYTotal, combinedCYTotal, combinedGrowthLabel, combinedBase1Total, combinedBase2Total, combinedBaseTotal, combinedProjTotal, combinedOverallContribution, ...projectionSplitValues(combinedProjTotal, combinedBase1Total, combinedBase2Total, combinedAppliedGrowth)]);
                 tbody.innerHTML += `
                     <tr class="bg-indigo-100/80 border-t-2 border-indigo-300 font-bold">
                         <td class="px-4 py-2.5 text-sm font-extrabold text-indigo-900">ALL COMBINED</td>
                         <td class="px-4 py-2.5 text-sm font-extrabold text-indigo-900">COMBINED GRAND TOTAL</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800 bg-indigo-200/50">100%</td>
+                        <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800 bg-indigo-200/50">${combinedOverallContribution}</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-slate-900">${combinedPYTotal}</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-slate-900">${combinedCYTotal}</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800">${combinedGrowthLabel}</td>
@@ -3985,6 +4296,7 @@
             tbody.innerHTML += `
                 <tr class="bg-slate-300 font-extrabold border-t-4 border-slate-400">
                     <td colspan="3" class="px-4 py-4 uppercase text-slate-900 tracking-wide text-right">OVERALL SYSTEM TOTAL</td>
+                    <td class="px-4 py-4 text-right text-sm text-indigo-800">${getProjectionContribution(grandProj)}</td>
                     <td class="px-4 py-4 text-right text-sm text-slate-900">${grandPY}</td>
                     <td class="px-4 py-4 text-right text-sm text-slate-900">${grandCY}</td>
                     <td class="px-4 py-4 text-right text-sm text-indigo-800">${grandPY > 0 ? `${(((grandCY - grandPY) / grandPY) * 100).toFixed(1)}%` : 'N/A'}</td>
@@ -3997,11 +4309,33 @@
 
         window.exportProjectionReport = function() {
             try {
-                if (!window.__lastProjectionData || window.__lastProjectionData.length === 0) {
-                    if (typeof window.renderProjectionReport === 'function') {
-                        window.renderProjectionReport();
+                const tbody = document.getElementById('projTableBody');
+                const dealerFilter = document.getElementById('projDealerFilter')?.value || 'ALL_COMBINED';
+                const targetValue = Math.max(0, Math.round(Number(document.getElementById('projTargetProjection')?.value) || 0));
+                const visibleEdits = Array.from(tbody?.querySelectorAll('[data-proj-model-count]') || []);
+                if (visibleEdits.length) {
+                    if (!(window.__projectionOverrides instanceof Map)) window.__projectionOverrides = new Map();
+                    if (!(window.__projectionModelTotals instanceof Map)) window.__projectionModelTotals = new Map();
+                    const editedTotalsByModel = new Map();
+                    visibleEdits.forEach(input => {
+                        const dealer = input.dataset.projDealer;
+                        const model = input.dataset.projModel;
+                        const value = Math.min(targetValue, Math.max(0, Math.round(Number(input.value) || 0)));
+                        const previous = Math.max(0, Math.round(Number(input.dataset.projPrevious) || 0));
+                        input.value = String(value);
+                        window.__projectionOverrides.set(JSON.stringify([dealer, model]), value);
+                        editedTotalsByModel.set(model, (editedTotalsByModel.get(model) || 0) + value);
+                        if (dealerFilter !== 'All' && dealerFilter !== 'ALL_COMBINED' && dealerFilter !== 'ALL COMBINED') {
+                            const currentTotal = window.__projectionModelTotals.get(model) ?? previous;
+                            window.__projectionModelTotals.set(model, Math.max(0, currentTotal + value - previous));
+                        }
+                    });
+                    if (dealerFilter === 'All' || dealerFilter === 'ALL_COMBINED' || dealerFilter === 'ALL COMBINED') {
+                        editedTotalsByModel.forEach((total, model) => window.__projectionModelTotals.set(model, total));
                     }
                 }
+                // Rebuild the export snapshot from the latest input values and overrides.
+                window.renderProjectionReport();
                 if (!window.__lastProjectionData || window.__lastProjectionData.length === 0) {
                     return showToast("No projection data to export");
                 }
@@ -4012,14 +4346,14 @@
                     document.getElementById(`projSplitName${index + 1}`)?.value.trim() || `Projection Part ${index + 1}`
                 );
                 let csv = useBase2
-                    ? [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base1 Event (Last Yr)', 'Base2 Event (Last Yr)', 'Base Total (Last Yr)', 'Projection Count']]
-                    : [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base Event (Last Yr)', 'Projection Count']];
+                    ? [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'Overall Model Contribution', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base1 Event (Last Yr)', 'Base2 Event (Last Yr)', 'Base Total (Last Yr)', 'Projection Count']]
+                    : [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'Overall Model Contribution', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base Event (Last Yr)', 'Projection Count']];
                 csv[0].push(...splitNames);
                 window.__lastProjectionData.forEach(r => {
                     const row = useBase2
-                        ? [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9]]
-                        : [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[9]];
-                    row.push(...r.slice(10, 10 + splitCount));
+                        ? [r[0], r[1], r[2], r[10], r[3], r[4], r[5], r[6], r[7], r[8], r[9]]
+                        : [r[0], r[1], r[2], r[10], r[3], r[4], r[5], r[6], r[9]];
+                    row.push(...r.slice(11, 11 + splitCount));
                     csv.push(row);
                 });
                 exportCSV(csv, 'retail_projection_report.csv');
@@ -4094,6 +4428,135 @@
             }
 
             return false;
+        };
+
+        window.renderFinRatioReport = function() {
+            const head = document.getElementById('finRatioTableHead');
+            const body = document.getElementById('finRatioTableBody');
+            const dateLabel = document.getElementById('finRatioDateLabel');
+            if (!head || !body || !currentUser) return;
+
+            const startValue = document.getElementById('reportStartDate')?.value || '';
+            const endValue = document.getElementById('reportEndDate')?.value || '';
+            const startParts = startValue ? startValue.split('-').map(Number) : null;
+            const endParts = endValue ? endValue.split('-').map(Number) : null;
+            const startDate = startParts ? new Date(startParts[0], startParts[1] - 1, startParts[2], 0, 0, 0, 0) : null;
+            const endDate = endParts ? new Date(endParts[0], endParts[1] - 1, endParts[2], 23, 59, 59, 999) : null;
+            const selectedDealer = document.getElementById('reportUserFilter')?.value || 'All';
+            const hypoMappingMap = getEffectiveHypoMappings();
+            const getValue = (item, name) => item?.[sanitizeKey(name)] || item?.[name] || '';
+            const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[char]);
+
+            if (dateLabel) {
+                if (startValue && endValue) dateLabel.textContent = `Date Range: ${formatDisplayDate(startValue)} to ${formatDisplayDate(endValue)}`;
+                else if (startValue) dateLabel.textContent = `From ${formatDisplayDate(startValue)} onward`;
+                else if (endValue) dateLabel.textContent = `Through ${formatDisplayDate(endValue)}`;
+                else dateLabel.textContent = 'All invoice dates';
+            }
+
+            const availableDealers = new Set();
+            masterInvoices.forEach(inv => {
+                if (currentUser.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) return;
+                const dealer = getValue(inv, 'Requesting Dealer') || getValue(inv, 'Dealer') || getValue(inv, 'Dealer Name');
+                if (dealer) availableDealers.add(String(dealer).trim());
+            });
+            const userSelect = document.getElementById('reportUserFilter');
+            const filterContainer = document.getElementById('reportUserFilterContainer');
+            if (userSelect) {
+                userSelect.innerHTML = `<option value="All">All Dealers</option>`;
+                Array.from(availableDealers).sort((a, b) => a.localeCompare(b)).forEach(dealer => {
+                    const option = document.createElement('option');
+                    option.value = dealer;
+                    option.textContent = dealer;
+                    userSelect.appendChild(option);
+                });
+                userSelect.value = availableDealers.has(selectedDealer) ? selectedDealer : 'All';
+                if (currentUser.role === 'Admin') filterContainer?.classList.remove('hidden');
+                else filterContainer?.classList.add('hidden');
+            }
+            const activeDealer = userSelect?.value || 'All';
+
+            const rows = masterInvoices.filter(inv => {
+                if (currentUser.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) return false;
+                const requestingDealer = String(getValue(inv, 'Requesting Dealer') || getValue(inv, 'Dealer') || getValue(inv, 'Dealer Name')).trim();
+                if (activeDealer !== 'All' && requestingDealer !== activeDealer) return false;
+
+                if (startDate || endDate) {
+                    const invoiceDate = parseStandardDate(getValue(inv, 'Invoice Date'));
+                    if (!invoiceDate) return false;
+                    if (startDate && invoiceDate < startDate) return false;
+                    if (endDate && invoiceDate > endDate) return false;
+                }
+                return true;
+            });
+
+            const pivot = new Map();
+            const dealerStats = new Map();
+            let grandTotal = 0;
+            let totalCash = 0;
+            rows.forEach(inv => {
+                const dealer = String(getValue(inv, 'Network Name') || getValue(inv, 'Billing Network Name') || getValue(inv, 'Requesting Dealer') || getValue(inv, 'Dealer') || getValue(inv, 'Dealer Name') || 'Unknown Dealer').trim();
+                const rawHypo = String(getValue(inv, 'Hypothecation')).trim();
+                const mappedHypo = hypoMappingMap.get(normalizeHypoMappingKey(rawHypo));
+                const hypo = String(mappedHypo?.group || getValue(inv, 'New Hypothecation') || rawHypo).trim();
+                if (!pivot.has(hypo)) pivot.set(hypo, new Map());
+                const dealerCounts = pivot.get(hypo);
+                dealerCounts.set(dealer, (dealerCounts.get(dealer) || 0) + 1);
+                if (!dealerStats.has(dealer)) dealerStats.set(dealer, { total: 0, cash: 0 });
+                const stats = dealerStats.get(dealer);
+                stats.total++;
+                if (!hypo) stats.cash++;
+                grandTotal++;
+                if (!hypo) totalCash++;
+            });
+
+            const dealers = Array.from(dealerStats.keys()).sort((a, b) => {
+                const statsA = dealerStats.get(a), statsB = dealerStats.get(b);
+                const ratioA = statsA.total ? (statsA.total - statsA.cash) / statsA.total : 0;
+                const ratioB = statsB.total ? (statsB.total - statsB.cash) / statsB.total : 0;
+                return ratioB - ratioA || a.localeCompare(b);
+            });
+            const hypoRows = Array.from(pivot.keys()).sort((a, b) => {
+                const totalA = Array.from(pivot.get(a).values()).reduce((sum, count) => sum + count, 0);
+                const totalB = Array.from(pivot.get(b).values()).reduce((sum, count) => sum + count, 0);
+                return totalB - totalA || a.localeCompare(b);
+            });
+            const tableHeaders = ['New Hypothecation', ...dealers, 'Grand Total'];
+            head.innerHTML = `<tr>${tableHeaders.map((label, index) => `<th class="px-3 py-2.5 text-${index ? 'right' : 'left'} text-xs font-bold uppercase tracking-wide whitespace-nowrap border-b border-indigo-400">${esc(label)}</th>`).join('')}</tr>`;
+
+            currentFinRatioExport = [tableHeaders];
+            if (!rows.length) {
+                body.innerHTML = `<tr><td colspan="${Math.max(tableHeaders.length, 2)}" class="px-4 py-8 text-center text-sm text-slate-500">No invoice data found for the selected filters.</td></tr>`;
+                return;
+            }
+
+            const htmlRows = [];
+            hypoRows.forEach(hypo => {
+                const counts = dealers.map(dealer => pivot.get(hypo).get(dealer) || 0);
+                const rowTotal = counts.reduce((sum, count) => sum + count, 0);
+                currentFinRatioExport.push([hypo, ...counts.map(count => count || ''), rowTotal]);
+                htmlRows.push(`<tr class="hover:bg-slate-50"><td class="px-3 py-2 font-medium whitespace-nowrap">${esc(hypo)}</td>${counts.map(count => `<td class="px-3 py-2 text-right tabular-nums">${count || ''}</td>`).join('')}<td class="px-3 py-2 text-right font-semibold tabular-nums">${rowTotal}</td></tr>`);
+            });
+
+            const totals = dealers.map(dealer => dealerStats.get(dealer).total);
+            currentFinRatioExport.push(['Grand Total', ...totals, grandTotal]);
+            htmlRows.push(`<tr class="bg-slate-100 font-bold"><td class="px-3 py-2">Grand Total</td>${totals.map(total => `<td class="px-3 py-2 text-right tabular-nums">${total}</td>`).join('')}<td class="px-3 py-2 text-right tabular-nums">${grandTotal}</td></tr>`);
+
+            const dealerRatios = dealers.map(dealer => {
+                const stats = dealerStats.get(dealer);
+                return stats.total ? (stats.total - stats.cash) / stats.total : 0;
+            });
+            const overallRatio = grandTotal ? (grandTotal - totalCash) / grandTotal : 0;
+            currentFinRatioExport.push(['Finance Ratio', ...dealerRatios.map(ratio => `${(ratio * 100).toFixed(1)}%`), `${(overallRatio * 100).toFixed(1)}%`]);
+            htmlRows.push(`<tr class="font-bold border-t-2 border-slate-300"><td class="px-3 py-2">Finance Ratio</td>${dealerRatios.map(ratio => `<td class="px-3 py-2 text-right text-indigo-700">${(ratio * 100).toFixed(1)}%</td>`).join('')}<td class="px-3 py-2 text-right text-indigo-700">${(overallRatio * 100).toFixed(1)}%</td></tr>`);
+            body.innerHTML = htmlRows.join('');
+        };
+
+        window.exportFinRatioCSV = function() {
+            if (!currentFinRatioExport.length || currentFinRatioExport.length === 1) return showToast('No data to export');
+            exportCSV(currentFinRatioExport, `finance_ratio_${Date.now()}.csv`);
         };
 
         // SUMMARY & MERGED & REG REPORTS
@@ -5986,6 +6449,151 @@
                     if (masterCb) masterCb.checked = false;
                 }).catch(e => showToast("Error: " + e.message));
             });
+        };
+
+        // HYPOTHECATION MAPPING
+        function normalizeHypoMappingKey(value) {
+            return String(value || '').trim().toUpperCase().replace(/\s+/g, ' ');
+        }
+
+        function getEffectiveHypoMappings() {
+            const mappings = new Map();
+            DEFAULT_HYPO_MAPPINGS.forEach(item => mappings.set(normalizeHypoMappingKey(item.original), { ...item, isDefault: true }));
+            Object.values(hypoMappingsDB || {}).forEach(item => {
+                if (!item || !item.original) return;
+                const key = normalizeHypoMappingKey(item.original);
+                if (item.disabled) mappings.delete(key);
+                else if (item.group) mappings.set(key, { original: item.original, group: item.group, isDefault: false });
+            });
+            return mappings;
+        }
+
+        function ensureDefaultHypoMappingsPersisted() {
+            if (!hypoMappingsLoaded || currentUser?.role !== 'Admin') return;
+            const updates = {};
+            DEFAULT_HYPO_MAPPINGS.forEach(item => {
+                const key = sanitizeKey(normalizeHypoMappingKey(item.original));
+                if (!Object.prototype.hasOwnProperty.call(hypoMappingsDB, key)) {
+                    updates[`users/admin_settings/hypo_mappings/${key}`] = item;
+                }
+            });
+            if (Object.keys(updates).length) update(ref(db), updates).catch(error => showToast('Could not initialize default Hypo mappings: ' + error.message));
+        }
+
+        window.switchHypoMappingTab = function(tab) {
+            currentHypoMappingTab = tab;
+            ['hmTabUnmapped', 'hmTabMapped', 'hmTabUpload'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const active = (tab === 'unmapped' && id === 'hmTabUnmapped') || (tab === 'mapped' && id === 'hmTabMapped') || (tab === 'upload' && id === 'hmTabUpload');
+                el.className = active
+                    ? 'font-semibold text-indigo-600 border-b-2 border-indigo-600 px-3 pb-2 transition-colors'
+                    : 'font-medium text-slate-500 hover:text-slate-700 px-3 pb-2 transition-colors';
+            });
+            const table = document.getElementById('hmTableContainer');
+            const upload = document.getElementById('hmUploadContainer');
+            if (tab === 'upload') {
+                table?.classList.add('hidden');
+                upload?.classList.remove('hidden');
+                upload?.classList.add('flex');
+            } else {
+                upload?.classList.add('hidden');
+                upload?.classList.remove('flex');
+                table?.classList.remove('hidden');
+                window.renderHypoMappings();
+            }
+        };
+
+        window.renderHypoMappings = function() {
+            if (currentUser?.role !== 'Admin') return;
+            const tbody = document.getElementById('hypoMappingTableBody');
+            if (!tbody) return;
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+            const mappingMap = getEffectiveHypoMappings();
+            let rows = [];
+            if (currentHypoMappingTab === 'unmapped') {
+                const rawValues = new Map();
+                masterInvoices.forEach(inv => {
+                    const raw = inv[sanitizeKey('Hypothecation')] || inv['Hypothecation'] || '';
+                    const original = String(raw).trim();
+                    const key = normalizeHypoMappingKey(original);
+                    if (key && !mappingMap.has(key)) rawValues.set(key, original);
+                });
+                rows = Array.from(rawValues.values()).sort((a, b) => a.localeCompare(b)).map(original => ({ original, group: '' }));
+                if (!rows.length) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-8 text-center text-sm text-slate-500">All current invoice values are mapped.</td></tr>';
+                    return;
+                }
+            } else {
+                rows = Array.from(mappingMap.values()).sort((a, b) => a.original.localeCompare(b.original));
+                if (!rows.length) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-8 text-center text-sm text-slate-500">No mappings found.</td></tr>';
+                    return;
+                }
+            }
+
+            tbody.innerHTML = rows.map(item => {
+                const key = sanitizeKey(normalizeHypoMappingKey(item.original));
+                const encodedKey = encodeURIComponent(key).replace(/'/g, '%27');
+                const encodedOriginal = encodeURIComponent(item.original).replace(/'/g, '%27');
+                const action = currentHypoMappingTab === 'unmapped' ? 'Save Mapping' : 'Update';
+                    const resetButton = currentHypoMappingTab === 'mapped'
+                        ? `<button onclick="window.removeHypoMapping('${encodedOriginal}')" class="bg-red-50 hover:bg-red-100 text-red-700 py-1.5 px-3 rounded-md text-sm font-medium">Remove</button>` : '';
+                return `<tr class="hover:bg-slate-50"><td class="px-4 py-3 text-sm font-semibold text-slate-800">${escapeHtml(item.original)}</td><td class="px-4 py-3"><input type="text" id="hmInput_${key}" value="${escapeHtml(item.group)}" list="hmGroupDatalist" placeholder="e.g. BAJAJ, IDFC, OTHER" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></td><td class="px-4 py-3 text-right"><div class="flex gap-2 justify-end"><button onclick="window.saveHypoMapping('${encodedKey}', '${encodedOriginal}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-1.5 px-3 rounded-md text-sm font-medium">${action}</button>${resetButton}</div></td></tr>`;
+            }).join('');
+        };
+
+        window.saveHypoMapping = function(encodedKey, encodedOriginal) {
+            const safeKey = decodeURIComponent(encodedKey);
+            const original = decodeURIComponent(encodedOriginal);
+            const group = document.getElementById(`hmInput_${safeKey}`)?.value.trim();
+            if (!group) return showToast('Enter a New Hypothecation category');
+            const key = sanitizeKey(normalizeHypoMappingKey(original));
+            set(ref(db, `users/admin_settings/hypo_mappings/${key}`), { original, group }).then(() => {
+                showToast(`Mapped '${original}' to '${group}'`);
+                window.renderHypoMappings();
+            }).catch(error => showToast('Error saving mapping: ' + error.message));
+        };
+
+        window.removeHypoMapping = function(encodedOriginal) {
+            const original = decodeURIComponent(encodedOriginal);
+            window.showConfirmModal('Remove Hypo Mapping', `Remove the mapping for "${original}"?`, () => {
+                const key = sanitizeKey(normalizeHypoMappingKey(original));
+                set(ref(db, `users/admin_settings/hypo_mappings/${key}`), { original, group: '', disabled: true }).then(() => {
+                    showToast('Mapping removed');
+                    window.renderHypoMappings();
+                }).catch(error => showToast('Error removing mapping: ' + error.message));
+            });
+        };
+
+        window.uploadHypoMappings = function() {
+            const text = document.getElementById('hmUploadTextarea')?.value || '';
+            if (!text.trim()) return showToast('Paste mapping data first');
+            const updates = {};
+            let count = 0;
+            text.trim().split(/\r?\n/).forEach(line => {
+                const clean = line.trim();
+                if (!clean) return;
+                let parts;
+                if (clean.includes('\t')) parts = clean.split('\t');
+                else {
+                    const splitAt = clean.lastIndexOf(',');
+                    if (splitAt < 0) return;
+                    parts = [clean.slice(0, splitAt), clean.slice(splitAt + 1)];
+                }
+                const original = String(parts[0] || '').trim();
+                const group = String(parts[1] || '').trim();
+                if (!original || !group || normalizeHypoMappingKey(original) === 'HYPOTHECATION') return;
+                const key = sanitizeKey(normalizeHypoMappingKey(original));
+                updates[`users/admin_settings/hypo_mappings/${key}`] = { original, group };
+                count++;
+            });
+            if (!count) return showToast('No valid 2-column mappings found');
+            update(ref(db), updates).then(() => {
+                document.getElementById('hmUploadTextarea').value = '';
+                showToast(`Saved ${count} Hypo mappings`);
+                window.switchHypoMappingTab('mapped');
+            }).catch(error => showToast('Error saving mappings: ' + error.message));
         };
 
         // MODEL GROUPS
