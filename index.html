@@ -19,7 +19,152 @@
         .sidebar-collapsed { width: 72px; }
         .sidebar-collapsed .sidebar-text { display: none; }
         .sidebar-collapsed .sidebar-icon { margin: 0 auto; }
-    </style>
+
+        /* Custom Project workspace */
+        #customProjectSection {min-width:0;}
+        #cpRoot {padding:28px;min-width:0;}
+        #cpRoot h1 {font-size:26px;font-weight:750;margin:12px 0 5px;letter-spacing:-.6px;}
+        #cpRoot h2,#cpDialog h2 {font-size:18px;font-weight:700;margin:24px 0 14px;}
+        #cpRoot h3 {font-size:20px;font-weight:700;margin:18px 0 8px;overflow-wrap:anywhere;}
+        .cp-row {display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .cp-spread {justify-content:space-between;}.cp-end {justify-content:flex-end;margin-top:22px;}
+        .cp-btn {border:1px solid #dbe2ea;background:white;border-radius:9px;padding:8px 13px;font-size:13px;font-weight:600;color:#475569;cursor:pointer;white-space:nowrap;}
+        .cp-btn:hover {background:#eef2ff;border-color:#a5b4fc;}.cp-btn:disabled {opacity:.5;cursor:wait;}
+        .cp-primary {background:#4f46e5;color:white;border-color:#4f46e5;}.cp-primary:hover {background:#4338ca;color:white;}
+        .cp-muted {font-size:12px;color:#64748b;font-weight:400;}.cp-description {color:#64748b;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;margin-bottom:18px;}
+        .cp-cards {display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
+        .cp-card {border:1px solid #e2e8f0;border-radius:15px;padding:20px;background:white;box-shadow:0 3px 12px #0f172a05;}
+        .cp-badge {background:#f1f5f9;color:#64748b;border-radius:99px;padding:5px 10px;font-size:11px;font-weight:700;}.cp-active {background:#dcfce7;color:#15803d;}
+        .cp-input {display:block;width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:10px 12px;background:white;color:#1e293b;font-size:14px;font-weight:400;margin-top:6px;}
+        .cp-input:focus,.cp-cell:focus {outline:2px solid #a5b4fc;outline-offset:1px;}
+        .cp-search {max-width:400px;margin:24px 0;}.cp-empty {padding:32px;text-align:center;color:#64748b;border:1px dashed #cbd5e1;border-radius:12px;font-size:14px;}
+        .cp-toolbar {display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin:20px 0;}
+        .cp-toolbar label,#cpDialog label {font-size:12px;font-weight:600;color:#475569;display:block;}
+        .cp-table-wrap {overflow:auto;border:1px solid #e2e8f0;border-radius:12px;max-height:65vh;}
+        .cp-table {width:100%;border-collapse:separate;border-spacing:0;font-size:14px;}
+        .cp-table th,.cp-table td {padding:12px 16px;border-bottom:1px solid #e2e8f0;border-right:1px solid #f1f5f9;text-align:left;min-width:185px;}
+        .cp-table thead th {background:#f8fafc;position:sticky;top:0;z-index:2;vertical-align:top;}
+        .cp-table .cp-model {position:sticky;left:0;background:white;min-width:220px;max-width:300px;z-index:1;}.cp-table thead .cp-model {z-index:3;background:#f8fafc;}
+        .cp-table tbody th {font-weight:500;}.cp-table tbody tr:hover td {background:#fafbff;}
+        .cp-cell-wrap {display:flex;align-items:center;gap:4px;}.cp-cell {width:100%;min-width:110px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px;color:#334155;}
+        .cp-remove {color:#94a3b8;font-size:20px;padding:0 5px;}.cp-remove:hover {color:#dc2626;}
+        .cp-formula-caption {font-size:11px;font-weight:400;color:#6366f1;margin-top:5px;max-width:260px;overflow-wrap:anywhere;}
+        .cp-error {color:#dc2626;font-size:13px;}.cp-help {margin-top:15px;line-height:1.7;}
+        #cpDialog {border:0;border-radius:18px;padding:26px;width:min(560px,calc(100vw - 32px));max-height:90vh;overflow:auto;box-shadow:0 24px 90px #0f172a55;}
+        #cpDialog::backdrop {background:#0f172a88;backdrop-filter:blur(3px);}#cpDialog h2 {margin:0;}#cpDialog form>label,#cpDialog form>div:not(:first-child) {margin-top:16px;}
+        .cp-grid {display:grid;grid-template-columns:1fr 1fr;gap:14px;}.cp-suggestions {display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;}
+        .cp-model-list {max-height:340px;overflow:auto;border:1px solid #e2e8f0;border-radius:9px;padding:10px;}.cp-model-option {padding:8px;}.cp-model-option input {margin-right:8px;accent-color:#4f46e5;}
+        #cpDialog [hidden] {display:none!important;}
+        @media(max-width:640px){#cpRoot {padding:16px;}.cp-grid {grid-template-columns:1fr;}.cp-toolbar {gap:12px;}.cp-cards {grid-template-columns:1fr;}}
+
+        /* Compact report layout, with controls shown only while editing. */
+        #cpRoot {padding:18px 20px;}
+        #cpRoot h1 {font-size:22px;margin:12px 0 3px;}
+        .cp-report-heading .cp-description {margin:0 0 8px;font-size:12px;}
+        .cp-report-top .cp-btn {padding:6px 10px;font-size:12px;}
+        .cp-report-top .cp-row {gap:6px;}
+        .cp-toolbar {padding:9px 12px;gap:16px;margin:12px 0;border-radius:8px;}
+        .cp-toolbar label {display:flex;align-items:center;gap:7px;}
+        .cp-toolbar .cp-input {width:138px;margin:0;padding:5px 7px;font-size:12px;}
+        .cp-period {font-size:12px;font-weight:600;color:#334155;}
+        #cpSaveStatus {margin-left:auto;font-size:11px;}
+        .cp-table-wrap {border-radius:7px;max-height:70vh;}
+        .cp-table {width:max-content;min-width:min(100%,560px);font-size:12px;line-height:1.35;font-variant-numeric:tabular-nums;}
+        .cp-table th,.cp-table td {padding:6px 10px;min-width:92px;max-width:210px;overflow-wrap:anywhere;}
+        .cp-table .cp-model {min-width:175px;max-width:245px;padding-right:12px;}
+        .cp-table .cp-numeric {text-align:right;}
+        .cp-table .cp-numeric .cp-col-heading {justify-content:flex-end;}
+        .cp-col-heading {gap:7px;flex-wrap:nowrap;min-height:18px;}
+        .cp-col-heading .cp-btn {padding:2px 5px;font-size:10px;border-color:transparent;background:transparent;}
+        .cp-col-meta {font-size:10px;display:block;margin-top:2px;white-space:nowrap;}
+        .cp-cell {min-width:65px;width:100%;max-width:145px;padding:3px 6px;border-radius:4px;height:26px;font-size:12px;}
+        .cp-numeric .cp-cell {text-align:right;}.cp-cell-wrap {gap:3px;justify-content:flex-end;}
+        .cp-cell[type=number] {appearance:textfield;-moz-appearance:textfield;}
+        .cp-cell::-webkit-inner-spin-button,.cp-cell::-webkit-outer-spin-button {-webkit-appearance:none;margin:0;}
+        .cp-remove {font-size:15px;line-height:18px;padding:0 2px;}
+        .cp-table .cp-row {gap:7px;}
+        .cp-table tbody tr:nth-child(even) td,.cp-table tbody tr:nth-child(even) .cp-model {background:#f8fafc;}
+        .cp-table tfoot th,.cp-table tfoot td {position:sticky;bottom:0;background:#eef2ff;color:#312e81;font-weight:700;border-top:2px solid #c7d2fe;border-bottom:0;z-index:2;padding-top:9px;padding-bottom:9px;}
+        .cp-table tfoot .cp-model {background:#eef2ff;z-index:3;}
+        .cp-summary-item {border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:10px;}
+        .cp-summary-options {display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;}
+        .cp-summary-options .cp-input {font-size:12px;padding:7px;}
+        .cp-help {font-size:11px;margin-top:10px;}
+        @media(max-width:640px){#cpRoot{padding:12px;}.cp-toolbar{gap:9px;}#cpSaveStatus{margin-left:0;}.cp-summary-options{grid-template-columns:1fr;}.cp-table .cp-model{min-width:150px;}}
+
+        .im-select{border:1px solid #cbd5e1;border-radius:6px;padding:5px 8px;font-size:12px;background:white;min-width:125px;max-width:220px;color:#334155;}
+        .im-tabs{margin:18px 0 10px;gap:8px;}.im-note{margin:12px 0;font-size:12px;}
+        .im-scroll{max-height:65vh;overflow:auto;border:1px solid #e2e8f0;border-radius:8px;}
+        .im-table{border-collapse:separate;border-spacing:0;font-size:12px;width:100%;}
+        .im-table th,.im-table td{text-align:left;padding:7px 10px;border-bottom:1px solid #e2e8f0;white-space:nowrap;}
+        .im-table th{background:#f8fafc;position:sticky;top:0;z-index:1;}.im-table small{display:block;font-size:10px;}
+        .im-table .cp-btn{padding:4px 7px;font-size:11px;}.im-table tr:hover td{background:#f8fafc;}
+        .im-options{border:1px solid #e2e8f0;padding:16px;border-radius:10px;margin:12px 0;}.im-options .cp-row{margin:10px 0;justify-content:space-between;max-width:450px;}
+        #imSearch{max-width:430px;}#imDialog{border:0;border-radius:14px;padding:22px;width:min(900px,calc(100vw - 32px));max-height:90vh;overflow:auto;}#imDialog::backdrop{background:#0f172a88;}
+
+        /* Report columns fit their contents, with only a small reading gap. */
+        #cpRoot .cp-table-wrap {width:fit-content;max-width:100%;}
+        #cpRoot .cp-report-table {width:max-content;min-width:0;table-layout:auto;}
+        #cpRoot .cp-report-table th,#cpRoot .cp-report-table td,
+        #cpRoot .cp-report-table .cp-model {min-width:0;max-width:none;width:auto;white-space:nowrap;padding-left:10px;padding-right:10px;}
+        .cp-dealer-title{font-size:13px!important;margin:14px 0 6px!important;font-weight:700;color:#4338ca;}
+        .cp-scope{margin-bottom:14px;min-width:0;}
+        #finRatioTableWrap{width:fit-content;max-width:100%;align-self:flex-start;}
+        #finRatioTable{width:max-content;min-width:0;table-layout:auto;font-size:12px;}
+        #finRatioTable th,#finRatioTable td{width:auto;min-width:0;padding:7px 11px;white-space:nowrap;}
+        #finRatioTable th{font-size:11px;letter-spacing:0;}
+        .cp-mapping-caption{display:block;font-size:10px;color:#64748b;font-weight:400;margin-top:3px;white-space:normal;max-width:180px;}
+        .cp-table tr[hidden]{display:none!important;}
+        .cp-adjusted{color:#b45309;font-weight:700;}.cp-adjusted::after{content:" *";font-size:10px;}.cp-target-input{width:110px;padding:5px 7px;margin:0;}
+
+        .nav-master-button{width:100%;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;color:#475569;text-align:left;transition:background .15s,color .15s;}
+        .nav-master-label{font-size:13px;font-weight:600;flex:1;white-space:nowrap;}
+        .nav-master-button:hover{background:#eef2ff;color:#4f46e5;}
+        .nav-master-button.nav-master-active{background:#eef2ff;color:#4338ca;}
+        .nav-chevron{transition:transform .18s;flex-shrink:0;}
+        .nav-master-button[aria-expanded="true"] .nav-chevron{transform:rotate(90deg);}
+        .nav-submenu{margin:4px 2px 9px 21px;padding:4px 5px 4px 10px;border-left:2px solid #c7d2fe;border-radius:0 8px 8px 0;background:#f5f7ff;}
+        .nav-submenu[hidden]{display:none!important;}
+        .nav-subitem{padding:8px 7px!important;border-radius:7px!important;}
+        .nav-subitem .sidebar-icon{width:16px;height:16px;flex-shrink:0;}
+        .nav-subitem .sidebar-text{font-size:12px;margin-left:9px;}
+        .sidebar-collapsed .nav-submenu{display:none!important;}
+        .sidebar-collapsed .nav-master-button{justify-content:center;padding:12px;gap:0;}
+        .cp-period{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-right:4px;}
+    
+/* Compact report workspace */
+#bkDialog{border:0;border-radius:12px;padding:20px;width:min(860px,calc(100vw - 32px));max-height:88vh;overflow:auto;box-shadow:0 20px 70px #0f172a44}
+#bkDialog::backdrop{background:#0f172a88;backdrop-filter:blur(3px)}#bkDialog textarea{margin:8px 0;font-size:12px}#bkDialog h2{font-size:17px}
+
+.bk-settings>div{padding:9px!important;gap:8px!important;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px}
+.bk-settings{margin:0}.bk-settings[open]>summary{margin-bottom:4px}
+#bkReportBar[hidden],#bkReportBar [hidden]{display:none!important}
+
+#reportsSection>div:first-child{padding:10px 16px}#reportsSection>div:first-child p{display:none}
+#reportsSection>div:nth-child(2){padding:12px 16px;gap:12px}
+#reportsSection>div:nth-child(2)>div:first-child{gap:14px;overflow-x:auto;white-space:nowrap;padding-bottom:5px;font-size:12px}
+#sharedReportFilters{padding:9px 12px;gap:10px;border-radius:8px}#sharedReportFilters>div:first-child{gap:10px}
+#reportsSection select,#reportsSection input{font-size:12px;min-height:29px;padding:4px 7px;max-width:100%}
+#reportsSection button{font-size:12px}#reportsSection label{font-size:11px}
+#reportCompareView>div:first-child,#reportCompareTimelineView>div:first-child,#reportProjectionView>div:first-child{padding:10px;gap:8px;border-radius:8px}
+#reportCompareTimelineView .gap-4,#reportProjectionView .gap-4,#reportProjectionView .gap-6{gap:9px}
+#reportProjectionView .pb-4{padding-bottom:8px}#reportProjectionView .pr-6{padding-right:10px}
+#reportProjectionView .w-full.text-sm.font-bold{width:auto;align-self:center;font-size:11px;margin-right:5px}
+#reportsSection table{font-size:12px}#reportsSection th,#reportsSection td{padding:6px 10px}
+#customPivotContainer{padding:7px;margin-top:0;gap:10px}
+.fin-title{display:flex;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:7px}
+#reportFinRatioView{gap:10px}#finRatioTableWrap{border-radius:8px;box-shadow:0 1px 3px #0f172a0a}
+#finRatioTableHead{background:#edf2f7;color:#334155}#finRatioTableHead th{text-transform:none;border-color:#dbe3ee;font-weight:600}
+#finRatioTableBody tr:nth-child(even){background:#f8fafc}#finRatioTableBody tr:last-child{background:#edf2ff;color:#3730a3;border-top:1px solid #c7d2fe}
+#finRatioTableBody td{border-right:1px solid #f1f5f9}#finRatioTableBody td:first-child{min-width:100px}
+.bk-bar{display:flex;flex-wrap:wrap;align-items:end;gap:10px;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px}
+.bk-bar label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:#64748b}.bk-bar select{max-width:220px}
+.bk-panel{padding:16px}.bk-panel h2{font-size:18px;font-weight:650}.bk-panel .im-table{width:max-content;min-width:0}.bk-panel .im-table td,.bk-panel .im-table th{padding:7px 10px}
+.bk-panel .im-select{max-width:240px}.bk-input{padding:5px 8px;border:1px solid #cbd5e1;border-radius:5px;font-size:12px}
+.bk-count{color:#4338ca;text-decoration:underline;cursor:pointer}.bk-settings summary{font-size:12px;font-weight:600;cursor:pointer;padding:6px;color:#475569}
+@media(max-width:700px){#reportsSection>div:nth-child(2){padding:10px}#reportProjectionView .border-l{border:0;padding-left:0}.fin-title{gap:5px}}
+
+</style>
 </head>
 <body class="text-slate-800 h-screen w-screen overflow-hidden flex bg-slate-50 relative">
 
@@ -427,6 +572,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                         Export
                     </button>
+                    <div id="drillDownBulkHypoAction" class="hidden items-center gap-2">
+                        <input id="drillDownHypoReplacement" type="text" class="w-44 px-2 py-1.5 border border-slate-300 rounded-lg text-sm" placeholder="Correct Hypothecation">
+                        <button type="button" onclick="window.bulkCorrectHypothecation()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium">Apply to All</button>
+                    </div>
                     <button onclick="window.closeDrillDownModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-md transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
             </div>
@@ -506,37 +655,63 @@
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Upload Invoices</span>
             </button>
             
-            <button id="navBtn_manageDataSection" onclick="window.showAppSection('manageDataSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
-                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Data</span>
-            </button>
 
-            <button id="navBtn_modelGroupsSection" onclick="window.showAppSection('modelGroupsSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Model Groups</span>
-            </button>
 
-            <button id="navBtn_hypoMappingSection" onclick="window.showAppSection('hypoMappingSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+
+
+
+            
+
+
+
+
+            <div id="navGroup_mapping" class="nav-master hidden">
+                <button id="navGroupBtn_mapping" type="button" class="nav-master-button" onclick="window.toggleNavGroup('mapping')" aria-expanded="false" aria-controls="navSub_mapping" title="Mapping">
+                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h6v6H4zM14 13h6v6h-6zM7 11v5h7M10 8h7v5"/></svg><span class="sidebar-text nav-master-label">Mapping</span><svg class="sidebar-text nav-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 5 7 7-7 7"/></svg>
+                </button>
+                <div id="navSub_mapping" class="nav-submenu" hidden>
+            <button id="navBtn_hypoMappingSection" onclick="window.showAppSection('hypoMappingSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Hypo Mapping</span>
             </button>
-            
-            <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+            <button id="navBtn_modelGroupsSection" onclick="window.showAppSection('modelGroupsSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Model Groups</span>
+            </button>
+            <button id="navBtn_invoiceMappingSection" onclick="window.showAppSection('invoiceMappingSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group"><svg class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10v18l-3-2-2 2-2-2-3 2V3zM9 7h6M9 11h6M9 15h3"/></svg><span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap">Invoice Mapping</span></button>
+                </div>
+            </div>
+
+            <div id="navGroup_manage" class="nav-master hidden">
+                <button id="navGroupBtn_manage" type="button" class="nav-master-button" onclick="window.toggleNavGroup('manage')" aria-expanded="false" aria-controls="navSub_manage" title="Manage">
+                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 5h6M9 3h6v4H9zM9 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3M8 12h8M8 16h8"/></svg><span class="sidebar-text nav-master-label">Manage</span><svg class="sidebar-text nav-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 5 7 7-7 7"/></svg>
+                </button>
+                <div id="navSub_manage" class="nav-submenu" hidden>
+            <button id="navBtn_manageDataSection" onclick="window.showAppSection('manageDataSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Data</span>
+            </button>
+            <button id="navBtn_usersSection" onclick="window.showAppSection('usersSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Users</span>
             </button>
-
-            <button id="navBtn_manageTimelinesSection" onclick="window.showAppSection('manageTimelinesSection')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+            <button id="navBtn_manageTimelinesSection" onclick="window.showAppSection('manageTimelinesSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Timeline</span>
             </button>
-
+                </div>
+            </div>
             <!-- User Buttons -->
             <button id="navBtn_extractorSectionUser" onclick="window.showAppSection('extractorSectionUser')" class="hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Upload Reg Data</span>
             </button>
 
+
+            <button id="navBtn_customProjectSection" onclick="window.showAppSection('customProjectSection')" class="w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
+                <svg class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v6m-3-3h6"/></svg>
+                <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap">Custom Project</span>
+            </button>
             <!-- Shared Buttons -->
             <button id="navBtn_extractorCusSection" onclick="window.showAppSection('extractorCusSection')" class="w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
@@ -565,6 +740,8 @@
     <main id="mainContentArea" class="flex-1 overflow-y-auto custom-scrollbar relative h-full w-full bg-slate-50/50 hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
         
+            <section id="invoiceMappingSection" class="hidden flex-col bg-white rounded-xl shadow-sm border border-slate-200"><div id="imRoot" class="p-5"></div></section>
+            <section id="customProjectSection" class="hidden flex-col bg-white rounded-xl shadow-sm border border-slate-200"><div id="cpRoot"></div></section>
             <!-- VEHICLE SEARCH SECTION (All Users) -->
             <section id="searchSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col h-full min-h-[600px] transition-all duration-300 relative">
                 <div class="bg-indigo-700 p-6 rounded-t-xl shadow-lg relative z-10 shrink-0">
@@ -909,6 +1086,8 @@
                                 <input type="date" id="reportEndDate" onchange="window.handleReportFilterChange()" class="w-36 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white shadow-sm">
                             </div>
                         </div>
+                        <div id="imReportFilter0"><label class="block text-xs font-semibold text-slate-700 mb-1">Invoice Type</label><select id="imReport0" onchange="window.handleReportFilterChange()" class="im-select"><option value="all">All</option></select></div>
+                        <div id="imReportFilter1"><label class="block text-xs font-semibold text-slate-700 mb-1">Invoice Category</label><select id="imReport1" onchange="window.handleReportFilterChange()" class="im-select"><option value="all">All</option></select></div>
                         <div id="reportUserFilterContainer">
                             <label id="reportUserFilterLabel" class="block text-xs font-semibold text-slate-700 mb-1">Filter by Dealer</label>
                             <select id="reportUserFilter" onchange="window.handleReportFilterChange()" class="w-48 px-3 py-1.5 border border-slate-300 rounded-md text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white shadow-sm font-medium"></select>
@@ -941,21 +1120,22 @@
                     <div id="reportFinRatioView" class="hidden flex-col gap-4 w-full">
                         <div class="flex flex-wrap justify-between items-center gap-3">
                             <div>
-                                <h3 class="text-base font-bold text-slate-800">Finance Ratio by Hypothecation</h3>
-                                <p id="finRatioDateLabel" class="text-sm text-slate-500">All invoice dates</p>
+                                <div class="fin-title"><h3 class="text-base font-bold text-slate-800">Finance Ratio by Hypothecation</h3><span id="finRatioDateLabel" class="text-xs text-slate-500">All invoice dates</span></div>
+                                <label class="cp-row text-sm">View by <select id="finRatioViewBy" class="im-select" onchange="window.renderFinRatioReport()"><option value="dealer">Dealer</option><option value="type">Invoice Type</option><option value="category">Invoice Category</option><option value="bk">BK NO.</option></select></label>
+                                
                             </div>
                             <div class="flex gap-2">
                                 <button onclick="window.clearFinRatioDateRange()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-1.5 px-3 rounded-md text-sm shadow-sm">All Data</button>
                                 <button onclick="window.exportFinRatioCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-4 rounded-md text-sm shadow-sm">Export CSV</button>
                             </div>
                         </div>
-                        <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
+                        <div id="finRatioTableWrap" class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
                             <table id="finRatioTable" class="w-full text-left border-collapse text-sm min-w-max">
                                 <thead id="finRatioTableHead" class="bg-indigo-500 text-white"></thead>
                                 <tbody id="finRatioTableBody" class="divide-y divide-slate-100"></tbody>
                             </table>
                         </div>
-                        <p class="text-xs text-slate-500">Finance Ratio = (Total Invoices − blank Hypothecation invoices) ÷ Total Invoices.</p>
+                        <p class="text-xs text-slate-500">Finance Ratio = (Total Invoices − Cash invoices) ÷ Total Invoices.</p>
                     </div>
                         
                     <!-- Reg Report View Container (Matching Screenshot 2 & 3) -->
@@ -1124,7 +1304,7 @@
                                         <option value="day">Day</option>
                                         <option value="dealer" selected>Dealer</option>
                                         <option value="model">Model</option>
-                                    </select>
+                                    <option value="bk">BK NO.</option><option value="type">Invoice Type</option><option value="category">Invoice Category</option></select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-indigo-700 mb-1">Level 2</label>
@@ -1133,16 +1313,16 @@
                                         <option value="day">Day</option>
                                         <option value="dealer">Dealer</option>
                                         <option value="model" selected>Model</option>
-                                    </select>
+                                    <option value="bk">BK NO.</option><option value="type">Invoice Type</option><option value="category">Invoice Category</option></select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-indigo-700 mb-1">Level 3 (Bottom)</label>
                                     <select id="pivotL3" class="w-32 px-3 py-1.5 border-2 border-indigo-100 rounded-md text-sm outline-none focus:border-indigo-500 bg-slate-50">
-                                        <option value="none">None</option>
-                                        <option value="day" selected>Day</option>
+                                        <option value="none" selected>None</option>
+                                        <option value="day">Day</option>
                                         <option value="dealer">Dealer</option>
                                         <option value="model">Model</option>
-                                    </select>
+                                    <option value="bk">BK NO.</option><option value="type">Invoice Type</option><option value="category">Invoice Category</option></select>
                                 </div>
                             </div>
                         </div>
@@ -1300,6 +1480,8 @@
         <span id="toastMsg">Action successful!</span>
     </div>
 
+    <dialog id="imDialog" aria-label="Bulk Invoice Mapping"></dialog>
+    <dialog id="cpDialog" aria-label="Custom Project editor"></dialog>
     <!-- FIREBASE AND APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1358,7 +1540,8 @@
         let cancelledInvoices = [];
         let currentUser = null;
         
-        let modelGroupsDB = {}; 
+        let modelGroupsDB = {};
+        let cpModelGroupsLoaded = false; 
         let hypoMappingsDB = {};
         let hypoMappingsLoaded = false;
         let timelinesDB = {}; 
@@ -1379,7 +1562,7 @@
 
         const TARGET_COLUMNS = [
             "Invoice #", "Invoice Date", "Requesting Dealer", "Model Category", "Model Name", 
-            "Model Variant", "Color", "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", 
+            "Model Variant", "Color", "Assigned To (DSE) Name", "Status", "Purchase Type", "Frame #", "BK NO.", 
             "Engine No/Motor No", "Network Type", "City", "Address Line 1", "Address Line 2", 
             "Permanent Reg No", "Billing Network Code", "Customer Name", "Mobile No",
             "Financier", "Hypothecation"
@@ -1522,6 +1705,8 @@
             onValue(ref(db, 'invoices'), (snapshot) => {
                 const data = snapshot.val();
                 masterInvoices = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+                window.cpRefreshValues?.();
+                window.imInvoicesChanged?.();
                 if (!currentUser) return;
                 
                 const reportsEl = document.getElementById('reportsSection');
@@ -1570,6 +1755,8 @@
 
             onValue(ref(db, 'users/admin_settings/model_groups'), (snapshot) => {
                 modelGroupsDB = snapshot.val() || {};
+                cpModelGroupsLoaded = true;
+                window.cpMappingChanged?.();
                 if (!currentUser) return;
                 
                 const mgEl = document.getElementById('modelGroupsSection');
@@ -1663,6 +1850,11 @@
         initDefaultDates();
         initCompareDates();
 
+
+        const navGroupSections={mapping:['bkMappingSection','hypoMappingSection','modelGroupsSection','invoiceMappingSection'],manage:['stockSection','manageDataSection','usersSection','manageTimelinesSection']};
+        function navSetExpanded(group,expanded){document.getElementById('navSub_'+group).hidden=!expanded;document.getElementById('navGroupBtn_'+group).setAttribute('aria-expanded',String(expanded));}
+        window.toggleNavGroup=function(group){if(currentUser?.role!=='Admin'||!navGroupSections[group])return;const sidebar=document.getElementById('sidebar');const collapsed=sidebar.classList.contains('sidebar-collapsed');if(collapsed){sidebar.classList.remove('sidebar-collapsed');sidebar.classList.add('sidebar-expanded');}const open=collapsed||document.getElementById('navSub_'+group).hidden;Object.keys(navGroupSections).forEach(key=>navSetExpanded(key,key===group&&open));};
+        window.syncNavigationGroups=function(sectionId){Object.entries(navGroupSections).forEach(([key,ids])=>{const isAdmin=currentUser?.role==='Admin',active=isAdmin&&ids.includes(sectionId);document.getElementById('navGroup_'+key).classList.toggle('hidden',!isAdmin);document.getElementById('navGroupBtn_'+key).classList.toggle('nav-master-active',active);navSetExpanded(key,active);});};
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('sidebar-expanded');
@@ -1670,7 +1862,7 @@
         };
 
         window.showAppSection = function(sectionId) {
-            ['searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'hypoMappingSection', 'manageTimelinesSection'].forEach(id => {
+            ['bkMappingSection','stockSection','invoiceMappingSection', 'customProjectSection', 'searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'hypoMappingSection', 'manageTimelinesSection'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
                 
@@ -1690,6 +1882,7 @@
                 activeBtn.classList.add('bg-indigo-50', 'text-indigo-600');
             }
             
+            window.syncNavigationGroups(sectionId);
             if (sectionId === 'usersSection' && currentUser?.role === 'Admin') window.renderUsersTable();
             if (sectionId === 'reportsSection') {
                 if(currentReportTab === 'compare') window.renderCompareReport();
@@ -1731,6 +1924,7 @@
             if (user) {
                 document.getElementById('loginError').classList.add('hidden');
                 currentUser = user;
+                window.imLogin?.();
                 if (hypoMappingsLoaded) ensureDefaultHypoMappingsPersisted();
                 document.getElementById('currentUserDisplay').textContent = user.name;
                 document.getElementById('currentUserRole').textContent = user.role;
@@ -1829,6 +2023,8 @@
             if (mainContent) mainContent.classList.add('hidden');
 
             const subSections = [
+                'invoiceMappingSection',
+                'customProjectSection',
                 'searchSection', 'extractorSection', 'extractorSectionUser', 
                 'extractorCusSection', 'manageDataSection', 'usersSection', 
                 'modelGroupsSection', 'manageTimelinesSection', 'reportsSection'
@@ -1907,17 +2103,32 @@
             const modal = document.getElementById('confirmModal');
             const content = document.getElementById('confirmModalContent');
             modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); pendingConfirmAction = null; }, 200);
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); modal.style.zIndex = ''; pendingConfirmAction = null; }, 200);
         };
 
-        window.openDrillDownModal = function(title, subtitle, headers, dataRows) {
+        window.openDrillDownModal = function(title, subtitle, headers, dataRows, options = {}) {
+            if(window.imEnrich){const enriched=window.imEnrich(headers,dataRows,options.invoiceKeys||[]);headers=enriched.headers;dataRows=enriched.rows;}
             document.getElementById('drillDownModalTitle').textContent = title;
             document.getElementById('drillDownModalSubtitle').textContent = subtitle;
+            const bulkHypoAction = document.getElementById('drillDownBulkHypoAction');
+            const replacementInput = document.getElementById('drillDownHypoReplacement');
+            const invoiceKeys = options.invoiceKeys || [];
+            const hasBulkHypoAction = Boolean(options.bulkHypothecationSource && invoiceKeys.length);
+            if (bulkHypoAction) {
+                bulkHypoAction.classList.toggle('hidden', !hasBulkHypoAction);
+                bulkHypoAction.classList.toggle('flex', hasBulkHypoAction);
+            }
+            if (replacementInput) replacementInput.value = '';
+            window.__hypoBulkInvoiceKeys = hasBulkHypoAction ? invoiceKeys : [];
+            window.__hypoBulkSource = hasBulkHypoAction ? options.bulkHypothecationSource : '';
             
             const headRow = document.getElementById('drillDownTableHead');
             headRow.innerHTML = '';
-            headers.forEach(h => {
-                headRow.innerHTML += `<th class="px-4 py-3 font-semibold border-b whitespace-nowrap">${h}</th>`;
+            [...headers, ...(options.invoiceKeys ? ['Actions'] : [])].forEach(h => {
+                const th = document.createElement('th');
+                th.className = 'px-4 py-3 font-semibold border-b whitespace-nowrap';
+                th.textContent = h;
+                headRow.appendChild(th);
             });
 
             const body = document.getElementById('drillDownTableBody');
@@ -1930,8 +2141,28 @@
                     let tr = document.createElement('tr');
                     tr.className = 'hover:bg-slate-50';
                     row.forEach(cell => {
-                        tr.innerHTML += `<td class="px-4 py-2 border-b whitespace-nowrap text-sm">${cell || '-'}</td>`;
+                        const td = document.createElement('td');
+                        td.className = 'px-4 py-2 border-b whitespace-nowrap text-sm';
+                        td.textContent = cell === undefined || cell === null || cell === '' ? '-' : String(cell);
+                        tr.appendChild(td);
                     });
+                    const invoiceKey = invoiceKeys[dataRows.indexOf(row)];
+                    if (options.invoiceKeys) {
+                        const actionCell = document.createElement('td');
+                        actionCell.className = 'px-4 py-2 border-b whitespace-nowrap text-sm';
+                        if (invoiceKey) {
+                            const editButton = document.createElement('button');
+                            editButton.type = 'button';
+                            editButton.textContent = 'Edit Invoice';
+                            editButton.className = 'text-indigo-600 hover:text-indigo-800 font-semibold';
+                            editButton.addEventListener('click', () => {
+                                window.closeDrillDownModal();
+                                setTimeout(() => window.openEditModal(invoiceKey, 'invoices'), 220);
+                            });
+                            actionCell.appendChild(editButton);
+                        }
+                        tr.appendChild(actionCell);
+                    }
                     body.appendChild(tr);
                 });
             }
@@ -1945,11 +2176,43 @@
             requestAnimationFrame(() => { setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10); });
         };
 
+        window.bulkCorrectHypothecation = function() {
+            const replacement = document.getElementById('drillDownHypoReplacement')?.value.trim() || '';
+            const invoiceKeys = window.__hypoBulkInvoiceKeys || [];
+            const source = window.__hypoBulkSource || '';
+            if (!replacement) return showToast('Enter the corrected Hypothecation value first.');
+            if (!invoiceKeys.length) return showToast('No matching invoices to update.');
+
+            const confirmModal = document.getElementById('confirmModal');
+            window.showConfirmModal(
+                'Bulk Correct Hypothecation',
+                `Update Hypothecation from "${source}" to "${replacement}" in all ${invoiceKeys.length} matching invoices?`,
+                () => {
+                    const updates = {};
+                    invoiceKeys.forEach(key => {
+                        updates[`invoices/${key}/${sanitizeKey('Hypothecation')}`] = replacement;
+                    });
+                    update(ref(db), updates).then(() => {
+                        window.closeDrillDownModal();
+                        showToast(`Hypothecation corrected in ${invoiceKeys.length} invoices.`);
+                    }).catch(error => showToast('Bulk update failed: ' + error.message));
+                    setTimeout(() => { if (confirmModal) confirmModal.style.zIndex = ''; }, 250);
+                }
+            );
+            if (confirmModal) confirmModal.style.zIndex = '300';
+        };
+
         window.closeDrillDownModal = function() {
             const modal = document.getElementById('drillDownModal');
             const content = document.getElementById('drillDownModalContent');
             modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentDrillDownData = []; }, 200);
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                currentDrillDownData = [];
+                window.__hypoBulkInvoiceKeys = [];
+                window.__hypoBulkSource = '';
+            }, 200);
         };
 
         window.exportDrillDownCSV = function() {
@@ -1968,6 +2231,7 @@
 
         // ADMIN EXTRACTION (Invoices)
         document.getElementById('extractBtn').addEventListener('click', () => {
+            if(window.imReady && !window.imReady())return showToast('Invoice mapping settings are loading. Please try again.');
             const rawText = document.getElementById('rawInput').value.trim();
             if (!rawText) return showToast("Paste data first!");
             const btn = document.getElementById('extractBtn');
@@ -2029,6 +2293,7 @@
                         const currentFrame = rowObj[sanitizeKey('Frame #')];
                         const currentInvNo = rowObj[sanitizeKey('Invoice #')];
                         let safeKey = sanitizeKey(currentInvNo || `INV_${Date.now()}_${count}`);
+                        window.imStamp?.(rowObj,safeKey);
 
                         if (currentFrame && existingFrames[currentFrame]) {
                             let oldInv = existingFrames[currentFrame];
@@ -2697,7 +2962,7 @@
             const dealers = new Set();
             const models = new Set();
             
-            masterInvoices.forEach(inv => {
+            bkReportInvoices().forEach(inv => {
                 const d = inv[sanitizeKey('Requesting Dealer')];
                 let m = inv[sanitizeKey('Model Name')];
                 if (m) {
@@ -2758,7 +3023,7 @@
             let pivotData = {};
             let gtR1 = 0, gtR2 = 0;
 
-            let filteredInvoices = masterInvoices.filter(inv => {
+            let filteredInvoices = bkReportInvoices().filter(inv => {
                 let d = inv[sanitizeKey('Requesting Dealer')] || '';
                 let rawM = inv[sanitizeKey('Model Name')] || '';
                 let m = rawM;
@@ -3053,7 +3318,7 @@
             const dealers = new Set();
             const models = new Set();
             
-            masterInvoices.forEach(inv => {
+            bkReportInvoices().forEach(inv => {
                 if (currentUser?.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv)) return;
                 const d = inv[sanitizeKey('Requesting Dealer')];
                 let m = inv[sanitizeKey('Model Name')];
@@ -3173,7 +3438,7 @@
                 return Math.floor((dateCheck - dateStart) / (1000 * 60 * 60 * 24)) + 1; 
             };
 
-            let filteredInvoices = masterInvoices.filter(inv => {
+            let filteredInvoices = bkReportInvoices().filter(inv => {
                 if (currentUser?.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv)) return false;
                 let d = inv[sanitizeKey('Requesting Dealer')] || '';
                 let rawM = inv[sanitizeKey('Model Name')] || '';
@@ -3206,7 +3471,7 @@
                     if (modelGroupsDB[mKey]) model = modelGroupsDB[mKey].group;
                 }
 
-                let recordData = { day: dayNum, dealer: dealer, model: model };
+                let recordData = { day: dayNum, dealer: dealer, model: model, bk:bkNo(inv)||'Unmapped',type:imValue(inv,'Invoice Type')||'Unmapped',category:imValue(inv,'Invoice Category')||'Unmapped' };
                 let isR1 = inR1 ? 1 : 0;
                 let isR2 = inR2 ? 1 : 0;
                 
@@ -3273,7 +3538,7 @@
             };
 
             function renderPivotNode(node, name, indentLevel, isDay) {
-                let html = generateTlRow(name, node.r1, node.r2, indentLevel, isDay);
+                let html = generateTlRow(isDay?name:cpEsc(name), node.r1, node.r2, indentLevel, isDay);
                 if (node.children && Object.keys(node.children).length > 0) {
                     let keys = Object.keys(node.children);
                     let firstChildType = node.children[keys[0]].keyType;
@@ -3460,7 +3725,7 @@
 
             const dealers = new Set();
             const models = new Set();
-            masterInvoices.forEach(inv => {
+            bkReportInvoices().forEach(inv => {
                 const d = inv[sanitizeKey('Requesting Dealer')];
                 let m = inv[sanitizeKey('Model Name')];
                 if (m) {
@@ -3733,7 +3998,7 @@
             
             let pyTotal = 0; let cyTotal = 0;
             
-            masterInvoices.forEach(inv => {
+            bkReportInvoices().forEach(inv => {
                 if (currentUser?.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) return;
 
                 let d = (inv[sanitizeKey('Requesting Dealer')] || inv['Requesting Dealer'] || 'Unknown Dealer').trim();
@@ -3952,7 +4217,7 @@
 
             let dealersData = {};
 
-            masterInvoices.forEach(inv => {
+            bkReportInvoices().forEach(inv => {
                 let d = (inv[sanitizeKey('Requesting Dealer')] || inv['Requesting Dealer'] || 'Unknown Dealer').trim();
                 let rawM = inv[sanitizeKey('Model Name')] || inv['Model Name'] || 'Unknown Model';
                 let m = rawM;
@@ -4453,14 +4718,14 @@
             })[char]);
 
             if (dateLabel) {
-                if (startValue && endValue) dateLabel.textContent = `Date Range: ${formatDisplayDate(startValue)} to ${formatDisplayDate(endValue)}`;
-                else if (startValue) dateLabel.textContent = `From ${formatDisplayDate(startValue)} onward`;
-                else if (endValue) dateLabel.textContent = `Through ${formatDisplayDate(endValue)}`;
+                if (startValue && endValue) dateLabel.textContent = `Date Range: ${cpDisplayDate(startValue)} to ${cpDisplayDate(endValue)}`;
+                else if (startValue) dateLabel.textContent = `From ${cpDisplayDate(startValue)} onward`;
+                else if (endValue) dateLabel.textContent = `Through ${cpDisplayDate(endValue)}`;
                 else dateLabel.textContent = 'All invoice dates';
             }
 
             const availableDealers = new Set();
-            masterInvoices.forEach(inv => {
+            bkReportInvoices().forEach(inv => {
                 if (currentUser.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) return;
                 const dealer = getValue(inv, 'Requesting Dealer') || getValue(inv, 'Dealer') || getValue(inv, 'Dealer Name');
                 if (dealer) availableDealers.add(String(dealer).trim());
@@ -4480,9 +4745,11 @@
                 else filterContainer?.classList.add('hidden');
             }
             const activeDealer = userSelect?.value || 'All';
+            imFillFilters();
 
-            const rows = masterInvoices.filter(inv => {
+            const rows = bkReportInvoices().filter(inv => {
                 if (currentUser.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) return false;
+                if(!imMatchReport(inv))return false;
                 const requestingDealer = String(getValue(inv, 'Requesting Dealer') || getValue(inv, 'Dealer') || getValue(inv, 'Dealer Name')).trim();
                 if (activeDealer !== 'All' && requestingDealer !== activeDealer) return false;
 
@@ -4495,18 +4762,20 @@
                 return true;
             });
 
-            const pivot = new Map();
+            const viewBy=document.getElementById('finRatioViewBy')?.value||'dealer';
+            const pivot = new Map(),finRecordGroups=new Map();
             const dealerStats = new Map();
             let grandTotal = 0;
             let totalCash = 0;
             rows.forEach(inv => {
-                const dealer = String(getValue(inv, 'Network Name') || getValue(inv, 'Billing Network Name') || getValue(inv, 'Requesting Dealer') || getValue(inv, 'Dealer') || getValue(inv, 'Dealer Name') || 'Unknown Dealer').trim();
+                const dealer = viewBy==='bk'?(bkNo(inv)||'Unmapped'):viewBy==='type'?(imValue(inv,'Invoice Type')||'Unmapped'):viewBy==='category'?(imValue(inv,'Invoice Category')||'Unmapped'):String(getValue(inv,'Requesting Dealer')||getValue(inv,'Dealer')||getValue(inv,'Dealer Name')||'Unknown Dealer').trim();
                 const rawHypo = String(getValue(inv, 'Hypothecation')).trim();
                 const financier = String(getValue(inv, 'Financier')).trim();
                 const isNotApplicable = isNotApplicableHypo(rawHypo);
                 const hypoSource = isNotApplicable && financier ? financier : rawHypo;
                 const mappedHypo = hypoMappingMap.get(normalizeHypoMappingKey(hypoSource));
                 const hypo = String(mappedHypo?.group || (isNotApplicable && financier ? financier : getValue(inv, 'New Hypothecation') || rawHypo)).trim();
+                const detailKey=JSON.stringify([hypo,dealer]);if(!finRecordGroups.has(detailKey))finRecordGroups.set(detailKey,[]);finRecordGroups.get(detailKey).push(inv);
                 if (!pivot.has(hypo)) pivot.set(hypo, new Map());
                 const dealerCounts = pivot.get(hypo);
                 dealerCounts.set(dealer, (dealerCounts.get(dealer) || 0) + 1);
@@ -4525,11 +4794,13 @@
                 return ratioB - ratioA || a.localeCompare(b);
             });
             const hypoRows = Array.from(pivot.keys()).sort((a, b) => {
+                if(!a)return -1;if(!b)return 1;
                 const totalA = Array.from(pivot.get(a).values()).reduce((sum, count) => sum + count, 0);
                 const totalB = Array.from(pivot.get(b).values()).reduce((sum, count) => sum + count, 0);
                 return totalB - totalA || a.localeCompare(b);
             });
-            const tableHeaders = ['New Hypothecation', ...dealers, 'Grand Total'];
+            const showGrandTotal=dealers.length>1;
+            const tableHeaders = ['Hypothecation', ...dealers, ...(showGrandTotal?['Grand Total']:[])];
             head.innerHTML = `<tr>${tableHeaders.map((label, index) => `<th class="px-3 py-2.5 text-${index ? 'right' : 'left'} text-xs font-bold uppercase tracking-wide whitespace-nowrap border-b border-indigo-400">${esc(label)}</th>`).join('')}</tr>`;
 
             currentFinRatioExport = [tableHeaders];
@@ -4538,25 +4809,25 @@
                 return;
             }
 
-            const htmlRows = [];
+            const htmlRows = [];BK.finDetails=[];
             hypoRows.forEach(hypo => {
                 const counts = dealers.map(dealer => pivot.get(hypo).get(dealer) || 0);
                 const rowTotal = counts.reduce((sum, count) => sum + count, 0);
-                currentFinRatioExport.push([hypo, ...counts.map(count => count || ''), rowTotal]);
-                htmlRows.push(`<tr class="hover:bg-slate-50"><td class="px-3 py-2 font-medium whitespace-nowrap">${esc(hypo)}</td>${counts.map(count => `<td class="px-3 py-2 text-right tabular-nums">${count || ''}</td>`).join('')}<td class="px-3 py-2 text-right font-semibold tabular-nums">${rowTotal}</td></tr>`);
+                currentFinRatioExport.push([hypo || 'Cash', ...counts.map(count => count || ''), ...(showGrandTotal?[rowTotal]:[])]);
+                htmlRows.push(`<tr class="hover:bg-slate-50"><td class="px-3 py-2 font-medium whitespace-nowrap">${esc(hypo || 'Cash')}</td>${counts.map((count,index) => {const dealer=dealers[index],records=finRecordGroups.get(JSON.stringify([hypo,dealer]))||[];const detail=BK.finDetails.push({name:(hypo||'Cash')+' · '+dealer,rows:records})-1;return `<td class="px-3 py-2 text-right tabular-nums">${count?`<button class="bk-count" data-bk="fin-drill" data-index="${detail}">${count}</button>`:''}</td>`;}).join('')}${showGrandTotal?`<td class="px-3 py-2 text-right font-semibold tabular-nums">${rowTotal}</td>`:''}</tr>`);
             });
 
             const totals = dealers.map(dealer => dealerStats.get(dealer).total);
-            currentFinRatioExport.push(['Grand Total', ...totals, grandTotal]);
-            htmlRows.push(`<tr class="bg-slate-100 font-bold"><td class="px-3 py-2">Grand Total</td>${totals.map(total => `<td class="px-3 py-2 text-right tabular-nums">${total}</td>`).join('')}<td class="px-3 py-2 text-right tabular-nums">${grandTotal}</td></tr>`);
+            currentFinRatioExport.push(['Total', ...totals, ...(showGrandTotal?[grandTotal]:[])]);
+            htmlRows.push(`<tr class="bg-slate-100 font-bold"><td class="px-3 py-2">Total</td>${totals.map(total => `<td class="px-3 py-2 text-right tabular-nums">${total}</td>`).join('')}${showGrandTotal?`<td class="px-3 py-2 text-right tabular-nums">${grandTotal}</td>`:''}</tr>`);
 
             const dealerRatios = dealers.map(dealer => {
                 const stats = dealerStats.get(dealer);
                 return stats.total ? (stats.total - stats.cash) / stats.total : 0;
             });
             const overallRatio = grandTotal ? (grandTotal - totalCash) / grandTotal : 0;
-            currentFinRatioExport.push(['Finance Ratio', ...dealerRatios.map(ratio => `${(ratio * 100).toFixed(1)}%`), `${(overallRatio * 100).toFixed(1)}%`]);
-            htmlRows.push(`<tr class="font-bold border-t-2 border-slate-300"><td class="px-3 py-2">Finance Ratio</td>${dealerRatios.map(ratio => `<td class="px-3 py-2 text-right text-indigo-700">${(ratio * 100).toFixed(1)}%</td>`).join('')}<td class="px-3 py-2 text-right text-indigo-700">${(overallRatio * 100).toFixed(1)}%</td></tr>`);
+            currentFinRatioExport.push(['Finance Ratio', ...dealerRatios.map(ratio => `${(ratio * 100).toFixed(1)}%`), ...(showGrandTotal?[`${(overallRatio * 100).toFixed(1)}%`]:[])]);
+            htmlRows.push(`<tr class="font-bold border-t-2 border-slate-300"><td class="px-3 py-2">Finance Ratio</td>${dealerRatios.map(ratio => `<td class="px-3 py-2 text-right text-indigo-700">${(ratio * 100).toFixed(1)}%</td>`).join('')}${showGrandTotal?`<td class="px-3 py-2 text-right text-indigo-700">${(overallRatio * 100).toFixed(1)}%</td>`:''}</tr>`);
             body.innerHTML = htmlRows.join('');
         };
 
@@ -4568,6 +4839,7 @@
         // SUMMARY & MERGED & REG REPORTS
         window.renderReports = function() {
             if (!currentUser) return;
+            imFillFilters();
             const startVal = document.getElementById('reportStartDate')?.value || '';
             const endVal = document.getElementById('reportEndDate')?.value || '';
             const searchInput = document.getElementById('reportSearch');
@@ -4596,7 +4868,7 @@
                     if (u) availableOptions.add(String(u).trim());
                 });
             } else {
-                masterInvoices.forEach(inv => {
+                bkReportInvoices().forEach(inv => {
                     if (currentUser.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) return;
                     const d = inv[sanitizeKey('Requesting Dealer')] || inv['Requesting Dealer'] || inv['Dealer'] || inv['Dealer Name'];
                     if (d) availableOptions.add(String(d).trim());
@@ -4632,7 +4904,8 @@
             const activeUserFilter = userSelect ? userSelect.value : 'All';
 
             // FILTER INVOICES (Restricted to current user for non-admin)
-            const filteredInvoices = masterInvoices.filter(inv => {
+            const filteredInvoices = bkReportInvoices().filter(inv => {
+                if(!imMatchReport(inv))return false;
                 if (currentUser.role !== 'Admin' && !window.isRecordOwnedByCurrentUser(inv, null)) {
                     return false;
                 }
@@ -5035,6 +5308,8 @@
                     <th class="px-4 py-3 font-semibold border-b whitespace-nowrap">Customer Name</th>
                     <th class="px-4 py-3 font-semibold border-b whitespace-nowrap">Mobile No</th>
                     <th class="px-4 py-3 font-semibold border-b whitespace-nowrap">Registration No</th>
+                    <th class="px-4 py-3 font-semibold border-b whitespace-nowrap">Invoice Type</th>
+                    <th class="px-4 py-3 font-semibold border-b whitespace-nowrap">Invoice Category</th>
                 `;
             }
 
@@ -5050,7 +5325,7 @@
                 const pagedInvoices = filteredInvoices.slice(startIdx, endIdx);
 
                 if (pagedInvoices.length === 0) {
-                    tbodyMerged.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-sm text-slate-500">No records found.</td></tr>';
+                    tbodyMerged.innerHTML = '<tr><td colspan="10" class="px-4 py-8 text-center text-sm text-slate-500">No records found.</td></tr>';
                 } else {
                     pagedInvoices.forEach(inv => {
                         const frame = inv[sanitizeKey('Frame #')] || '';
@@ -5068,6 +5343,8 @@
                             <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${inv[sanitizeKey('Customer Name')] || '-'}</td>
                             <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${inv[sanitizeKey('Mobile No')] || '-'}</td>
                             <td class="px-4 py-3 text-sm font-semibold whitespace-nowrap ${regNo ? 'text-emerald-600' : 'text-amber-600'}">${regNo || 'Pending'}</td>
+                            <td class="px-4 py-3 text-sm whitespace-nowrap">${cpEsc(imValue(inv,'Invoice Type')||'Unmapped')}</td>
+                            <td class="px-4 py-3 text-sm whitespace-nowrap">${cpEsc(imValue(inv,'Invoice Category')||'Unmapped')}</td>
                         `;
                         tbodyMerged.appendChild(tr);
                     });
@@ -6549,8 +6826,38 @@
                 const action = currentHypoMappingTab === 'unmapped' ? 'Save Mapping' : 'Update';
                     const resetButton = currentHypoMappingTab === 'mapped'
                         ? `<button onclick="window.removeHypoMapping('${encodedOriginal}')" class="bg-red-50 hover:bg-red-100 text-red-700 py-1.5 px-3 rounded-md text-sm font-medium">Remove</button>` : '';
-                return `<tr class="hover:bg-slate-50"><td class="px-4 py-3 text-sm font-semibold text-slate-800">${escapeHtml(item.original)}</td><td class="px-4 py-3"><input type="text" id="hmInput_${key}" value="${escapeHtml(item.group)}" list="hmGroupDatalist" placeholder="e.g. BAJAJ, IDFC, OTHER" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></td><td class="px-4 py-3 text-right"><div class="flex gap-2 justify-end"><button onclick="window.saveHypoMapping('${encodedKey}', '${encodedOriginal}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-1.5 px-3 rounded-md text-sm font-medium">${action}</button>${resetButton}</div></td></tr>`;
+                const originalCell = currentHypoMappingTab === 'unmapped'
+                    ? `<button type="button" onclick="window.showHypoInvoiceDetails('${encodedOriginal}')" class="text-left font-semibold text-indigo-700 underline decoration-indigo-300 underline-offset-2 hover:text-indigo-900">${escapeHtml(item.original)}</button>`
+                    : escapeHtml(item.original);
+                return `<tr class="hover:bg-slate-50"><td class="px-4 py-3 text-sm text-slate-800">${originalCell}</td><td class="px-4 py-3"><input type="text" id="hmInput_${key}" value="${escapeHtml(item.group)}" list="hmGroupDatalist" placeholder="e.g. BAJAJ, IDFC, OTHER" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-indigo-500 bg-white"></td><td class="px-4 py-3 text-right"><div class="flex gap-2 justify-end"><button onclick="window.saveHypoMapping('${encodedKey}', '${encodedOriginal}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-1.5 px-3 rounded-md text-sm font-medium">${action}</button>${resetButton}</div></td></tr>`;
             }).join('');
+        };
+
+        window.showHypoInvoiceDetails = function(encodedHypo) {
+            const targetHypo = normalizeHypoMappingKey(decodeURIComponent(encodedHypo));
+            const matchingInvoices = masterInvoices.filter(inv => {
+                const rawHypo = inv[sanitizeKey('Hypothecation')] || inv['Hypothecation'] || '';
+                return normalizeHypoMappingKey(rawHypo) === targetHypo;
+            });
+            const displayValue = value => String(value ?? '').trim() || '-';
+            const headers = ['Invoice #', 'Invoice Date', 'Dealer', 'Model Name', 'Frame #', 'Customer Name', 'Financier', 'Hypothecation'];
+            const dataRows = matchingInvoices.map(inv => [
+                displayValue(inv[sanitizeKey('Invoice #')] || inv['Invoice #']),
+                displayValue(inv[sanitizeKey('Invoice Date')] || inv['Invoice Date']),
+                displayValue(inv[sanitizeKey('Requesting Dealer')] || inv['Requesting Dealer']),
+                displayValue(inv[sanitizeKey('Model Name')] || inv['Model Name']),
+                displayValue(inv[sanitizeKey('Frame #')] || inv['Frame #']),
+                displayValue(inv[sanitizeKey('Customer Name')] || inv['Customer Name']),
+                displayValue(inv[sanitizeKey('Financier')] || inv['Financier']),
+                displayValue(inv[sanitizeKey('Hypothecation')] || inv['Hypothecation'])
+            ]);
+            window.openDrillDownModal(
+                `Invoices: ${decodeURIComponent(encodedHypo)}`,
+                `${matchingInvoices.length} matching invoice${matchingInvoices.length === 1 ? '' : 's'}`,
+                headers,
+                dataRows,
+                { bulkHypothecationSource: decodeURIComponent(encodedHypo), invoiceKeys: matchingInvoices.map(inv => inv.__fbKey) }
+            );
         };
 
         window.saveHypoMapping = function(encodedKey, encodedOriginal) {
@@ -6649,6 +6956,7 @@
                 if (m && String(m).trim()) allModels.add(String(m).trim());
             });
 
+            bkStockRows().forEach(row=>{const name=bkField(row,'MODEL NAME');if(name)allModels.add(name);});
             const defaultGroups = [
                 'ACTIVA 110', 'ACTIVA 125', 'DIO 110', 'DIO 125', 
                 'SHINE 100', 'SHINE 125', 'SP 125', 'SP 160', 
@@ -6786,6 +7094,7 @@
 
         // CSV HELPER
         function exportCSV(dataArray, filename) {
+            if(window.imEnrich && dataArray.length){const enriched=window.imEnrich(dataArray[0],dataArray.slice(1));dataArray=[enriched.headers,...enriched.rows];}
             const csvContent = dataArray.map(row => 
                 row.map(cell => {
                     let c = String(cell !== undefined && cell !== null ? cell : '');
@@ -6848,6 +7157,790 @@
                 searchTimeout = setTimeout(window.handleVehicleSearch, 300);
             });
         }
+        // CUSTOM PROJECTS — user-scoped, live invoice calculations, stable column references.
+        const CP = { projects: {}, selected: null, user: null, unsubscribe: null, loaded: false, error: '', search: '', modal: null, pending: 0, editing: false, saveErrors: new Map() };
+        const cpId = () => 'p' + crypto.randomUUID().replace(/-/g, '');
+        const cpEsc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const cpCols = p => Object.values(p.columns || {}).sort((a,b) => a.order-b.order);
+        const cpRows = p => Object.values(p.models || {}).filter(m => m.selected).sort((a,b) => a.name.localeCompare(b.name));
+        const cpEditable = () => currentUser && currentUser.role !== 'Viewer';
+        const cpEditing = () => cpEditable() && CP.editing;
+        const cpProject = () => {const p = CP.projects[CP.selected]; return p ? cpGroupedProject(p) : p;};
+        const cpPath = id => `users/${CP.user}/custom_projects/${id}`;
+        const cpVisible = () => currentUser && !document.getElementById('customProjectSection').classList.contains('hidden');
+        const cpInvoices = () => bkEffectiveInvoices().filter(inv => currentUser?.role === 'Admin' || window.isRecordOwnedByCurrentUser(inv));
+        const cpMasterName = name => {
+            const raw = String(name || '').trim();
+            return String(modelGroupsDB[sanitizeKey(raw)]?.group || raw).trim();
+        };
+        const cpModel = inv => cpMasterName(inv[sanitizeKey('Model Name')]);
+        // Upgrade projects made with original model rows without discarding their entries.
+        function cpGroupedProject(project) {
+            if(project.modelBasis === 'masterGroup') return project;
+            const p = structuredClone(project), buckets = new Map();
+            Object.values(p.models || {}).forEach(row => {
+                const name = cpMasterName(row.name);
+                if(!buckets.has(name)) buckets.set(name, []);
+                buckets.get(name).push(row);
+            });
+            p.modelBasis = 'masterGroup'; p.models = {}; p.values = {};
+            p.previousModelEntries = {models: project.models || {}, values: project.values || {}};
+            p.groupMergeConflicts = false;
+            buckets.forEach((rows, name) => {
+                const id = rows[0].id;
+                p.models[id] = {id, name, selected: rows.some(r => r.selected)};
+                p.values[id] = {};
+                cpCols(p).filter(c => c.source === 'manual').forEach(c => {
+                    const vals = rows.map(r => project.values?.[r.id]?.[c.id]).filter(v => v !== undefined && v !== null && v !== '');
+                    if(!vals.length) return;
+                    if(c.format === 'Number') p.values[id][c.id] = Math.round(vals.reduce((sum,v) => sum + Number(v),0)*100)/100;
+                    else if(vals.every(v => v === vals[0])) p.values[id][c.id] = vals[0];
+                    else {p.values[id][c.id] = ''; p.groupMergeConflicts = true;}
+                });
+            });
+            return p;
+        }
+        function cpPreviousEntries(p) {
+            if(!p.previousModelEntries || !Object.keys(p.previousModelEntries.values || {}).length) return '';
+            const cols = cpCols(p).filter(c => c.source === 'manual');
+            return `<details class="cp-help"><summary class="cp-btn">Previous model entries (before grouping)</summary><p class="cp-muted">Number entries were added within each Master Group. Different Text, Date or Percentage entries are kept here; enter the required group value in the main table.</p><div class="cp-table-wrap"><table class="cp-table"><thead><tr><th>Original Model</th>${cols.map(c=>`<th>${cpEsc(c.name)}</th>`).join('')}</tr></thead><tbody>${Object.values(p.previousModelEntries.models || {}).map(row=>`<tr><th>${cpEsc(row.name)}</th>${cols.map(c=>`<td>${cpEsc(cpFormat(p.previousModelEntries.values?.[row.id]?.[c.id] ?? '',c))}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`;
+        }
+        const cpModels = () => [...new Set([...cpInvoices().map(cpModel),...bkStockRows().map(r=>cpMasterName(bkField(r,"MODEL NAME")))].filter(Boolean))].sort();
+        const cpOptions = (values, selected) => values.map(v => `<option value="${cpEsc(v)}" ${v === selected ? 'selected' : ''}>${cpEsc(v)}</option>`).join('');
+        const cpButton = (label, action, id = '', primary = false) => `<button type="button" class="cp-btn ${primary ? 'cp-primary' : ''}" data-cp="${action}" data-id="${id}">${label}</button>`;
+        function cpStatus(message, error = false) { const el = document.getElementById('cpSaveStatus'); if(el) { el.textContent = message; el.style.color = error ? '#dc2626' : '#64748b'; } }
+        function cpConnect() {
+            if (!currentUser || CP.user === String(currentUser.id)) return;
+            CP.unsubscribe?.(); CP.user = String(currentUser.id); CP.projects = {}; CP.selected = null; CP.loaded = false; CP.error = ''; CP.search = ''; CP.viewOverride=null; CP.editing = false; CP.saveErrors.clear();
+            CP.unsubscribe = onValue(ref(db, `users/${CP.user}/custom_projects`), snap => {
+                CP.projects = snap.val() || {}; CP.loaded = true;
+                if(CP.selected && !CP.projects[CP.selected]) { CP.selected = null; cpClose(); }
+                if(cpVisible() && !CP.pending) { if(document.activeElement?.dataset.cell) cpRefreshValues(); else cpRender(); }
+            }, err => { CP.error = 'Projects could not load: ' + err.message; if(cpVisible()) cpRender(); });
+        }
+        async function cpWrite(id, patch, deleting = false) {
+            if(!cpEditable() || !CP.loaded || CP.error) throw new Error('Projects are not ready for editing.');
+            const saveKey = id + ':' + Object.keys(patch).sort().join('|');
+            CP.pending++; cpStatus('Saving…');
+            try {
+                if(deleting) await remove(ref(db, cpPath(id)));
+                else {
+                    if(CP.projects[id] && CP.projects[id].modelBasis !== 'masterGroup') {
+                        const upgraded = cpGroupedProject(CP.projects[id]);
+                        for(const [key,value] of Object.entries(patch)) {
+                            const parts = key.split('/'); let target = upgraded;
+                            parts.slice(0,-1).forEach(part => {target = target[part] ||= {};});
+                            if(value === null) delete target[parts.at(-1)]; else target[parts.at(-1)] = value;
+                        }
+                        patch = upgraded;
+                    }
+                    await update(ref(db, cpPath(id)), {...patch, updatedAt: Date.now()});
+                }
+                CP.saveErrors.delete(saveKey); cpStatus('Saved • Live invoice data');
+            } catch(err) { CP.saveErrors.set(saveKey, err.message); cpStatus('Save failed — please retry', true); throw err; }
+            finally { CP.pending--; }
+        }
+        const cpProjectionSources={baseEvent:'Base Event',basePool:'Base Event Total',cytdContrib:'CYTD Contrib %',pytd:'PYTD Count',cytd:'CYTD Count'};
+        const cpProjectionDateFields={baseStart:'Base 1 Start',baseEnd:'Base 1 End',pyStart:'Prev YTD Start',pyEnd:'Prev YTD End',cyStart:'Curr YTD Start',cyEnd:'Curr YTD End'};
+        function cpInvoiceFilterSelect(field,value,attrs) {
+            const entries=[['all','All'],...Object.entries(imOptions(field))];
+            if(value==='unmapped'||[...cpInvoices(),...bkStockRows().map(bkStockInvoice)].some(inv=>!imValue(inv,field)))entries.push(['unmapped','Unmapped']);
+            return `<select class="cp-input" ${attrs}>${entries.map(([id,label])=>`<option value="${cpEsc(id)}" ${id===value?'selected':''}>${cpEsc(label)}</option>`).join('')}</select>`;
+        }
+        function cpInvoiceMatches(inv,filters) {
+            if(!filters)return true;
+            if(filters.bk&&filters.bk!=='all'&&(filters.bk==='unmapped'?!!bkNo(inv):bkKey(bkNo(inv))!==bkKey(filters.bk)))return false;
+            return [['type','Invoice Type'],['category','Invoice Category']].every(([key,field])=>{
+                const chosen=filters[key]||'all';if(chosen==='all')return true;
+                if(chosen==='unmapped')return !imValue(inv,field);
+                return imResolved(inv,field).id===chosen;
+            });
+        }
+        function cpInvoiceFilterCaption(c) {
+            if(c.source!=='invoice'&&c.source!=='stock'&&!cpProjectionSources[c.source])return '';
+            const labels=[['type','Invoice Type'],['category','Invoice Category']].flatMap(([key,field])=>{const id=c.invoiceFilters?.[key];return !id||id==='all'?[]:[id==='unmapped'?field+': Unmapped':imOptions(field)[id]||'Unknown mapping'];});
+            if(c.invoiceFilters?.bk&&c.invoiceFilters.bk!=='all')labels.push('BK NO.: '+c.invoiceFilters.bk);return labels.length?`<span class="cp-mapping-caption">${labels.map(cpEsc).join(' · ')}</span>`:'';
+        }
+        function cpProjectionMetrics(p) {
+            const s=p.projection;
+            if(!s)throw Error('Set Projection Dates in Edit Report first.');
+            const range=(a,b)=>{if(!s[a]||!s[b]||s[a]>s[b])throw Error('Set valid '+cpProjectionDateFields[a]+' / End dates.');const start=parseStandardDate(s[a]),end=parseStandardDate(s[b]);end.setHours(23,59,59,999);return [start,end];};
+            const base=range('baseStart','baseEnd'),py=range('pyStart','pyEnd'),cy=range('cyStart','cyEnd'),models=new Map();let baseTotal=0,cyTotal=0;
+            cpInvoices().forEach(inv=>{
+                if(!cpInvoiceMatches(inv,p._invoiceFilters)||!cpInvoiceMatches(inv,{bk:cpView(p).bk||'all'}))return;
+                const dealer=String(inv[sanitizeKey('Requesting Dealer')]||inv.Dealer||'').trim();if(s.dealer&&s.dealer!=='ALL_COMBINED'&&s.dealer!=='ALL_DEALERS'&&dealer!==s.dealer)return;
+                const name=cpModel(inv);if(!name)return;const d=parseStandardDate(inv[sanitizeKey('Invoice Date')]);if(!d||isNaN(d))return;
+                const inBase=d>=base[0]&&d<=base[1],inPy=d>=py[0]&&d<=py[1],inCy=d>=cy[0]&&d<=cy[1];
+                if(!inBase&&!inPy&&!inCy)return;
+                const m=models.get(name)||{baseEvent:0,pytd:0,cytd:0};if(inBase){m.baseEvent++;baseTotal++;}if(inPy)m.pytd++;if(inCy){m.cytd++;cyTotal++;}models.set(name,m);
+            });
+            models.forEach(m=>m.cytdContrib=cyTotal>0?m.cytd/cyTotal:baseTotal>0?m.baseEvent/baseTotal:0);
+            return {models,baseTotal,cyTotal};
+        }
+        function cpProjectionInitial(p) {
+            if(p.projection){const view=cpView(p);return {...p.projection,dealer:view.mode==='all'?'ALL_DEALERS':view.mode==='single'?view.dealer:'ALL_COMBINED'};}
+            const value=id=>document.getElementById(id)?.value||'';
+            return {timeline:value('projTlSelect')||'CUSTOM',dealer:value('projDealerFilter')==='All'?'ALL_COMBINED':value('projDealerFilter')||'ALL_COMBINED',baseStart:value('projBaseStart'),baseEnd:value('projBaseEnd'),pyStart:value('projPYTDStart'),pyEnd:value('projPYTDEnd'),cyStart:value('projCYTDStart'),cyEnd:value('projCYTDEnd')};
+        }
+        function cpProjectionDialog() {
+            const p=cpProject(),s=cpProjectionInitial(p),dealers=[...new Set(cpInvoices().map(inv=>String(inv[sanitizeKey('Requesting Dealer')]||inv.Dealer||'').trim()).filter(Boolean))].sort();
+            if(s.dealer&&s.dealer!=='ALL_COMBINED'&&s.dealer!=='ALL_DEALERS'&&!dealers.includes(s.dealer))dealers.push(s.dealer);
+            const timelineOptions='<option value="CUSTOM">Custom Dates</option>'+Object.entries(timelinesDB).sort((a,b)=>String(a[1].name).localeCompare(String(b[1].name))).map(([id,t])=>`<option value="${cpEsc(id)}" ${s.timeline===id?'selected':''}>${cpEsc(t.name)} (Base 1)</option>`).join('');
+            cpDialog('Projection Dates',`<p class="cp-muted">Saved separately for this project. These dates control Base Event, PYTD, CYTD and CYTD Contrib % columns.</p>${cpButton('Copy current Retail Projection dates','copy-projection')}<label>Timeline Event<select class="cp-input" id="cpProjectionTimeline" name="timeline">${timelineOptions}</select></label><div class="cp-grid">${Object.entries(cpProjectionDateFields).map(([key,label])=>`<label>${label}<input class="cp-input" type="date" name="${key}" required value="${cpEsc(s[key])}"></label>`).join('')}</div><label>Dealer scope<select class="cp-input" name="dealer"><option value="ALL_COMBINED">ALL COMBINED</option><option value="ALL_DEALERS" ${s.dealer==='ALL_DEALERS'?'selected':''}>ALL DEALERS — Separate</option>${dealers.map(d=>`<option value="${cpEsc(d)}" ${s.dealer===d?'selected':''}>${cpEsc(d)}</option>`).join('')}</select></label><p class="cp-muted">CYTD Contrib % = model CYTD ÷ all-model CYTD in this dealer scope. When CYTD is zero, Base Event contribution is used, matching Retail Projection. Hiding a model does not change other models' percentages.</p><label><input type="checkbox" name="addColumns" ${cpCols(p).some(c=>cpProjectionSources[c.source])?'':'checked'}> Add Base Event and CYTD Contrib % columns if missing</label>`, 'projection');
+        }
+        function cpProjectionCopy() {
+            const form=document.getElementById('cpForm');
+            const source={baseStart:'projBaseStart',baseEnd:'projBaseEnd',pyStart:'projPYTDStart',pyEnd:'projPYTDEnd',cyStart:'projCYTDStart',cyEnd:'projCYTDEnd',timeline:'projTlSelect',dealer:'projDealerFilter'};
+            Object.entries(source).forEach(([name,id])=>{const value=document.getElementById(id)?.value||'';form.elements[name].value=name==='timeline'?(timelinesDB[value]?value:'CUSTOM'):name==='dealer'?(value==='All'?'ALL_COMBINED':value||'ALL_COMBINED'):value;});
+            if(!form.elements.dealer.value)form.elements.dealer.value='ALL_COMBINED';
+        }
+        function cpProjectionCaption(p) {
+            if(!p.projection||!cpCols(p).some(c=>cpProjectionSources[c.source]))return '';
+            const s=p.projection,label=s.timeline==='CUSTOM'?'Custom Dates':s.timelineLabel||timelinesDB[s.timeline]?.name||'Timeline dates';
+            return `<p class="cp-muted cp-help">${cpEsc(label)} · Base Event: ${cpEsc(cpDisplayDate(s.baseStart))} to ${cpEsc(cpDisplayDate(s.baseEnd))} · PYTD: ${cpEsc(cpDisplayDate(s.pyStart))} to ${cpEsc(cpDisplayDate(s.pyEnd))} · CYTD: ${cpEsc(cpDisplayDate(s.cyStart))} to ${cpEsc(cpDisplayDate(s.cyEnd))} · ${cpEsc(cpView(p).mode==='all'?'ALL DEALERS':cpView(p).mode==='single'?cpView(p).dealer:'ALL COMBINED')}</p>`;
+        }
+        function cpCounts(p) {
+            const counts = new Map();
+            if(!p.start || !p.end || p.start > p.end) return counts;
+            const start = parseStandardDate(p.start), end = parseStandardDate(p.end); end.setHours(23,59,59,999);
+            cpInvoices().forEach(inv => { if(!cpInvoiceMatches(inv,p._invoiceFilters)||!cpInvoiceMatches(inv,{bk:cpView(p).bk||'all'}))return; if(p._scope&&cpDealerName(inv)!==p._scope)return; const d = parseStandardDate(inv[sanitizeKey('Invoice Date')]); if(d && d >= start && d <= end) {const m = cpModel(inv); counts.set(m, (counts.get(m)||0)+1);} });
+            return counts;
+        }
+        // Small arithmetic parser: no eval / Function and no execution of user input.
+        function cpParse(expression) {
+            const tokens = String(expression).match(/TOTAL|@[a-zA-Z0-9_]+|(?:\d+(?:\.\d*)?|\.\d+)|[()+*/-]|\S/g) || []; let i = 0;
+            function atom() {
+                const t = tokens[i++];
+                if(t==='TOTAL'){if(tokens[i++]!=='(')throw Error('Use TOTAL([Column])');const ref=tokens[i++];if(!/^@\w+$/.test(ref||'')||tokens[i++]!==')')throw Error('TOTAL accepts one column reference');return {total:ref.slice(1)};}
+                if(t === '+' || t === '-') return {op:'unary'+t, a:atom()};
+                if(t === '(') {const n = sum(); if(tokens[i++] !== ')') throw Error('Missing closing bracket'); return n;}
+                if(t && /^@\w+$/.test(t)) return {ref:t.slice(1)};
+                if(t && /^(?:\d+(?:\.\d*)?|\.\d+)$/.test(t)) return {value:Number(t)};
+                throw Error('Expected a column, number or bracket');
+            }
+            function product() { let a=atom(); while(['*','/'].includes(tokens[i])) {const op=tokens[i++]; a={op,a,b:atom()};} return a; }
+            function sum() { let a=product(); while(['+','-'].includes(tokens[i])) {const op=tokens[i++]; a={op,a,b:product()};} return a; }
+            const tree=sum(); if(i !== tokens.length) throw Error('Invalid formula near ' + tokens[i]); return tree;
+        }
+        function cpCompile(text, columns) {
+            let src = text.trim(); if(!src.startsWith('=')) throw Error('Start the formula with ='); src=src.slice(1); let out='';
+            const sorted=[...columns].sort((a,b)=>b.name.length-a.name.length);
+            while(src.length) {
+                if(/^\s/.test(src)) {src=src.slice(1);continue;}
+                const totalCall=src.match(/^TOTAL\s*\(/i);if(totalCall){out+='TOTAL ( ';src=src.slice(totalCall[0].length);continue;}
+                const col=sorted.find(c => src.startsWith('['+c.name+']') || (src.startsWith(c.name) && (!src[c.name.length] || /[\s+*/()\-]/.test(src[c.name.length]))));
+                if(col) {const bracketed=src[0]==='['; out+='@'+col.id+' '; src=src.slice(col.name.length+(bracketed?2:0)); continue;}
+                const match=src.match(/^(?:\d+(?:\.\d*)?|\.\d+|[()+*/-])/);
+                if(!match) throw Error('Unknown column. Choose a column suggestion.'); out+=match[0]+' '; src=src.slice(match[0].length);
+            }
+            cpParse(out); return out.trim();
+        }
+        const cpFormulaText = (formula, p) => '=' + (formula || '').replace(/@(\w+)/g, (_, id) => '['+(p.columns?.[id]?.name || 'Deleted column')+']');
+        function cpValidate(p) {
+            const visiting=new Set(), done=new Set();
+            function visit(id) {
+                const c=p.columns[id]; if(!c) throw Error('Formula references a missing column');
+                if(visiting.has(id)) throw Error('Circular formula: columns cannot depend on themselves');
+                if(done.has(id)) return; visiting.add(id);
+                if(c.source==='formula') {cpParse(c.formula); for(const m of c.formula.matchAll(/@(\w+)/g)) { const dep=p.columns[m[1]]; if(!dep || !['Number','Percentage'].includes(dep.format)) throw Error('Formula needs Number or Percentage columns'); visit(m[1]); }}
+                visiting.delete(id); done.add(id);
+            }
+            Object.keys(p.columns || {}).forEach(visit);
+        }
+        function cpAdjustedTarget(p,row,id,counts) {
+            if(p._ignoreAdjustment===id)return undefined;
+            if(p.columns?.[id]?.source!=='formula'||p.columns?.[id]?.format!=='Number')return undefined;
+            const saved=p.targetAdjustments?.[id]?.[row.id];if(saved===undefined||saved===null)return undefined;
+            if(!p._scope)return Number(saved);
+            counts.targetSplits ||= new Map();const key=id+':'+row.id;
+            if(!counts.targetSplits.has(key)) {
+                const root={...p,_scope:'',values:p._combinedValues||p.values,projection:p.projection?{...p.projection,dealer:'ALL_COMBINED'}:undefined,_ignoreAdjustment:id};
+                const dealers=cpDealers(),manualAllocation=cpDealerAllocation(root);
+                let weights=dealers.map(dealer=>{try{const scoped=cpScopedProject(root,dealer,manualAllocation);return Math.max(0,Number(cpValue(scoped,row,id,cpCounts(scoped)))||0);}catch{return 0;}});
+                if(!weights.some(Boolean))weights=dealers.map(dealer=>{try{return cpProjectionMetrics({...root,projection:{...root.projection,dealer}}).models.get(row.name)?.cytd||0;}catch{return 0;}});
+                if(!weights.some(Boolean))weights=dealers.map(dealer=>cpCounts({...root,_scope:dealer}).get(row.name)||0);
+                const split=cpAllocate(Number(saved),weights);counts.targetSplits.set(key,Object.fromEntries(dealers.map((dealer,i)=>[dealer,split[i]])));
+            }
+            return counts.targetSplits.get(key)[p._scope]??0;
+        }
+        function cpTargetDialog(id) {
+            const p=cpProject(),cols=cpCols(p).filter(c=>c.source==='formula'&&c.format==='Number');
+            const c=cols.find(c=>c.id===id)||cols.find(c=>/target/i.test(c.name))||cols[0];
+            if(!c){alert('Create a Number column with Auto — Formula first, then adjust its targets.');return;}
+            const combined=cpScopedProject(p,'',null),counts=cpCounts(combined);
+            let automaticTotal=0;
+            const rows=cpRows(p).map(row=>{let auto='';try{auto=cpValue({...combined,_ignoreAdjustment:c.id},row,c.id,counts);automaticTotal+=Number(auto)||0;}catch{}const saved=p.targetAdjustments?.[c.id]?.[row.id];return `<tr><th>${cpEsc(row.name)}</th><td>${auto===''?'—':cpEsc(cpFormat(auto,c))}</td><td><input class="cp-input cp-target-input" type="number" min="0" step="${c.decimals===0||c.decimals===undefined?'1':'0.01'}" name="target_${row.id}" data-auto="${cpEsc(auto)}" value="${saved===undefined?'':cpEsc(saved)}" placeholder="Auto: ${auto===''?'—':cpEsc(cpFormat(auto,c))}" aria-label="Final target for ${cpEsc(row.name)}"></td><td><button class="cp-btn" type="button" data-cp="reset-target" data-id="${row.id}">Auto</button></td></tr>`;}).join('');
+            cpDialog('Adjust Model Targets',`<label>Target Column<select id="cpTargetColumn" class="cp-input">${cols.map(col=>`<option value="${col.id}" ${col.id===c.id?'selected':''}>${cpEsc(col.name)}</option>`).join('')}</select></label><p class="cp-muted">Combined targets: enter a final number only for models you want to adjust. Blank / Auto restores the formula. Balance and other dependent formulas use the final target. Dealer views distribute adjusted totals automatically.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Model</th><th>Automatic</th><th>Final Target</th><th>Reset</th></tr></thead><tbody>${rows}</tbody></table></div><div class="cp-row"><span>Automatic sum: <b>${cpEsc(cpFormat(automaticTotal,c))}</b></span><span>Final sum: <b id="cpTargetFinalSum"></b></span></div><p class="cp-muted">This column's Total will use Sum of final model targets. Increasing one model does not reduce another automatically; adjust both to keep the same total.</p>${cpButton('Reset all to Auto','reset-all-targets')}`, 'targets',c.id);
+            cpUpdateTargetSum();
+        }
+        function cpUpdateTargetSum(){const p=cpProject(),c=p?.columns?.[CP.modal?.id];if(!c)return;let sum=0;document.querySelectorAll('#cpDialog .cp-target-input').forEach(el=>{sum+=Number(el.value===''?el.dataset.auto:el.value)||0;});const out=document.getElementById('cpTargetFinalSum');if(out)out.textContent=cpFormat(sum,c);}
+        function cpValue(p, row, id, counts, cache = {}, visiting = new Set()) {
+            if(Object.prototype.hasOwnProperty.call(cache,id)) return cache[id];
+            const c=p.columns?.[id]; if(!c) throw Error('Missing column'); if(visiting.has(id)) throw Error('Circular formula'); visiting.add(id);
+            const adjusted=cpAdjustedTarget(p,row,id,counts);
+            if(adjusted!==undefined){visiting.delete(id);cache[id]=adjusted;return adjusted;}
+            if((c.source==='invoice'||c.source==='stock'||cpProjectionSources[c.source])&&c.invoiceFilters){
+                const key=JSON.stringify(c.invoiceFilters);counts.filteredCounts ||= new Map();
+                const filteredProject={...p,_invoiceFilters:c.invoiceFilters};
+                if(!counts.filteredCounts.has(key))counts.filteredCounts.set(key,cpCounts(filteredProject));
+                counts=counts.filteredCounts.get(key);p=filteredProject;
+            }
+            let value;
+            if(c.source==='invoice') { if(!p.start || !p.end) throw Error('Select Start and End Date'); value=counts.get(row.name)||0; }
+            else if(c.source==='stock') {if(!BK.stockLoaded)throw Error('Stock has not loaded');if(!counts.stockCounts){counts.stockCounts=new Map();bkStockRows().forEach(r=>{if(p._scope&&bkRule(r)?.dealer!==p._scope)return;const inv=bkStockInvoice(r);if(!cpInvoiceMatches(inv,c.invoiceFilters)||!cpInvoiceMatches(inv,{bk:cpView(p).bk||'all'}))return;const name=cpMasterName(bkField(r,'MODEL NAME'));counts.stockCounts.set(name,(counts.stockCounts.get(name)||0)+1);});}value=counts.stockCounts.get(row.name)||0;}
+            else if(cpProjectionSources[c.source]) {
+                if(!counts.projectionMetrics)counts.projectionMetrics=cpProjectionMetrics(p);
+                if(c.source==='basePool')value=counts.projectionMetrics.baseTotal;
+                else if(c.source==='cytdContrib'&&p._scope&&p._contribution==='combined') {
+                    if(!counts.combinedMetrics)counts.combinedMetrics=cpProjectionMetrics({...p,projection:{...p.projection,dealer:'ALL_COMBINED'}});
+                    value=counts.combinedMetrics.models.get(row.name)?.cytdContrib??0;
+                }else value=counts.projectionMetrics.models.get(row.name)?.[c.source]??0;
+            }
+            else if(c.source==='manual') value=p.values?.[row.id]?.[id] ?? '';
+            else {
+                function calc(n) {
+                    if(n.total){counts.formulaTotals ||= {};const v=cpTotalValue(p,n.total,counts,counts.formulaTotals);if(v===''||!Number.isFinite(Number(v)))throw Error('TOTAL needs a numeric total. Check that column’s Total settings.');return Number(v);}
+                    if(n.ref) {const v=cpValue(p,row,n.ref,counts,cache,visiting); if(v==='') return 0; if(!Number.isFinite(Number(v))) throw Error('Non-numeric value'); return Number(v);}
+                    if('value' in n) return n.value;
+                    const a=calc(n.a); if(n.op==='unary-') return -a; if(n.op==='unary+') return a;
+                    const b=calc(n.b); if(n.op==='/') {if(b===0) throw Error('Cannot divide by zero');return a/b;} return n.op==='+'?a+b:n.op==='-'?a-b:a*b;
+                }
+                value=calc(cpParse(c.formula)); if(!Number.isFinite(value)) throw Error('Invalid numeric result');
+            }
+            visiting.delete(id); cache[id]=value; return value;
+        }
+        function cpDisplayDate(value){const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?m[3]+'-'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(m[2])-1]+'-'+m[1]:String(value||'');}
+        function cpFormat(value, c) {
+            c={...c,decimals:c.decimals??0};
+            if(value==='') return '';
+            if(c.format==='Number' || c.format==='Percentage') {const n=Number(value)*(c.format==='Percentage'?100:1);return n.toLocaleString('en-IN',{minimumFractionDigits:c.decimals===2?2:0,maximumFractionDigits:c.decimals===0?0:2})+(c.format==='Percentage'?'%':'');}
+            return String(value);
+        }
+        function cpManualDisplay(value,c) {
+            c={...c,decimals:c.decimals??0};
+            if(value==='' || !['Number','Percentage'].includes(c.format)) return value;
+            const n=Number(value)*(c.format==='Percentage'?100:1);
+            return c.decimals===2?n.toFixed(2):c.decimals===0?n.toFixed(0):String(Math.round((n+Number.EPSILON)*100)/100);
+        }
+        function cpSummary(c) {
+            return {method:c.source==='basePool'?'max':c.source==='cytdContrib'?'sum':c.source==='formula'&&['Number','Percentage'].includes(c.format)?'formula':c.format==='Percentage'?'average':c.format==='Number'?'sum':'none',format:'inherit',decimals:c.decimals??0,...(c.summary||{})};
+        }
+        function cpSummaryMethods(c) {
+            const numeric=['Number','Percentage'].includes(c.format);
+            return [['none','None'],...(numeric?[['sum','Sum'],['average','Average']]:[]),...((numeric||c.format==='Date')?[['min','Min'],['max','Max']]:[]),['count','Count'],...(c.source==='formula'&&numeric?[['formula','Formula on totals']]:[])];
+        }
+        function cpTotalValue(p,id,counts,cache={},visiting=new Set()) {
+            if(Object.prototype.hasOwnProperty.call(cache,id))return cache[id];
+            if(visiting.has(id))throw Error('Circular total formula');
+            const c=p.columns?.[id];if(!c)throw Error('Missing total column');
+            const config=cpSummary(c);if(config.method==='none')return '';
+            visiting.add(id);
+            let value;
+            try {
+                if(config.method==='formula') {
+                    function calc(n) {
+                        if(n.total){const v=cpTotalValue(p,n.total,counts,cache,visiting);if(v===''||!Number.isFinite(Number(v)))throw Error('TOTAL needs a numeric total');return Number(v);}
+                        if(n.ref){const v=cpTotalValue(p,n.ref,counts,cache,visiting);if(v==='')throw Error('Choose an aggregation for every referenced total column');if(!Number.isFinite(Number(v)))throw Error('Total formula requires numbers');return Number(v);}
+                        if('value' in n)return n.value;
+                        const a=calc(n.a);if(n.op==='unary-')return -a;if(n.op==='unary+')return a;
+                        const b=calc(n.b);if(n.op==='/'){if(b===0)throw Error('Cannot divide total by zero');return a/b;}
+                        return n.op==='+'?a+b:n.op==='-'?a-b:a*b;
+                    }
+                    value=calc(cpParse(c.formula));
+                } else {
+                    // Blank cells are excluded from Average/Count; errors are surfaced, never silently omitted.
+                    const vals=cpRows(p).map(row=>cpValue(p,row,id,counts)).filter(v=>v!==''&&v!==null&&v!==undefined);
+                    if(config.method==='count')value=vals.length;
+                    else if(!vals.length)value=config.method==='sum'?0:'';
+                    else if(c.format==='Date')value=vals.reduce((a,b)=>config.method==='min'?(a<b?a:b):(a>b?a:b));
+                    else {
+                        const nums=vals.map(Number);if(nums.some(n=>!Number.isFinite(n)))throw Error('Total contains a non-numeric value');
+                        value=config.method==='sum'?nums.reduce((a,b)=>a+b,0):config.method==='average'?nums.reduce((a,b)=>a+b,0)/nums.length:config.method==='min'?Math.min(...nums):Math.max(...nums);
+                    }
+                }
+                if(typeof value==='number'&&!Number.isFinite(value))throw Error('Invalid total');cache[id]=value;return value;
+            } finally {visiting.delete(id);}
+        }
+        function cpSummaryFormat(c) {
+            const config=cpSummary(c);
+            return {format:config.format==='inherit'?(config.method==='count'?'Number':c.format):config.format,decimals:config.decimals==='auto'?'auto':Number(config.decimals)};
+        }
+        function cpRefreshTotals(p,counts,section=document) {
+            const cache={};
+            section.querySelectorAll('[data-total-col]').forEach(el=>{
+                const c=p.columns[el.dataset.totalCol], config=cpSummary(c);
+                try {const value=cpTotalValue(p,c.id,counts,cache);el.textContent=cpFormat(value,cpSummaryFormat(c));el.title=cpSummaryMethods(c).find(([v])=>v===config.method)?.[1]||'';el.className='';}
+                catch(err){el.textContent='—';el.title=err.message;el.className='cp-error';}
+            });
+        }
+        function cpTotalsDialog() {
+            const p=cpProject();
+            cpDialog('Total Row Settings',`<label><input type="checkbox" name="enabled" ${p.totalSettings?.enabled===false?'':'checked'}> Show total row</label><label>Row Name<input class="cp-input" name="label" maxlength="80" value="${cpEsc(p.totalSettings?.label||'Total')}"></label><p class="cp-muted">Totals use the models selected in this project. Blank cells are excluded from Average and Count. Formula on totals calculates using other columns' totals.</p>${cpCols(p).map(c=>{const config=cpSummary(c);return `<div class="cp-summary-item"><strong>${cpEsc(c.name)}</strong><div class="cp-summary-options"><label>Calculation<select class="cp-input" name="method_${c.id}">${cpSummaryMethods(c).map(([v,label])=>`<option value="${v}" ${v===config.method?'selected':''}>${label}</option>`).join('')}</select></label><label>Format<select class="cp-input" name="format_${c.id}">${['inherit',...(['Number','Percentage'].includes(c.format)?['Number','Percentage']:[])].map(v=>`<option value="${v}" ${v===config.format?'selected':''}>${v==='inherit'?'Same as column':v}</option>`).join('')}</select></label><label>Decimals<select class="cp-input" name="decimals_${c.id}">${[['auto','Up to 2'],['0','Whole number'],['2','Always 2']].map(([v,label])=>`<option value="${v}" ${v===String(config.decimals)?'selected':''}>${label}</option>`).join('')}</select></label></div></div>`;}).join('')}`, 'totals');
+        }
+
+        const cpDealerName=inv=>String(inv[sanitizeKey('Requesting Dealer')]||inv.Dealer||inv['Dealer Name']||'Unknown Dealer').trim();
+        const cpDealers=()=>[...new Set([...cpInvoices().map(cpDealerName),...bkStockRows().map(r=>bkRule(r)?.dealer).filter(Boolean)])].sort();
+        const cpView=p=>CP.viewOverride||p.dealerView||{mode:p.projection?.dealer&&p.projection.dealer!=='ALL_COMBINED'?'single':'combined',dealer:p.projection?.dealer||'',contribution:'dealer'};
+        function cpDealerControls(p) {
+            const v=cpView(p);
+            return `<div class="cp-toolbar"><label>View<select id="cpDealerMode" class="im-select">${[['combined','ALL COMBINED'],['all','ALL DEALERS — Separate'],['single','Single Dealer']].map(([id,label])=>`<option value="${id}" ${v.mode===id?'selected':''}>${label}</option>`).join('')}</select></label>${v.mode==='single'?`<label>Dealer<select id="cpDealerPick" class="im-select">${cpDealers().map(d=>`<option value="${cpEsc(d)}" ${v.dealer===d?'selected':''}>${cpEsc(d)}</option>`).join('')}</select></label>`:''}<label>BK NO. / Location${bkSelect(v.bk||'all','id="cpLocationView"')}</label><label>CYTD Contribution<select id="cpContribution" class="im-select"><option value="dealer" ${v.contribution!=='combined'?'selected':''}>Dealer’s Own Model Share</option><option value="combined" ${v.contribution==='combined'?'selected':''}>Combined Model Share</option></select></label></div>${v.mode!=='combined'?'<p class="cp-muted cp-help">Manual Number targets are entered in Combined view and allocated by each dealer’s model CYTD (Base Event fallback). Text / Date / Percentage inputs are shared. Formula columns use the chosen contribution basis and each dealer’s counts.</p>':''}`;
+        }
+        function cpAllocate(value,weights) {
+            const scale=Number.isInteger(Number(value))?1:100,units=Math.round(Math.abs(Number(value))*scale),sum=weights.reduce((a,b)=>a+b,0),sign=Number(value)<0?-1:1;
+            if(!weights.length)return [];
+            const parts=weights.map((w,i)=>{const raw=units*(sum?w/sum:1/weights.length);return {i,n:Math.floor(raw),fraction:raw-Math.floor(raw)};});
+            let remainder=units-parts.reduce((a,b)=>a+b.n,0);[...parts].sort((a,b)=>b.fraction-a.fraction||a.i-b.i).forEach(part=>{if(remainder-->0)part.n++;});return parts.map(part=>sign*part.n/scale);
+        }
+        function cpScopedProject(p,dealer,allocation) {
+            const scoped={...p,_combinedValues:p._combinedValues||p.values,_scope:dealer||'',_contribution:cpView(p).contribution||'dealer',projection:p.projection?{...p.projection,dealer:dealer||'ALL_COMBINED'}:undefined};
+            if(dealer){scoped.values={};cpRows(p).forEach(row=>{scoped.values[row.id]={};cpCols(p).filter(c=>c.source==='manual').forEach(c=>{const v=p.values?.[row.id]?.[c.id]??'';scoped.values[row.id][c.id]=v!==''&&c.format==='Number'?(allocation?.[row.id]?.[c.id]?.[dealer]??0):v;});});}
+            return scoped;
+        }
+        function cpDealerAllocation(p) {
+            const dealers=cpDealers(),data={},metrics=new Map(),counts=new Map();
+            dealers.forEach(d=>{const scoped={...p,_scope:d,projection:p.projection?{...p.projection,dealer:d}:undefined};counts.set(d,cpCounts(scoped));if(p.projection){try{metrics.set(d,cpProjectionMetrics(scoped));}catch{}}});
+            cpRows(p).forEach(row=>{let weights=dealers.map(d=>metrics.get(d)?.models.get(row.name)?.cytd||0);
+                if(!weights.some(Boolean))weights=dealers.map(d=>metrics.get(d)?.models.get(row.name)?.baseEvent||0);
+                if(!weights.some(Boolean))weights=dealers.map(d=>counts.get(d).get(row.name)||0);
+                data[row.id]={};cpCols(p).filter(c=>c.source==='manual'&&c.format==='Number').forEach(c=>{const value=p.values?.[row.id]?.[c.id];if(value===undefined||value==='')return;const parts=cpAllocate(value,weights);data[row.id][c.id]=Object.fromEntries(dealers.map((d,i)=>[d,parts[i]]));});
+            });return data;
+        }
+        function cpTable(p,editing) {
+            const columns=cpCols(p).filter(c=>editing||!c.hideInReport),rows=cpRows(p);
+            return `<div class="cp-table-wrap"><table class="cp-table ${editing?'cp-edit-table':'cp-report-table'}"><thead><tr><th class="cp-model">Master Group Name</th>${columns.map(c=>`<th class="${['Number','Percentage'].includes(c.format)?'cp-numeric':''}" title="${cpEsc(c.source==='formula'?cpFormulaText(c.formula,p):c.source==='invoice'?'Live invoice count':c.format)}"><div class="cp-row cp-col-heading"><span>${cpEsc(c.name)}</span>${editing?cpButton('←','move-left',c.id)+cpButton('⚙','column',c.id)+cpButton('→','move-right',c.id):''}</div>${editing?`<span class="cp-muted cp-col-meta">${cpProjectionSources[c.source]||(c.source==='stock'?'Current Stock':c.source==='invoice'?'Invoice Count':c.source==='formula'?'Formula':'Manual')} · ${cpEsc(c.format)}${c.hideInReport?' · Hidden in report':''}</span>`:''}${cpInvoiceFilterCaption(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr data-model-row="${row.id}"><th class="cp-model"><div class="cp-row cp-spread"><span>${cpEsc(row.name)}</span>${editing?`<button class="cp-remove" title="Remove model from this project" data-cp="remove-model" data-id="${row.id}">×</button>`:''}</div></th>${columns.map(c=>{const value=p.values?.[row.id]?.[c.id]??'';return `<td class="${['Number','Percentage'].includes(c.format)?'cp-numeric':''}">${c.source==='manual'&&editing&&!p._scope?`<div class="cp-cell-wrap"><input class="cp-cell" aria-label="${cpEsc(row.name+' '+c.name)}" data-row="${row.id}" data-col="${c.id}" data-cell="1" type="${c.format==='Date'?'date':c.format==='Text'?'text':'number'}" ${['Number','Percentage'].includes(c.format)?'step="0.01"':''} value="${cpEsc(cpManualDisplay(value,c))}">${c.format==='Percentage'?'<span>%</span>':''}</div>`:`<span data-auto-row="${row.id}" data-auto-col="${c.id}"></span>`}</td>`;}).join('')}</tr>`).join('') || `<tr><td colspan="${columns.length+1}" class="cp-empty">No models selected.${editing?' Use Models to add master groups.':''}</td></tr>`}<tr data-zero-empty hidden><td colspan="${columns.length+1}" class="cp-empty">All selected models have zero / blank values. They will appear automatically when a value changes.</td></tr></tbody>${p.totalSettings?.enabled===false?'':`<tfoot><tr><th class="cp-model">${cpEsc(p.totalSettings?.label||'Total')}</th>${columns.map(c=>`<td class="${['Number','Percentage'].includes(c.format)?'cp-numeric':''}"><span data-total-col="${c.id}"></span></td>`).join('')}</tr></tfoot>`}</table></div>`;
+        }
+        function cpTables(p,editing) {
+            const v=cpView(p),dealers=v.mode==='all'?cpDealers():v.mode==='single'?[v.dealer||cpDealers()[0]].filter(Boolean):[''];
+            const allocations=v.mode==='combined'?null:cpDealerAllocation(p);
+            return dealers.map(dealer=>`<section class="cp-scope" data-dealer="${cpEsc(dealer)}">${dealer?`<h3 class="cp-dealer-title">${cpEsc(dealer)}</h3>`:''}${cpTable(cpScopedProject(p,dealer,allocations),editing)}</section>`).join('')||'<p class="cp-muted">No dealers available.</p>';
+        }
+        async function cpMoveColumn(id,direction) {
+            const p=cpProject(),cols=cpCols(p),i=cols.findIndex(c=>c.id===id),j=i+direction;if(!cpEditing()||i<0||j<0||j>=cols.length)return;
+            [cols[i],cols[j]]=[cols[j],cols[i]];const patch={};cols.forEach((c,n)=>patch['columns/'+c.id+'/order']=n+1);await cpWrite(p.id,patch);cpRender();
+        }
+        function cpRender() {
+            const root=document.getElementById('cpRoot'); if(!currentUser) {root.innerHTML='';return;}
+            if(CP.error) {root.innerHTML=`<div class="cp-empty">${cpEsc(CP.error)}</div>`;return;}
+            if(!CP.loaded || !cpModelGroupsLoaded) {root.innerHTML='<div class="cp-empty">Loading projects…</div>';return;}
+            const p=cpProject();
+            if(!p) {
+                const all=Object.values(CP.projects).map(cpGroupedProject), filtered=all.filter(p=>(p.name+' '+(p.description||'')).toLowerCase().includes(CP.search.toLowerCase()));
+                const cards=arr=>arr.length?`<div class="cp-cards">${arr.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)).map(p=>`<article class="cp-card"><div class="cp-row"><span class="cp-badge ${p.status==='Active'?'cp-active':''}">${cpEsc(p.status)}</span><span class="cp-muted">${cpRows(p).length} models · ${cpCols(p).length} columns</span></div><h3>${cpEsc(p.name)}</h3><p class="cp-description">${cpEsc(p.description || 'No description added')}</p><div class="cp-row">${cpButton('Open project →','open',p.id,true)}${cpEditable()?cpButton('Edit','project',p.id)+cpButton('Delete','delete-project',p.id):''}</div></article>`).join('')}</div>`:'<div class="cp-empty">No projects in this section.</div>';
+                root.innerHTML=`<div class="cp-row cp-spread"><div><h1>Custom Project</h1><p class="cp-muted">Your plans, live actuals and calculations in one place.</p></div>${cpEditable()?cpButton('+ New Project','new-project','',true):'<span class="cp-badge">Read only</span>'}</div><input id="cpSearch" class="cp-input cp-search" placeholder="Search available projects…" aria-label="Search projects" value="${cpEsc(CP.search)}"><h2>Active <span class="cp-muted">${filtered.filter(p=>p.status==='Active').length}</span></h2>${cards(filtered.filter(p=>p.status==='Active'))}<h2>Inactive / Completed <span class="cp-muted">${filtered.filter(p=>p.status!=='Active').length}</span></h2>${cards(filtered.filter(p=>p.status!=='Active'))}`;
+                return;
+            }
+            const columns=cpCols(p), rows=cpRows(p), editing=cpEditing();
+            const controls = editing ? cpButton('Project settings','project',p.id)+cpButton('Models','models')+cpButton('+ Column','new-column')+cpButton('Adjust Targets','adjust-targets')+cpButton('Projection Dates','projection')+cpButton('Total settings','totals')+cpButton('Save & View','save-report','',true) : (cpEditable()?cpButton('Edit Report','edit-report','',true):'');
+            const period = editing ? `<label>Start<input class="cp-input" id="cpStart" type="date" value="${cpEsc(p.start)}"></label><label>End<input class="cp-input" id="cpEnd" type="date" value="${cpEsc(p.end)}"></label>` : `<span class="cp-period">${cpEsc(cpDisplayDate(p.start) || 'Start date not set')} <span class="cp-muted">to</span> ${cpEsc(cpDisplayDate(p.end) || 'End date not set')}</span>`;
+            root.innerHTML=`<div class="cp-row cp-spread cp-report-top"><div class="cp-row">${cpButton('← Projects','back')}<span class="cp-badge ${p.status==='Active'?'cp-active':''}">${cpEsc(p.status)}</span><span class="cp-muted">${editing?'Editing report':'Report view'}</span></div><div class="cp-row">${controls}</div></div><div class="cp-report-heading"><h1>${cpEsc(p.name)}</h1>${p.description?`<p class="cp-description">${cpEsc(p.description)}</p>`:''}</div><div class="cp-toolbar">${period}<span class="cp-muted">${rows.length} master groups · Live invoice data · Stock: ${cpEsc(bkStockStamp())}</span><span id="cpSaveStatus" class="cp-muted" role="status">${CP.saveErrors.size?'Save failed — retry your changes before saving report':CP.pending?'Saving…':editing?'Changes save automatically · Save & View when ready':'Saved report'}</span></div>${cpDealerControls(p)}<div id="cpTables">${cpTables(p,editing)}</div>${!columns.length?'<div class="cp-empty">Add columns in Edit Report to build your report.</div>':''}${editing?'<p class="cp-muted cp-help">Move columns with ← / →. Manual inputs are editable in Combined view. For a model-wise 40% uplift use =[Base Event]*1.4. To distribute a dealer’s base target by the chosen model share use =[Base Event Total]*1.4*[CYTD Contrib %]. Use Total settings for Sum, Average, Min, Max, Count or Formula.</p>':''}`;
+            root.insertAdjacentHTML('beforeend',cpProjectionCaption(p));
+            if(editing) root.insertAdjacentHTML('beforeend', cpPreviousEntries(p));
+            if(editing && p.groupMergeConflicts) cpStatus('Some grouped Text / Date / Percentage entries need review. See Previous model entries below.', true);
+            cpRefreshValues();
+        }
+        function cpRowIsEmpty(p,row,counts) {
+            const cols=cpCols(p);if(!cols.length)return false;
+            const cache={};
+            return cols.every(c=>{try{
+                const value=cpValue(p,row,c.id,counts,cache);
+                if(value===null||value===undefined||String(value).trim()==='')return true;
+                if(['Number','Percentage'].includes(c.format))return Number(value)===0;
+                return false;
+            }catch{return false;}});
+        }
+        function cpRefreshValues() {
+            const original=cpProject();if(!original||!cpVisible())return;
+            const allocations=cpView(original).mode==='combined'?null:cpDealerAllocation(original);
+            document.querySelectorAll('#cpRoot .cp-scope').forEach(section=>{
+                const p=cpScopedProject(original,section.dataset.dealer,allocations),counts=cpCounts(p),caches={};
+                section.querySelectorAll('[data-auto-row]').forEach(el=>{const row=p.models[el.dataset.autoRow],col=p.columns[el.dataset.autoCol];try{el.textContent=cpFormat(cpValue(p,row,col.id,counts,caches[row.id]||={}),col);el.title=p.targetAdjustments?.[col.id]?.[row.id]!==undefined?'Manually adjusted target; use Adjust Targets → Auto to reset.':'';el.className=el.title?'cp-adjusted':'';}catch(err){el.textContent='—';el.title=err.message;el.className='cp-error';}});
+                let visibleRows=0;
+                section.querySelectorAll('[data-model-row]').forEach(el=>{const row=p.models[el.dataset.modelRow];el.hidden=!cpEditing()&&!!p.hideZeroModels&&cpRowIsEmpty(p,row,counts);if(!el.hidden)visibleRows++;});
+                const empty=section.querySelector('[data-zero-empty]');if(empty)empty.hidden=cpEditing()||!p.hideZeroModels||visibleRows>0||!cpRows(p).length;
+                cpRefreshTotals(p,counts,section);
+            });
+        }
+        window.cpRefreshValues = cpRefreshValues;
+        window.cpMappingChanged = () => {if(cpVisible()) cpRender();};
+        function cpClose() {document.getElementById('cpDialog').close(); CP.modal=null;}
+        function cpDialog(title, body, kind, id='') {
+            CP.modal={kind,id}; const dialog=document.getElementById('cpDialog');
+            dialog.innerHTML=`<form id="cpForm"><div class="cp-row cp-spread"><h2>${title}</h2>${cpButton('✕','close')}</div>${body}<p id="cpFormError" class="cp-error" role="alert"></p><div class="cp-row cp-end">${cpButton('Cancel','close')}<button class="cp-btn cp-primary" type="submit">Save</button></div></form>`;
+            if(!dialog.open)dialog.showModal(); dialog.querySelector('input,select,textarea')?.focus();
+        }
+        function cpProjectDialog(id) {
+            const p=CP.projects[id]; let n=1; while(Object.values(CP.projects).some(p=>p.name==='Project '+n)) n++;
+            cpDialog(p?'Edit Project':'New Project',`<label>Project Name<input class="cp-input" name="name" required maxlength="100" value="${cpEsc(p?.name||'Project '+n)}"></label><label>Description<textarea class="cp-input" name="description" rows="3" maxlength="2000">${cpEsc(p?.description||'')}</textarea></label><label>Status<select class="cp-input" name="status">${cpOptions(['Active','Inactive','Completed'],p?.status||'Active')}</select></label><label><input type="checkbox" name="hideZeroModels" ${p?.hideZeroModels?'checked':''}> Hide models with all zero / blank values in report view</label><p class="cp-muted">Edit mode always shows every selected model. All columns, including hidden ones, are checked. Non-zero values or errors keep the row visible. Data, formulas and totals are preserved.</p>`, 'project', id);
+        }
+        function cpColumnDialog(id) {
+            const p=cpProject(), c=p.columns?.[id]; let n=1; while(cpCols(p).some(c=>c.name==='Col'+n))n++;
+            cpDialog(c?'Edit Column':'New Column',`<label>Column Name<input class="cp-input" name="name" required maxlength="60" value="${cpEsc(c?.name||'Col'+n)}"></label><div class="cp-grid"><label>Input Type<select class="cp-input" id="cpSource" name="source"><option value="manual">Manual</option><option value="invoice">Auto — Invoice Count</option><option value="stock">Auto — Current Stock</option>${Object.entries(cpProjectionSources).map(([id,label])=>`<option value="${id}">Auto — ${label}</option>`).join('')}<option value="formula">Auto — Formula</option></select></label><label>Formatting<select class="cp-input" id="cpFormat" name="format">${cpOptions(['Text','Date','Number','Percentage'],c?.format||'Number')}</select></label></div><label><input type="checkbox" name="hideInReport" ${c?.hideInReport?'checked':''}> Hide this column in report view</label><p class="cp-muted">Still saved, visible in Edit Report and available in formulas.</p><label id="cpDecimalsLabel">Decimals<select class="cp-input" name="decimals">${[['auto','Up to 2 decimals'],['0','Whole number (0 decimals)'],['2','Always 2 decimals']].map(([v,l])=>`<option value="${v}" ${String(c?.decimals??0)===v?'selected':''}>${l}</option>`).join('')}</select></label><div id="cpInvoiceFilterArea"><label>BK NO. / Location${bkSelect(c?.invoiceFilters?.bk||'all','name="bk"')}</label><div class="cp-grid"><label>Invoice Type${cpInvoiceFilterSelect('Invoice Type',c?.invoiceFilters?.type||'all','name="invoiceType"')}</label><label>Invoice Category${cpInvoiceFilterSelect('Invoice Category',c?.invoiceFilters?.category||'all','name="invoiceCategory"')}</label></div><p class="cp-muted">Applies only to this automatic column. Choose both to count their intersection. Current Stock uses the last upload, independent of invoice dates. CYTD contribution uses the same filtered invoices for its numerator and denominator.</p></div><div id="cpFormulaArea"><label>Formula<input class="cp-input" id="cpFormula" name="formula" autocomplete="off" placeholder="= choose a column, then + − * /" value="${cpEsc(c?.formula?cpFormulaText(c.formula,p):'=')}"></label><div id="cpSuggestions" class="cp-suggestions" role="listbox" aria-label="Available columns"></div><p class="cp-muted">A column name uses its model-row value. TOTAL([Column]) uses that column’s total for the current dealer view. To distribute a 40% higher overall target: =TOTAL([LY Data])*1.4*[CYTD Contb %]. Supports + − * / and ( ). Percentage displays 0.5 as 50%. For growth use =(Actual-Plan)/Plan.</p></div><p id="cpProjectionHint" class="cp-muted" hidden>Uses this project’s Projection Dates. Configure them using the Projection Dates button in Edit Report.</p><p id="cpInvoiceHint" class="cp-muted">Counts each available invoice record for this model between the project's Start and End Date. Updates automatically when invoices change.</p>${c?cpButton('Delete column','delete-column',c.id):''}`, 'column',id);
+            document.getElementById('cpSource').value=c?.source||'manual'; cpColumnOptions();
+        }
+        function cpColumnOptions() {
+            const source=document.getElementById('cpSource').value, fmt=document.getElementById('cpFormat');
+            [...fmt.options].forEach(o=>{o.disabled=source!=='manual' && !['Number','Percentage'].includes(o.value);});
+            if(source!=='manual'&&!['Number','Percentage'].includes(fmt.value))fmt.value='Number';
+            document.getElementById('cpProjectionHint').hidden=!cpProjectionSources[source];
+            document.getElementById('cpInvoiceFilterArea').hidden=source!=='invoice'&&source!=='stock'&&!cpProjectionSources[source];
+            document.getElementById('cpFormulaArea').hidden=source!=='formula'; document.getElementById('cpInvoiceHint').hidden=source!=='invoice'; document.getElementById('cpDecimalsLabel').hidden=!['Number','Percentage'].includes(fmt.value); cpSuggest();
+        }
+        function cpSuggest() {
+            const input=document.getElementById('cpFormula'); if(!input)return;
+            const before=input.value.slice(0,input.selectionStart??input.value.length), match=before.match(/(?:^=|[+*/(\-])\s*([^+*/()\-]*)$/), term=(match?.[1]||'').replace(/^\[/,'').toLowerCase();
+            document.getElementById('cpSuggestions').innerHTML=input.value.trim().startsWith('=')?cpCols(cpProject()).filter(c=>c.id!==CP.modal.id&&['Number','Percentage'].includes(c.format)&&c.name.toLowerCase().includes(term)).map(c=>`<button type="button" role="option" class="cp-btn" data-cp="suggest" data-id="${c.id}">${cpEsc(c.name)}</button><button type="button" class="cp-btn" data-cp="suggest" data-id="${c.id}" data-total="1">Σ Total: ${cpEsc(c.name)}</button>`).join(''):'';
+        }
+        function cpModelsDialog() {
+            const p=cpProject(), names=[...new Set([...cpModels(),...Object.values(p.models||{}).map(m=>m.name)])].sort(), stored=new Map(Object.values(p.models||{}).map(m=>[m.name,m]));
+            cpDialog('Available Master Groups',`<p class="cp-muted">Mapped Master Group Names are used, just like reports. Unmapped models keep their original names. Selection applies only to this project.</p><input class="cp-input" id="cpModelSearch" placeholder="Find a model…"><div class="cp-row">${cpButton('Select all','models-all')}${cpButton('Clear all','models-none')}</div><div class="cp-model-list">${names.map(name=>`<label class="cp-model-option"><input type="checkbox" name="model" value="${cpEsc(name)}" ${stored.get(name)?.selected?'checked':''}> ${cpEsc(name)}</label>`).join('')||'<p>No invoice models available yet.</p>'}</div>`, 'models');
+        }
+        async function cpSubmit(event) {
+            event.preventDefault(); const form=event.target, f=new FormData(form), modal={...CP.modal}; if(!cpEditable())return;
+            const button=form.querySelector('[type="submit"]');button.disabled=true;
+            try {
+                if(modal.kind==='project') {
+                    const name=String(f.get('name')).trim(); if(!name)throw Error('Enter a project name');
+                    const id=modal.id||cpId(), patch={name,description:String(f.get('description')).trim(),status:f.get('status'),hideZeroModels:f.get('hideZeroModels')==='on'};
+                    if(!modal.id) {Object.assign(patch,{id,createdAt:Date.now(),modelBasis:'masterGroup',start:'',end:'',models:{},columns:{},values:{}});cpModels().forEach(name=>{const id=cpId();patch.models[id]={id,name,selected:true};});}
+                    await cpWrite(id,patch); if(!modal.id){CP.selected=id;CP.editing=true;}
+                } else if(modal.kind==='column') {
+                    const p=cpProject(), id=modal.id||cpId(), name=String(f.get('name')).trim();
+                    if(!name||/[\[\]@]/.test(name)||/^\d/.test(name))throw Error('Use a column name starting with a letter; avoid [ ] @.');
+                    if(cpCols(p).some(c=>c.id!==id&&c.name.toLowerCase()===name.toLowerCase()))throw Error('Column name already exists');
+                    const old=p.columns?.[id], c={id,name,hideInReport:f.get('hideInReport')==='on',source:f.get('source'),format:f.get('format'),decimals:f.get('decimals')==='auto'?'auto':Number(f.get('decimals')),order:old?.order??Math.max(0,...cpCols(p).map(c=>c.order))+1};
+                    if(c.source==='invoice'||c.source==='stock'||cpProjectionSources[c.source])c.invoiceFilters={bk:String(f.get('bk')||'all'),type:String(f.get('invoiceType')||'all'),category:String(f.get('invoiceCategory')||'all')};
+                    if(old?.summary && cpSummaryMethods(c).some(([method])=>method===old.summary.method))c.summary=old.summary;
+                    if(c.source==='formula')c.formula=cpCompile(String(f.get('formula')),cpCols(p));
+                    const candidate={...p,columns:{...p.columns,[id]:c}};cpValidate(candidate);
+                    if(old&&old.format!==c.format&&Object.values(p.values||{}).some(row=>row[id]!==undefined&&row[id]!==''))throw Error('This column has saved entries. Create a new column to use a different format.');
+                    await cpWrite(p.id,{['columns/'+id]:c});
+                } else if(modal.kind==='targets') {
+                    const p=cpProject(),c=p.columns[modal.id],patch={};
+                    cpRows(p).forEach(row=>{const raw=String(f.get('target_'+row.id)??'').trim();let value=null;if(raw!==''){value=Number(raw);if(!Number.isFinite(value)||value<0)throw Error('Targets must be zero or positive numbers.');value=Math.round(value*100)/100;}
+                        patch['targetAdjustments/'+c.id+'/'+row.id]=value;
+                    });
+                    patch['columns/'+c.id+'/summary']={...cpSummary(c),method:'sum'};
+                    await cpWrite(p.id,patch);
+                } else if(modal.kind==='projection') {
+                    const p=cpProject(),projection={timeline:String(f.get('timeline')),dealer:String(f.get('dealer'))};
+                    Object.keys(cpProjectionDateFields).forEach(key=>projection[key]=String(f.get(key)||''));
+                    for(const [a,b] of [['baseStart','baseEnd'],['pyStart','pyEnd'],['cyStart','cyEnd']])if(!projection[a]||!projection[b]||projection[a]>projection[b])throw Error('Enter a valid '+cpProjectionDateFields[a]+' / End range.');
+                    projection.timelineLabel=timelinesDB[projection.timeline]?.name||'Custom Dates';
+                    const patch={projection,dealerView:{...cpView(p),mode:projection.dealer==='ALL_DEALERS'?'all':projection.dealer==='ALL_COMBINED'?'combined':'single',dealer:projection.dealer==='ALL_DEALERS'?'':projection.dealer}};let order=Math.max(0,...cpCols(p).map(c=>c.order));
+                    if(f.get('addColumns')==='on')for(const source of ['baseEvent','cytdContrib'])if(!cpCols(p).some(c=>c.source===source)){
+                        const id=cpId(),baseName=cpProjectionSources[source];let name=baseName,n=2;while(cpCols(p).some(c=>c.name.toLowerCase()===name.toLowerCase()))name=baseName+' '+n++;
+                        patch['columns/'+id]={id,name,source,format:source==='cytdContrib'?'Percentage':'Number',decimals:0,order:++order};
+                    }
+                    await cpWrite(p.id,patch);
+                } else if(modal.kind==='totals') {
+                    const p=cpProject(), patch={totalSettings:{enabled:f.get('enabled')==='on',label:String(f.get('label')||'').trim()||'Total'}};
+                    cpCols(p).forEach(c=>{patch['columns/'+c.id+'/summary']={method:f.get('method_'+c.id),format:f.get('format_'+c.id),decimals:f.get('decimals_'+c.id)};});
+                    await cpWrite(p.id,patch);
+                } else if(modal.kind==='models') {
+                    const p=cpProject(), selected=new Set(f.getAll('model')), models=structuredClone(p.models||{}), known=new Set();
+                    Object.values(models).forEach(m=>{known.add(m.name);m.selected=selected.has(m.name);}); selected.forEach(name=>{if(!known.has(name)){const id=cpId();models[id]={id,name,selected:true};}});
+                    await cpWrite(p.id,{models});
+                }
+                cpClose();cpRender();
+            } catch(err) {document.getElementById('cpFormError').textContent=err.message;} finally {button.disabled=false;}
+        }
+        async function cpAction(event) {
+            const b=event.target.closest('[data-cp]');if(!b)return; const action=b.dataset.cp,id=b.dataset.id,p=cpProject();
+            if(action==='close'){cpClose();return;} if(action==='back'){CP.selected=null;CP.editing=false;cpRender();return;}if(action==='open'){CP.selected=id;CP.editing=false;CP.viewOverride=null;cpRender();return;}
+            if(!cpEditable())return;
+            try {
+                if(action==='move-left'||action==='move-right'){await cpMoveColumn(id,action==='move-left'?-1:1);}
+                else if(action==='edit-report'){CP.editing=true;cpRender();}
+                else if(action==='save-report') {
+                    cpStatus('Saving report…');
+                    const started=Date.now(); while(CP.pending && Date.now()-started<10000) await new Promise(resolve=>setTimeout(resolve,50));
+                    if(CP.pending)throw Error('Still saving. Check your connection, then try Save & View again.');
+                    if(CP.saveErrors.size)throw Error('A change did not save. Retry the failed change before saving the report.');
+                    await cpWrite(p.id,{reportSavedAt:Date.now()});
+                    CP.editing=false;cpRender();
+                }
+                else if(action==='adjust-targets')cpTargetDialog();
+                else if(action==='reset-target'){const el=document.getElementById('cpForm').elements['target_'+id];if(el)el.value='';cpUpdateTargetSum();}
+                else if(action==='reset-all-targets'){document.querySelectorAll('#cpDialog .cp-target-input').forEach(el=>el.value='');cpUpdateTargetSum();}
+                else if(action==='projection')cpProjectionDialog();
+                else if(action==='copy-projection')cpProjectionCopy();
+                else if(action==='totals')cpTotalsDialog();
+                else if(action==='new-project'||action==='project')cpProjectDialog(id);
+                else if(action==='new-column'||action==='column')cpColumnDialog(id);
+                else if(action==='models')cpModelsDialog();
+                else if(action==='models-all'||action==='models-none')document.querySelectorAll('#cpDialog [name="model"]').forEach(el=>{if(!el.closest('label').hidden)el.checked=action==='models-all';});
+                else if(action==='remove-model'){await cpWrite(p.id,{['models/'+id+'/selected']:false});cpRender();}
+                else if(action==='delete-project') {if(confirm('Delete "'+CP.projects[id].name+'" and all its saved values? This cannot be undone.')){await cpWrite(id,{},true);cpRender();}}
+                else if(action==='delete-column') {
+                    if(cpCols(p).some(c=>c.source==='formula'&&[...c.formula.matchAll(/@(\w+)/g)].some(m=>m[1]===id)))throw Error('Another formula uses this column. Update that formula before deleting.');
+                    if(confirm('Delete this column and its saved values?')){const patch={['columns/'+id]:null};Object.keys(p.values||{}).forEach(row=>patch['values/'+row+'/'+id]=null);await cpWrite(p.id,patch);cpClose();cpRender();}
+                } else if(action==='suggest') {
+                    const el=document.getElementById('cpFormula'), pos=el.selectionStart??el.value.length, before=el.value.slice(0,pos), match=before.match(/(?:^=|[+*/(\-])\s*([^+*/()\-]*)$/), start=match?pos-match[1].length:pos, text=b.dataset.total==='1'?'TOTAL(['+p.columns[id].name+'])':'['+p.columns[id].name+']';
+                    el.value=el.value.slice(0,start)+text+el.value.slice(el.selectionEnd??pos);el.focus();el.setSelectionRange(start+text.length,start+text.length);cpSuggest();
+                }
+            }catch(err){const el=document.getElementById('cpFormError');if(CP.modal&&el)el.textContent=err.message;else {cpStatus(err.message,true);alert(err.message);}}
+        }
+        document.getElementById('cpRoot').addEventListener('click',cpAction);
+        document.getElementById('cpDialog').addEventListener('click',cpAction);
+        document.getElementById('cpDialog').addEventListener('submit',cpSubmit);
+        document.getElementById('cpDialog').addEventListener('cancel',()=>{CP.modal=null;});
+        document.getElementById('cpDialog').addEventListener('input',e=>{
+            if(e.target.classList.contains('cp-target-input'))cpUpdateTargetSum();
+            if(e.target.id==='cpFormula')cpSuggest();
+            if(e.target.id==='cpModelSearch'){const q=e.target.value.toLowerCase();document.querySelectorAll('.cp-model-option').forEach(el=>el.hidden=!el.textContent.toLowerCase().includes(q));}
+        });
+        document.getElementById('cpDialog').addEventListener('change',e=>{
+            if(e.target.id==='cpTargetColumn'){if(confirm('Switch target column? Save current adjustments first if you want to keep them.'))cpTargetDialog(e.target.value);else e.target.value=CP.modal.id;return;}
+            if(e.target.id==='cpSource') {const fmt=document.getElementById('cpFormat');if(cpProjectionSources[e.target.value])fmt.value=e.target.value==='cytdContrib'?'Percentage':'Number';}
+            if(['cpSource','cpFormat'].includes(e.target.id))cpColumnOptions();
+            if(CP.modal?.kind==='projection') {
+                const form=document.getElementById('cpForm');
+                if(e.target.id==='cpProjectionTimeline'&&timelinesDB[e.target.value]) {const t=timelinesDB[e.target.value];form.elements.baseStart.value=t.d1_start||'';form.elements.baseEnd.value=t.d1_end||'';}
+                else if(['baseStart','baseEnd'].includes(e.target.name))form.elements.timeline.value='CUSTOM';
+            }
+        });
+        document.getElementById('cpRoot').addEventListener('input',e=>{if(e.target.id==='cpSearch'){const pos=e.target.selectionStart;CP.search=e.target.value;cpRender();const el=document.getElementById('cpSearch');el.focus();el.setSelectionRange(pos,pos);}});
+        document.getElementById('cpRoot').addEventListener('focusin',e=>{const el=e.target,p=cpProject();if(el.dataset.cell&&p){const c=p.columns[el.dataset.col],v=p.values?.[el.dataset.row]?.[c.id]??'';el.value=v!==''&&c.format==='Percentage'?Math.round(Number(v)*10000)/100:v;}});
+        document.getElementById('cpRoot').addEventListener('focusout',e=>{const el=e.target,p=cpProject();if(el.dataset.cell&&p&&!CP.pending){const c=p.columns[el.dataset.col],v=p.values?.[el.dataset.row]?.[c.id]??'';el.value=cpManualDisplay(v,c);}});
+        document.getElementById('cpRoot').addEventListener('change',async e=>{
+            if(!['cpDealerMode','cpDealerPick','cpContribution','cpLocationView'].includes(e.target.id))return;
+            const p=cpProject();if(!p)return;const view={...cpView(p)};
+            if(e.target.id==='cpDealerMode')view.mode=e.target.value;
+            if(e.target.id==='cpDealerPick')view.dealer=e.target.value;
+            if(e.target.id==='cpContribution')view.contribution=e.target.value;
+            if(e.target.id==='cpLocationView')view.bk=e.target.value;
+            if(view.mode==='single'&&!cpDealers().includes(view.dealer))view.dealer=cpDealers()[0]||'';
+            try{if(cpEditable()){await cpWrite(p.id,{dealerView:view});CP.viewOverride=null;}else CP.viewOverride=view;cpRender();}catch(err){cpStatus(err.message,true);}
+        });
+        document.getElementById('cpRoot').addEventListener('change',async e=>{
+            const el=e.target,p=cpProject();if(!p||!cpEditing())return;
+            try {
+                if(el.dataset.cell) {
+                    const c=p.columns[el.dataset.col];let v=el.value;
+                    if(v!==''&&['Number','Percentage'].includes(c.format)) {v=Number(v);if(!Number.isFinite(v))throw Error('Enter a valid number');v=Math.round((v+Number.EPSILON)*100)/100;el.value=String(v);if(c.format==='Percentage')v/=100;}
+                    await cpWrite(p.id,{['values/'+el.dataset.row+'/'+c.id]:v});el.value=cpManualDisplay(v,c);cpRefreshValues();
+                } else if(el.id==='cpStart'||el.id==='cpEnd') {
+                    const start=document.getElementById('cpStart').value,end=document.getElementById('cpEnd').value;
+                    if(start&&end&&start>end){el.value=el.id==='cpStart'?(p.start||''):(p.end||'');throw Error('End Date must be on or after Start Date');}
+                    await cpWrite(p.id,{start,end});cpRefreshValues();
+                }
+            }catch(err){cpStatus(err.message+' — change not saved',true);}
+        });
+        const cpOriginalShowSection=window.showAppSection;
+        window.showAppSection=function(id){cpOriginalShowSection(id);if(id==='customProjectSection'){cpConnect();cpRender();}};
+        const cpOriginalLogout=window.handleLogout;
+        window.handleLogout=function(){CP.unsubscribe?.();CP.unsubscribe=null;CP.user=null;CP.projects={};CP.selected=null;CP.editing=false;CP.saveErrors.clear();cpClose();document.getElementById('cpRoot').innerHTML='';cpOriginalLogout();};
+        // Invoice mapping: stable option IDs, dealer defaults and per-invoice overrides.
+        const IM = {config:{},loaded:false,invoicesReady:false,tab:'unmapped',query:'',page:1,busy:false,resync:false,error:'',preview:null};
+        const imFields=['Invoice Type','Invoice Category'];
+        const imNorm=v=>String(v||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+        const imDealer=inv=>String(bkRule(inv)?.dealer||inv[sanitizeKey('Requesting Dealer')]||inv.Dealer||inv['Dealer Name']||'').trim();
+        const imFieldKey=field=>field==='Invoice Type'?'type':'category';
+        const imDefaultRules={};
+        ['AGARWAL MOTORS.','AL UZAIR AUTOMOBILES','SHREE BHAGIRATHI MOTORS','SHRI GANGA MOTORS.','VEER MOTORS.'].forEach(name=>imDefaultRules[imNorm(name)]={name,type:'ad',category:'network'});
+        imDefaultRules[imNorm('SHRI MASHA AUTOS PVT. LTD.')]={name:'SHRI MASHA AUTOS PVT. LTD.',type:'masha',category:''};
+        const imOptions=field=>({...((field==='Invoice Type')?{masha:'Masha Inv',ad:'AD Inv'}:{counter:'Counter',network:'Network'}),...(IM.config[field==='Invoice Type'?'types':'categories']||{})});
+        const imRules=()=>({...imDefaultRules,...(IM.config.rules||{})});
+        function imResolved(inv,field) {
+            const key=imFieldKey(field),over=IM.config.overrides?.[inv.__fbKey],options=imOptions(field);
+            if(over&&Object.prototype.hasOwnProperty.call(over,key))return {id:over[key],label:options[over[key]]||'',source:'Manual'};
+            const location=bkRule(inv);if(location&&Object.prototype.hasOwnProperty.call(location,key)){const id=location[key]||'';return {id,label:options[id]||'',source:'BK NO. mapping'};}
+            // Preserve fields supplied by older imports unless this feature generated them.
+            if(!inv.invoiceMappingGenerated && !inv.invoiceMappingAuto?.[key] && inv[sanitizeKey(field)]) {
+                const label=String(inv[sanitizeKey(field)]).trim(),id=Object.keys(options).find(id=>options[id].toLowerCase()===label.toLowerCase());
+                return {id:id||'',label,source:'Imported'};
+            }
+            const id=imRules()[imNorm(imDealer(inv))]?.[key]||'';
+            return {id,label:options[id]||'',source:id?'Dealer rule':'Unmapped'};
+        }
+        const imValue=(inv,field)=>imResolved(inv,field).label;
+        function imStamp(inv,id) {const effective={...inv,__fbKey:id},auto={};imFields.forEach(field=>{auto[imFieldKey(field)]=!inv[sanitizeKey(field)]||!!inv.invoiceMappingGenerated||!!inv.invoiceMappingAuto?.[imFieldKey(field)];inv[sanitizeKey(field)]=imValue(effective,field);});inv.invoiceMappingAuto=auto;inv.invoiceMappingGenerated=auto.type&&auto.category;return inv;}
+        const imAdmin=()=>currentUser?.role==='Admin';
+        const imVisible=()=>!document.getElementById('invoiceMappingSection').classList.contains('hidden');
+        const imSelect=(field,value,attrs='')=>`<select class="im-select" ${attrs}><option value="">Unmapped</option>${Object.entries(imOptions(field)).map(([id,label])=>`<option value="${cpEsc(id)}" ${id===value?'selected':''}>${cpEsc(label)}</option>`).join('')}</select>`;
+        function imNotice(msg,error=false){IM.error=error?msg:'';const el=document.getElementById('imNotice');if(el){el.textContent=msg;el.style.color=error?'#dc2626':'#64748b';}}
+        async function imSave(patch) {if(!imAdmin()||!IM.loaded)throw Error('Admin access and mapping connection are required');await update(ref(db,'users/admin_settings/invoice_mapping'),patch);}
+        async function imSync() {
+            if(!imAdmin()||!IM.loaded||!IM.invoicesReady||(window.bkMappingReady&&!window.bkMappingReady()))return;
+            if(IM.busy){IM.resync=true;return;}IM.busy=true;IM.resync=false;
+            try {
+                const changes={};
+                masterInvoices.forEach(inv=>{if(!inv.__fbKey)return;imFields.forEach(field=>{const value=imValue(inv,field);if((inv[sanitizeKey(field)]??'')!==value)changes[inv.__fbKey+'/'+sanitizeKey(field)]=value;if(!inv[sanitizeKey(field)]&&!inv.invoiceMappingAuto?.[imFieldKey(field)])changes[inv.__fbKey+'/invoiceMappingAuto/'+imFieldKey(field)]=true;});
+                    // Only mark records generated by defaults; preserve imported manual fields.
+                    if(!inv.invoiceMappingGenerated&&!imFields.some(f=>inv[sanitizeKey(f)]))changes[inv.__fbKey+'/invoiceMappingGenerated']=true;
+                });
+                const entries=Object.entries(changes);for(let i=0;i<entries.length;i+=600)await update(ref(db,'invoices'),Object.fromEntries(entries.slice(i,i+600)));
+                if(entries.length)imNotice('Automatic mapping saved for existing / new invoices.');
+            }catch(err){IM.resync=false;imNotice('Automatic mapping could not save: '+err.message,true);}
+            finally {IM.busy=false;if(IM.resync){IM.resync=false;queueMicrotask(imSync);}}
+        }
+        function imFillFilters() {
+            const start=document.getElementById('reportStartDate')?.value||'',end=document.getElementById('reportEndDate')?.value||'',dealer=document.getElementById('reportUserFilter')?.value||'All';
+            const from=start?parseStandardDate(start):null,to=end?parseStandardDate(end):null;if(to)to.setHours(23,59,59,999);
+            const scoped=bkEffectiveInvoices().filter(inv=>{if(!currentUser)return false;if(currentUser.role!=='Admin'&&!window.isRecordOwnedByCurrentUser(inv))return false;if(dealer!=='All'&&imDealer(inv)!==dealer)return false;const d=parseStandardDate(inv[sanitizeKey('Invoice Date')]);return !((from||to)&&!d)&&(!from||d>=from)&&(!to||d<=to);});
+            imFields.forEach((field,i)=>{const el=document.getElementById('imReport'+i);if(!el)return;const selected=el.value,hasUnmapped=scoped.some(inv=>{const other=document.getElementById('imReport'+(1-i))?.value||'all',otherValue=imValue(inv,imFields[1-i]);return !imValue(inv,field)&&(other==='all'||(other==='unmapped'?!otherValue:otherValue===other));});el.innerHTML='<option value="all">All</option>'+(hasUnmapped?'<option value="unmapped">Unmapped</option>':'')+Object.values(imOptions(field)).map(label=>`<option value="${cpEsc(label)}">${cpEsc(label)}</option>`).join('');el.value=[...el.options].some(o=>o.value===selected)?selected:'all';});
+        }
+        function imMatchReport(inv) {return imFields.every((field,i)=>{const val=document.getElementById('imReport'+i)?.value||'all';return val==='all'||(val==='unmapped'?!imValue(inv,field):imValue(inv,field)===val);});}
+        function imChanged(){window.bkOptionsChanged?.();imFillFilters();window.cpRefreshValues?.();if(imVisible())imRender();const reports=document.getElementById('reportsSection');if(currentUser&&reports&&!reports.classList.contains('hidden')){if(currentReportTab==='finratio')window.renderFinRatioReport();else if(!['compare','comptimeline','projection'].includes(currentReportTab))window.renderReports();}imSync();}
+        window.imInvoicesChanged=()=>{IM.invoicesReady=true;window.bkRefresh?.();if(imVisible())imRender();imSync();};
+        window.imLogin=()=>{window.syncNavigationGroups('');const nav=document.getElementById('navBtn_invoiceMappingSection');nav.classList.toggle('hidden',!imAdmin());nav.classList.toggle('flex',imAdmin());imSync();};
+        onValue(ref(db,'users/admin_settings/invoice_mapping'),snap=>{IM.config=snap.val()||{};IM.loaded=true;imChanged();},err=>{IM.loaded=false;imNotice('Mapping could not load: '+err.message,true);});
+        function imList(unmapped=false){return masterInvoices.filter(inv=>(!unmapped||imFields.some(f=>!imValue(inv,f)))&&(!IM.query||[imDealer(inv),inv[sanitizeKey('Invoice #')],inv[sanitizeKey('Frame #')],...imFields.map(f=>imValue(inv,f))].join(' ').toLowerCase().includes(IM.query.toLowerCase())));}
+        function imRender() {
+            const root=document.getElementById('imRoot');if(!imAdmin()){root.innerHTML='<p>Admin access required.</p>';return;}
+            const all=masterInvoices,unmapped=all.filter(inv=>imFields.some(f=>!imValue(inv,f))).length;
+            root.innerHTML=`<div class="cp-row cp-spread"><div><h2 class="text-xl font-bold">Invoice Mapping</h2><p class="cp-muted">Dealer defaults apply to old and new invoices. Manual invoice mapping takes priority.</p></div><div class="cp-row"><button class="cp-btn" data-im="download">Download Unmapped CSV</button><button class="cp-btn" data-im="import">Bulk Upload CSV</button></div></div><div class="cp-row im-tabs">${[['unmapped','Unmapped · '+unmapped],['all','All Invoices · '+all.length],['rules','Dealer Rules'],['options','Manage Types / Categories']].map(([id,label])=>`<button class="cp-btn ${IM.tab===id?'cp-primary':''}" data-im="tab" data-id="${id}">${label}</button>`).join('')}</div><p id="imNotice" class="cp-muted" role="status">${cpEsc(IM.error||(!IM.loaded?'Loading mapping settings…':'Changes save automatically. Blank Masha categories remain unmapped.'))}</p><div id="imContent"></div>`;
+            const content=document.getElementById('imContent');if(!IM.loaded)return;
+            if(IM.tab==='options'){content.innerHTML=imFields.map(field=>`<section class="im-options"><h3 class="font-semibold">${field}</h3>${Object.entries(imOptions(field)).map(([id,label])=>`<div class="cp-row"><span>${cpEsc(label)}</span><button class="cp-btn" data-im="rename" data-field="${field}" data-id="${cpEsc(id)}">Rename</button></div>`).join('')}<button class="cp-btn cp-primary" data-im="add" data-field="${field}">+ Add ${field}</button></section>`).join('');return;}
+            if(IM.tab==='rules') {
+                const dealers=[...new Set([...Object.values(imRules()).map(r=>r.name),...all.map(imDealer)].filter(Boolean))].sort();
+                content.innerHTML=`<p class="cp-muted im-note">Changing a dealer rule updates all automatic mappings, including future uploads. Manual invoice overrides stay unchanged. Leave a rule Unmapped when manual selection is required.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Dealer</th><th>Invoice Type</th><th>Invoice Category</th></tr></thead><tbody>${dealers.map(name=>{const rule=imRules()[imNorm(name)]||{};return `<tr><td>${cpEsc(name)}</td>${imFields.map(field=>`<td>${imSelect(field,rule[imFieldKey(field)]||'',`data-rule="${cpEsc(name)}" data-field="${field}"`)}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div>`;return;
+            }
+            const list=imList(IM.tab==='unmapped'),pages=Math.max(1,Math.ceil(list.length/100));IM.page=Math.min(IM.page,pages);
+            content.innerHTML=`<input id="imSearch" class="cp-input" placeholder="Search Frame, Invoice Number or Dealer" value="${cpEsc(IM.query)}"><p class="cp-muted im-note">${list.length} invoices · Page ${IM.page} / ${pages} · Both Type and Category must be filled to leave Unmapped.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Frame #</th><th>BK NO.</th><th>Invoice Number</th><th>Dealer</th><th>Invoice Type</th><th>Invoice Category</th><th>Mapping</th></tr></thead><tbody>${list.slice((IM.page-1)*100,IM.page*100).map(inv=>`<tr><td>${cpEsc(inv[sanitizeKey('Frame #')]||'—')}</td><td>${cpEsc(bkNo(inv)||'—')}</td><td>${cpEsc(inv[sanitizeKey('Invoice #')]||'—')}</td><td>${cpEsc(imDealer(inv)||'Unknown')}</td>${imFields.map(field=>{const v=imResolved(inv,field);return `<td>${imSelect(field,v.id,`data-invoice="${cpEsc(inv.__fbKey)}" data-field="${field}"`)}<small class="cp-muted">${cpEsc(v.label&&!v.id?'Imported: '+v.label:v.source)}</small></td>`;}).join('')}<td><button class="cp-btn" data-im="reset" data-id="${cpEsc(inv.__fbKey)}">Use dealer defaults</button></td></tr>`).join('')||'<tr><td colspan="6">No matching invoices.</td></tr>'}</tbody></table></div><div class="cp-row im-note"><button class="cp-btn" data-im="prev" ${IM.page<=1?'disabled':''}>Previous</button><button class="cp-btn" data-im="next" ${IM.page>=pages?'disabled':''}>Next</button></div>`;
+        }
+        function imDownload(){if(!imAdmin())return;const headers=['Record ID','Frame #','Invoice #','Dealer',...imFields];const rows=masterInvoices.filter(inv=>imFields.some(f=>!imValue(inv,f))).map(inv=>[inv.__fbKey,inv[sanitizeKey('Frame #')]||'',inv[sanitizeKey('Invoice #')]||'',imDealer(inv),...imFields.map(f=>imValue(inv,f))]);exportCSV([headers,...rows],'invoice_mapping_unmapped.csv');}
+        function imParseCSV(text) {
+            const rows=[];let row=[],cell='',quoted=false;const input=text.replace(/^\uFEFF/,'');
+            for(let i=0;i<input.length;i++){const ch=input[i];if(ch==='"'){if(quoted&&input[i+1]==='"'){cell+='"';i++;}else if(!quoted&&cell!=='')throw Error('Invalid CSV quote');else quoted=!quoted;}
+                else if(ch===','&&!quoted){row.push(cell);cell='';}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&input[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v.trim()))rows.push(row);row=[];cell='';}else cell+=ch;}
+            if(quoted)throw Error('Unclosed CSV quote');row.push(cell);if(row.some(v=>v.trim()))rows.push(row);return rows;
+        }
+        function imPrepareImport(text) {
+            const rows=imParseCSV(text),headers=(rows.shift()||[]).map(v=>v.trim());const fi=headers.indexOf('Frame #'),ii=headers.indexOf('Invoice #'),ri=headers.indexOf('Record ID'),fields=imFields.map(f=>headers.indexOf(f));
+            if(fi<0||ii<0||fields.some(i=>i<0))throw Error('Use the downloaded CSV with Frame #, Invoice #, Invoice Type and Invoice Category headers.');
+            if(rows.length>10000)throw Error('Upload up to 10,000 rows at a time.');
+            const updates=[],seen=new Set();
+            rows.forEach((row,n)=>{
+                if(row.length!==headers.length)throw Error('CSV row '+(n+2)+' has a different number of columns.');
+                const frame=row[fi].trim(),number=row[ii].trim(),record=ri>=0?row[ri].trim():'';
+                const matches=masterInvoices.filter(inv=>(!record||inv.__fbKey===record)&&String(inv[sanitizeKey('Frame #')]||'').trim()===frame&&String(inv[sanitizeKey('Invoice #')]||'').trim()===number);
+                if((!frame&&!number)||matches.length!==1)throw Error('Row '+(n+2)+': invoice / frame not found or not unique.');
+                const inv=matches[0];if(seen.has(inv.__fbKey))throw Error('Duplicate invoice at row '+(n+2));seen.add(inv.__fbKey);
+                const values={};imFields.forEach((field,j)=>{const val=row[fields[j]].trim();if(!val)return;const id=Object.keys(imOptions(field)).find(id=>imOptions(field)[id].toLowerCase()===val.toLowerCase());if(!id&&val.toUpperCase()!=='UNMAPPED')throw Error('Row '+(n+2)+': unknown '+field+' "'+val+'". Add it in Manage Types / Categories first.');if(imResolved(inv,field).id!==(id||'') || imValue(inv,field)!==(imOptions(field)[id]||''))values[imFieldKey(field)]=id||'';});
+                if(Object.keys(values).length)updates.push({id:inv.__fbKey,frame,number,values});
+            });return updates;
+        }
+        function imPreviewHTML(updates){return `<p>${updates.length} invoices will be updated. Blank CSV cells leave existing mappings unchanged; UNMAPPED clears a mapping.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Frame</th><th>Invoice</th><th>Type</th><th>Category</th></tr></thead><tbody>${updates.slice(0,100).map(r=>`<tr><td>${cpEsc(r.frame)}</td><td>${cpEsc(r.number)}</td>${imFields.map(f=>`<td>${Object.prototype.hasOwnProperty.call(r.values,imFieldKey(f))?cpEsc(imOptions(f)[r.values[imFieldKey(f)]]||'Unmapped'):'Unchanged'}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${updates.length>100?'<p>Showing first 100 rows.</p>':''}<button class="cp-btn cp-primary" data-im="apply-import" ${updates.length?'':'disabled'}>Apply ${updates.length} updates</button>`;}
+        function imImportDialog(){IM.preview=null;const d=document.getElementById('imDialog');d.innerHTML='<div class="cp-row cp-spread"><h2 class="font-bold">Bulk Invoice Mapping</h2><button class="cp-btn" data-im="close">Close</button></div><p class="cp-muted im-note">Download Unmapped CSV, fill Type / Category and upload it here. Frame and Invoice Number identify the record. Blank cells do not overwrite mappings.</p><input id="imFile" type="file" accept=".csv,text/csv"><div id="imPreview" class="im-note"></div>';d.showModal();}
+        async function imAction(e){const b=e.target.closest('[data-im]');if(!b||!imAdmin())return;const a=b.dataset.im;
+            try{
+                if(a==='tab'){IM.tab=b.dataset.id;IM.page=1;imRender();}
+                else if(a==='prev'||a==='next'){IM.page+=a==='prev'?-1:1;imRender();}
+                else if(a==='download')imDownload();else if(a==='import')imImportDialog();else if(a==='close'){IM.preview=null;IM.importText='';document.getElementById('imDialog').close();}
+                else if(a==='reset'){if(!confirm('Remove manual mappings for this invoice and apply dealer defaults?'))return;const inv=masterInvoices.find(i=>i.__fbKey===b.dataset.id);await imSave({['overrides/'+b.dataset.id]:null});if(inv)await update(ref(db,'invoices/'+inv.__fbKey),{invoiceMappingGenerated:true});imSync();}
+                else if(a==='add'||a==='rename'){
+                    const field=b.dataset.field,current=a==='rename'?imOptions(field)[b.dataset.id]:'';const label=prompt((a==='rename'?'Rename ':'Add ')+field,current);if(label===null)return;const clean=label.trim();if(!clean||clean.length>80||clean.toUpperCase()==='UNMAPPED')throw Error('Enter a name up to 80 characters. UNMAPPED is reserved.');if(Object.entries(imOptions(field)).some(([id,v])=>id!==b.dataset.id&&v.toLowerCase()===clean.toLowerCase()))throw Error('This name already exists.');
+                    await imSave({[(field==='Invoice Type'?'types':'categories')+'/'+(a==='rename'?b.dataset.id:cpId())]:clean});
+                }else if(a==='apply-import'){
+                    if(!IM.preview?.length)throw Error('No valid updates to apply.');b.disabled=true;
+                    // Revalidate invoice identity immediately before committing; mappings may have changed since preview.
+                    const fresh=imPrepareImport(IM.importText),patch={};fresh.forEach(r=>Object.entries(r.values).forEach(([field,value])=>patch['overrides/'+r.id+'/'+field]=value));
+                    await imSave(patch);document.getElementById('imDialog').close();IM.preview=null;imNotice(fresh.length+' invoice mappings saved.');
+                }
+            }catch(err){b.disabled=false;imNotice(err.message,true);const el=document.getElementById('imPreview');if(document.getElementById('imDialog').open&&el)el.textContent=err.message;else alert(err.message);}
+        }
+        document.getElementById('imRoot').addEventListener('click',imAction);document.getElementById('imDialog').addEventListener('click',imAction);
+        document.getElementById('imRoot').addEventListener('input',e=>{if(e.target.id==='imSearch'){const pos=e.target.selectionStart;IM.query=e.target.value;IM.page=1;imRender();const el=document.getElementById('imSearch');el.focus();el.setSelectionRange(pos,pos);}});
+        document.getElementById('imRoot').addEventListener('change',async e=>{const el=e.target;if(!imAdmin())return;try{el.disabled=true;if(el.dataset.invoice)await imSave({['overrides/'+el.dataset.invoice+'/'+imFieldKey(el.dataset.field)]:el.value});else if(el.dataset.rule){const key=imNorm(el.dataset.rule),rule={...(imRules()[key]||{}),name:el.dataset.rule,[imFieldKey(el.dataset.field)]:el.value};await imSave({['rules/'+key]:rule});}}catch(err){imNotice('Not saved: '+err.message,true);}finally{el.disabled=false;}});
+        document.getElementById('imDialog').addEventListener('change',async e=>{if(e.target.id!=='imFile'||!imAdmin())return;const preview=document.getElementById('imPreview');IM.preview=null;try{const file=e.target.files[0];if(!file)return;if(file.size>5*1024*1024)throw Error('CSV must be smaller than 5 MB.');IM.importText=await file.text();IM.preview=imPrepareImport(IM.importText);preview.innerHTML=imPreviewHTML(IM.preview);}catch(err){preview.textContent=err.message;}});
+        const imOriginalShow=window.showAppSection;
+        window.showAppSection=function(id){if(id==='invoiceMappingSection'&&!imAdmin())return;imOriginalShow(id);if(id==='invoiceMappingSection')imRender();};
+        // Add mappings to invoice-level drilldowns and CSV reports without altering summary totals.
+        function imEnrich(headers,rows,keys=[]) {
+            const missing=['BK NO.',...imFields].filter(f=>!headers.includes(f));if(!missing.length)return {headers,rows};
+            const ii=headers.findIndex(h=>['Invoice #','Invoice Number','Invoice No'].includes(h)),fi=headers.findIndex(h=>['Frame #','Frame No','Chasis No','Chassis No'].includes(h));
+            if(ii<0&&fi<0&&!keys.length)return {headers,rows};
+            const byKey=new Map(masterInvoices.map(inv=>[inv.__fbKey,inv])),lookup=new Map();
+            const identity=(invoice,frame)=>JSON.stringify([ii<0?'':String(invoice||''),fi<0?'':String(frame||'')]);
+            masterInvoices.forEach(inv=>{const key=identity(inv[sanitizeKey('Invoice #')],inv[sanitizeKey('Frame #')]);if(lookup.has(key))lookup.set(key,null);else lookup.set(key,inv);});
+            const enriched=rows.map((row,n)=>{const inv=(keys[n]?byKey.get(keys[n]):null)||lookup.get(identity(row[ii],row[fi]));return [...row,...missing.map(f=>inv?(f==='BK NO.'?bkNo(inv):imValue(inv,f)):'')];});
+            return {headers:[...headers,...missing],rows:enriched};
+        }
+        window.imEnrich=imEnrich;
+
+        const imOriginalReportTab=window.switchReportTab;
+        window.switchReportTab=function(tab){imOriginalReportTab(tab);[0,1].forEach(i=>document.getElementById('imReportFilter'+i).hidden=tab==='regreport');};
+        const imOriginalLogout=window.handleLogout;
+        window.handleLogout=function(){IM.preview=null;IM.importText='';IM.query='';IM.page=1;document.getElementById('imDialog').close();document.getElementById('imRoot').innerHTML='';imOriginalLogout();};
+        // Shared location mapping and replace-only stock snapshots.
+        const BK={config:{},stock:{},loaded:false,stockLoaded:false,tab:'unmapped',query:'',page:1,preview:null,reportRows:[]};
+        function bkField(row,name){const key=Object.keys(row||{}).find(k=>imNorm(k)===imNorm(name));return key?String(row[key]??'').trim():'';}
+        function bkNo(row){return bkField(row,'BK NO.');}
+        function bkKey(name){return 'b'+Array.from(new TextEncoder().encode(String(name).trim().toUpperCase())).map(n=>n.toString(16).padStart(2,'0')).join('');}
+        function bkRule(row){const name=typeof row==='string'?row:bkNo(row);return name?BK.config.locations?.[bkKey(name)]:undefined;}
+        function bkShort(name){return BK.config.shortNames?.[bkKey(name)]||name;}
+        function bkEffectiveInvoices(){return masterInvoices.map(inv=>{const d=bkRule(inv)?.dealer;return d?{...inv,[sanitizeKey('Requesting Dealer')]:d}:inv;});}
+        function bkStockInvoice(row){return {...row,[sanitizeKey('Model Name')]:bkField(row,'MODEL NAME'),[sanitizeKey('Requesting Dealer')]:bkRule(row)?.dealer||''};}
+        function bkStockRows(){if(!currentUser)return [];return Object.values(BK.stock.rows||{}).filter(r=>currentUser.role==='Admin'||(bkRule(r)?.dealer&&window.isRecordOwnedByCurrentUser(bkStockInvoice(r))));}
+        function bkStockStamp(){return BK.stock.uploadedAt?new Date(BK.stock.uploadedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+' IST':'Not uploaded';}
+        function bkLocations(){return [...new Set([...bkEffectiveInvoices().filter(inv=>currentUser?.role==='Admin'||window.isRecordOwnedByCurrentUser(inv)).map(bkNo),...bkStockRows().map(bkNo),...(imAdmin()?Object.values(BK.config.locations||{}).map(r=>r.name):[])].filter(Boolean))].sort();}
+        function bkSelect(value='all',attrs=''){return `<select class="im-select" ${attrs}><option value="all">All Locations</option><option value="unmapped" ${value==='unmapped'?'selected':''}>Missing BK NO.</option>${bkLocations().map(n=>`<option value="${cpEsc(n)}" ${value===n?'selected':''}>${cpEsc(n)}</option>`).join('')}</select>`;}
+        function bkDealers(){return [...new Set([...Object.values(imRules()).map(r=>r.name),...masterInvoices.map(r=>String(r[sanitizeKey('Requesting Dealer')]||r.Dealer||r['Dealer Name']||'').trim()),...Object.values(BK.config.locations||{}).map(r=>r.dealer)].filter(Boolean))].sort();}
+        function bkDealerSelect(value,attrs=''){return `<select class="im-select" ${attrs}><option value="">Unmapped</option>${bkDealers().map(n=>`<option value="${cpEsc(n)}" ${value===n?'selected':''}>${cpEsc(n)}</option>`).join('')}</select>`;}
+        function bkReportInvoices(){const loc=document.getElementById('bkReportFilter')?.value||'all',type=document.getElementById('bkReportType')?.value||'all',cat=document.getElementById('bkReportCategory')?.value||'all';return bkEffectiveInvoices().filter(inv=>(currentUser?.role==='Admin'||window.isRecordOwnedByCurrentUser(inv))&&cpInvoiceMatches(inv,{bk:loc,type,category:cat}));}
+        async function bkSave(patch){if(!imAdmin()||!BK.loaded)throw Error('Admin access and loaded mapping settings required');await update(ref(db,'users/admin_settings/bk_mapping'),patch);}
+        function bkComplete(rule){return !!(rule?.dealer&&rule?.type&&rule?.category);}
+        function bkRender(){const root=document.getElementById('bkRoot');if(!root||!imAdmin())return;const names=bkLocations(),unmapped=names.filter(n=>!bkComplete(bkRule(n))),q=BK.query.toLowerCase();let rows=(BK.tab==='unmapped'?unmapped:BK.tab==='mapped'?names.filter(n=>bkComplete(bkRule(n))):names).filter(n=>[n,bkRule(n)?.dealer].join(' ').toLowerCase().includes(q));const pages=Math.max(1,Math.ceil(rows.length/75));BK.page=Math.min(BK.page,pages);
+            root.innerHTML=`<div class="cp-row cp-spread"><div><h2>BK NO. Mapping</h2><p class="cp-muted">Location → Dealer → Invoice Type / Category. Shared by retail and current stock.</p></div><div class="cp-row"><button class="cp-btn" data-bk="add">+ Location</button><button class="cp-btn" data-bk="download">Download Unmapped CSV</button><button class="cp-btn" data-bk="bulk">Bulk Mapping</button><button class="cp-btn" data-bk="short">Dealer Short Names</button></div></div><div class="cp-row im-tabs">${[['unmapped','Unmapped · '+unmapped.length],['mapped','Mapped · '+(names.length-unmapped.length)],['all','All · '+names.length]].map(([id,label])=>`<button class="cp-btn ${BK.tab===id?'cp-primary':''}" data-bk="tab" data-id="${id}">${label}</button>`).join('')}<input class="bk-input" id="bkSearch" placeholder="Find location / dealer" value="${cpEsc(BK.query)}"></div><p class="cp-muted">${BK.loaded?'Changes save automatically. Manual invoice overrides take priority over location mappings.':'Loading mappings…'}</p><div class="im-scroll"><table class="im-table"><thead><tr><th>BK NO. / Location</th><th>Dealer</th><th>Invoice Type</th><th>Invoice Category</th></tr></thead><tbody>${rows.slice((BK.page-1)*75,BK.page*75).map(name=>{const r=bkRule(name)||{};return `<tr><th>${cpEsc(name)}</th><td>${bkDealerSelect(r.dealer,`data-location="${cpEsc(name)}" data-field="dealer"`)}</td>${imFields.map(f=>`<td>${imSelect(f,r[imFieldKey(f)]||'',`data-location="${cpEsc(name)}" data-field="${imFieldKey(f)}"`)}</td>`).join('')}</tr>`;}).join('')||'<tr><td colspan="4">No matching locations. Upload invoices / stock with BK NO. or add a location.</td></tr>'}</tbody></table></div><div class="cp-row im-note"><button class="cp-btn" data-bk="prev" ${BK.page===1?'disabled':''}>Previous</button><span>${BK.page} / ${pages}</span><button class="cp-btn" data-bk="next" ${BK.page===pages?'disabled':''}>Next</button></div>`;}
+        function bkDialog(title,body){BK.preview=null;const d=document.getElementById('bkDialog');d.innerHTML=`<div class="cp-row cp-spread"><h2 class="font-bold">${cpEsc(title)}</h2><button class="cp-btn" data-bk="close">Close</button></div>${body}<p id="bkError" class="cp-error" role="status"></p>`;d.showModal();}
+        function bkParseTable(text){return text.split(/\r?\n/,1)[0].includes('\t')?text.trim().split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split('\t')):imParseCSV(text);}
+        function bkParseMapping(text){const data=bkParseTable(text),headers=data.shift()||[],idx=n=>headers.findIndex(h=>imNorm(h)===imNorm(n));if(['BK NO.','Dealer','Invoice Type','Invoice Category'].some(n=>idx(n)<0))throw Error('Required headers: BK NO., Dealer, Invoice Type, Invoice Category');const patch={},seen=new Set();if(!data.length||data.length>10000)throw Error('Upload 1–10,000 mapping rows');data.forEach((row,i)=>{if(row.length!==headers.length)throw Error('Column count mismatch at row '+(i+2));const name=row[idx('BK NO.')].trim(),key=bkKey(name);if(!name||seen.has(key))throw Error('Missing / duplicate BK NO. at row '+(i+2));seen.add(key);const r={...(bkRule(name)||{}),name};const dealer=row[idx('Dealer')].trim();if(dealer){const match=bkDealers().find(d=>imNorm(d)===imNorm(dealer));if(dealer.toUpperCase()!=='UNMAPPED'&&!match)throw Error('Unknown dealer at row '+(i+2)+': '+dealer);r.dealer=match||'';}imFields.forEach(f=>{const val=row[idx(f)].trim();if(!val)return;const id=Object.keys(imOptions(f)).find(id=>imOptions(f)[id].toLowerCase()===val.toLowerCase());if(!id&&val.toUpperCase()!=='UNMAPPED')throw Error('Unknown '+f+' at row '+(i+2));r[imFieldKey(f)]=id||'';});patch['locations/'+key]=r;});return patch;}
+        function bkParseStock(text){const data=bkParseTable(text),headers=(data.shift()||[]).map(v=>v.trim());if(['MODEL NAME','BK NO.'].some(n=>!headers.some(h=>imNorm(h)===imNorm(n))))throw Error('Stock needs MODEL NAME and BK NO. columns');if(new Set(headers.map(imNorm)).size!==headers.length||headers.some(h=>!h))throw Error('Stock headers must be unique and nonblank');if(!data.length||data.length>50000)throw Error('Upload 1–50,000 stock rows');const rows={},seen=new Set();data.forEach((values,i)=>{if(values.length!==headers.length)throw Error('Stock column count mismatch at row '+(i+2));const row=Object.fromEntries(headers.map((h,j)=>[sanitizeKey(h),values[j].trim()]));if(!bkField(row,'MODEL NAME')||!bkNo(row))throw Error('MODEL NAME / BK NO. is blank at row '+(i+2));const chassis=bkField(row,'CHASSIS NO.');if(chassis){const k=imNorm(chassis);if(seen.has(k))throw Error('Duplicate chassis at row '+(i+2)+': '+chassis);seen.add(k);}rows['s'+i]=row;});return rows;}
+        function bkImportDialog(stock=false){BK.fileName='';bkDialog(stock?'Upload Fresh Stock':'Bulk BK NO. Mapping',`<p class="cp-muted im-note">${stock?'Every row is one vehicle. Required: MODEL NAME and BK NO. All supplied columns are preserved. Applying replaces the entire previous stock snapshot.':'Use BK NO., Dealer, Invoice Type, Invoice Category headers. Blank cells preserve saved mappings; UNMAPPED clears a field.'}</p><input id="bkImportFile" data-stock="${stock}" type="file" accept=".csv,.tsv,.txt"><p class="cp-muted">Or paste rows copied from Excel, including headers:</p><textarea id="bkPaste" class="cp-input" rows="6"></textarea><button class="cp-btn" data-bk="preview" data-stock="${stock}">Validate & Preview</button><div id="bkPreview" class="im-note"></div>`);}
+        function bkPreview(stock,text){const result=stock?bkParseStock(text):bkParseMapping(text),rows=Object.values(result),headers=stock?Object.keys(rows[0]):['name','dealer','type','category'];BK.preview={stock,result,text};document.getElementById('bkPreview').innerHTML=`<p><b>${rows.length}</b> ${stock?'vehicles validated. Previous '+Object.keys(BK.stock.rows||{}).length+' vehicles will be replaced.':'locations validated.'}</p><div class="im-scroll"><table class="im-table"><thead><tr>${headers.map(h=>`<th>${cpEsc(h)}</th>`).join('')}</tr></thead><tbody>${rows.slice(0,15).map(r=>`<tr>${headers.map(h=>`<td>${cpEsc(!stock&&h==='type'?imOptions('Invoice Type')[r[h]]||'Unmapped':!stock&&h==='category'?imOptions('Invoice Category')[r[h]]||'Unmapped':r[h]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="cp-muted">Preview: first ${Math.min(rows.length,15)} rows.</p><button class="cp-btn cp-primary" data-bk="apply">${stock?'Replace Stock with '+rows.length+' Vehicles':'Save Mapping'}</button>`;}
+        function bkStockRender(){const root=document.getElementById('stockRoot');if(!root||!currentUser)return;const rows=bkStockRows(),groups=new Map();rows.forEach(r=>{const name=cpMasterName(bkField(r,'MODEL NAME')),loc=bkNo(r),key=JSON.stringify([name,loc]);if(!groups.has(key))groups.set(key,{name,loc,count:0});groups.get(key).count++;});root.innerHTML=`<div class="cp-row cp-spread"><div><h2>Current Stock</h2><p class="cp-muted">Last upload: ${cpEsc(bkStockStamp())} · ${rows.length} vehicles · ${cpEsc(BK.stock.fileName||'')}</p></div><div class="cp-row">${imAdmin()?'<button class="cp-btn cp-primary" data-bk="stock">Upload Fresh Stock</button>':''}<button class="cp-btn" data-bk="export-stock">Export Stock CSV</button></div></div><p class="cp-muted im-note">Stock is a snapshot of the last upload. Each upload replaces all previous stock; invoices do not subtract from this snapshot.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Master Group Name</th><th>BK NO.</th><th>Dealer</th><th>Invoice Type</th><th>Invoice Category</th><th>Stock</th></tr></thead><tbody>${[...groups.values()].sort((a,b)=>a.name.localeCompare(b.name)||a.loc.localeCompare(b.loc)).map(g=>{const inv=bkStockInvoice({'MODEL NAME':g.name,'BK NO.':g.loc});return `<tr><td>${cpEsc(g.name)}</td><td>${cpEsc(g.loc)}</td><td>${cpEsc(bkShort(bkRule(g.loc)?.dealer||'Unmapped'))}</td><td>${cpEsc(imValue(inv,'Invoice Type')||'Unmapped')}</td><td>${cpEsc(imValue(inv,'Invoice Category')||'Unmapped')}</td><td><button class="bk-count" data-bk="stock-drill" data-model="${cpEsc(g.name)}" data-location="${cpEsc(g.loc)}">${g.count}</button></td></tr>`;}).join('')||'<tr><td colspan="6">No stock available.</td></tr>'}</tbody><tfoot><tr><th colspan="5">Total</th><th>${rows.length}</th></tr></tfoot></table></div>`;}
+        function bkStockTable(rows){const h=[...new Set(rows.flatMap(r=>Object.keys(r)))];return {headers:[...h,'Dealer','Invoice Type','Invoice Category'],rows:rows.map(r=>[...h.map(k=>r[k]||''),bkRule(r)?.dealer||'',...imFields.map(f=>imValue(bkStockInvoice(r),f))])};}
+        function bkRefreshFilters(){const el=document.getElementById('bkReportFilter');if(el){const v=el.value;el.innerHTML=bkSelect(v).match(/<select[^>]*>([\s\S]*)<\/select>/)[1];el.value=[...el.options].some(o=>o.value===v)?v:'all';}for(const [id,field] of [['bkReportType','Invoice Type'],['bkReportCategory','Invoice Category']]){const el=document.getElementById(id);if(!el)continue;const v=el.value;el.innerHTML='<option value="all">All</option><option value="unmapped">Unmapped</option>'+Object.entries(imOptions(field)).map(([k,l])=>`<option value="${cpEsc(k)}">${cpEsc(l)}</option>`).join('');el.value=[...el.options].some(o=>o.value===v)?v:'all';}}
+        function bkRefresh(){bkRefreshFilters();if(currentUser){if(!document.getElementById('bkMappingSection').classList.contains('hidden'))bkRender();if(!document.getElementById('stockSection').classList.contains('hidden'))bkStockRender();if(document.activeElement?.dataset.cell)window.cpRefreshValues?.();else window.cpMappingChanged?.();if(!document.getElementById('reportsSection').classList.contains('hidden'))window.bkReportChange();} }
+        window.bkMappingReady=()=>BK.loaded;window.bkRefresh=bkRefresh;window.bkOptionsChanged=()=>{bkRefreshFilters();if(imAdmin()&&!document.getElementById("bkMappingSection").classList.contains("hidden"))bkRender();};
+        window.bkReportChange=function(){if(!currentUser)return;if(BK.locationReport){bkLocationReport();return;}if(currentReportTab==='compare')window.renderCompareReport();else if(currentReportTab==='comptimeline')window.renderTimelineReport();else if(currentReportTab==='projection'){window.renderProjectionReport();}else if(currentReportTab==='finratio')window.renderFinRatioReport();else window.renderReports();bkApplyShortNames();};
+        const bkOriginalLabels=new WeakMap();
+        function bkApplyShortNames(){for(const root of document.querySelectorAll('#reportsSection table,#cpRoot .cp-dealer-title')){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){const saved=bkOriginalLabels.get(node),full=saved&&node.textContent===saved.short?saved.full:node.textContent.trim(),short=bkShort(full);if(short!==full){bkOriginalLabels.set(node,{full,short});node.textContent=short;if(node.parentElement)node.parentElement.title=full;}else if(saved&&node.textContent===saved.short){node.textContent=full;bkOriginalLabels.delete(node);}}}}
+        function bkLocationReport(){const root=document.getElementById('bkLocationView');if(!root||!currentUser)return;const from=document.getElementById('reportStartDate').value,to=document.getElementById('reportEndDate').value,dealer=document.getElementById('reportUserFilter').value||'All',start=from?parseStandardDate(from):null,end=to?parseStandardDate(to):null;if(end)end.setHours(23,59,59,999);const groups=new Map();bkReportInvoices().filter(imMatchReport).forEach(inv=>{const date=parseStandardDate(inv[sanitizeKey('Invoice Date')]);if((start||end)&&!date)return;if(start&&date<start||end&&date>end||dealer!=='All'&&imDealer(inv)!==dealer)return;const name=bkNo(inv)||'Missing BK NO.',key=JSON.stringify([name,cpModel(inv)]);if(!groups.has(key))groups.set(key,{name,model:cpModel(inv),rows:[]});groups.get(key).rows.push(inv);});BK.reportRows=[...groups.values()].sort((a,b)=>a.name.localeCompare(b.name)||a.model.localeCompare(b.model));root.innerHTML=`<div class="cp-row cp-spread"><h3 class="font-semibold">Retail by BK NO. / Master Group</h3><button class="cp-btn" data-bk="export-retail">Export CSV</button></div><div class="im-scroll"><table class="im-table"><thead><tr><th>BK NO.</th><th>Master Group Name</th><th>Dealer</th><th>Retail Count</th></tr></thead><tbody>${BK.reportRows.map((g,i)=>`<tr><td>${cpEsc(g.name)}</td><td>${cpEsc(g.model)}</td><td>${cpEsc([...new Set(g.rows.map(imDealer))].map(bkShort).join(', '))}</td><td><button class="bk-count" data-bk="retail-drill" data-index="${i}">${g.rows.length}</button></td></tr>`).join('')||'<tr><td colspan="4">No matching invoices.</td></tr>'}</tbody><tfoot><tr><th colspan="3">Total</th><th>${BK.reportRows.reduce((a,g)=>a+g.rows.length,0)}</th></tr></tfoot></table></div>`;}
+        async function bkAction(e){const b=e.target.closest('[data-bk]');if(!b)return;try{const a=b.dataset.bk;
+            if(a==='close'){BK.preview=null;document.getElementById('bkDialog').close();return;}
+            if(a==='stock-drill'){const rows=bkStockRows().filter(r=>cpMasterName(bkField(r,'MODEL NAME'))===b.dataset.model&&bkNo(r)===b.dataset.location),t=bkStockTable(rows);window.openDrillDownModal('Stock · '+b.dataset.model,b.dataset.location+' · '+bkStockStamp(),t.headers,t.rows);return;}
+            if(a==='export-stock'){const t=bkStockTable(bkStockRows());exportCSV([t.headers,...t.rows],'current_stock.csv');return;}
+            if(a==='retail-drill'||a==='fin-drill'){const g=a==='fin-drill'?BK.finDetails?.[Number(b.dataset.index)]:BK.reportRows[Number(b.dataset.index)];if(!g)return;const h=['Frame #','BK NO.','Invoice #','Invoice Date','Model Name','Requesting Dealer','Invoice Type','Invoice Category'];window.openDrillDownModal(a==='fin-drill'?'Finance Details':'Retail · '+g.model,g.name,h,g.rows.map(r=>h.map(f=>f==='BK NO.'?bkNo(r):imFields.includes(f)?imValue(r,f):r[sanitizeKey(f)]||'')));return;}
+            if(a==='export-retail'){exportCSV([['BK NO.','Master Group Name','Retail Count'],...BK.reportRows.map(g=>[g.name,g.model,g.rows.length])],'bk_retail.csv');return;}
+            if(!imAdmin())throw Error('Admin access required');
+            if(a==='tab'){BK.tab=b.dataset.id;BK.page=1;bkRender();}else if(a==='prev'||a==='next'){BK.page+=a==='prev'?-1:1;bkRender();}
+            else if(a==='add'){const name=prompt('BK NO. / Location name');if(name?.trim()){if(name.trim().length>120)throw Error('Location name must be at most 120 characters');if(bkRule(name))throw Error('Location already exists');await bkSave({['locations/'+bkKey(name)]:{name:name.trim(),dealer:'',type:'',category:''}});}}
+            else if(a==='download')exportCSV([['BK NO.','Dealer','Invoice Type','Invoice Category'],...bkLocations().filter(n=>!bkComplete(bkRule(n))).map(n=>{const r=bkRule(n)||{};return [n,r.dealer||'',imOptions('Invoice Type')[r.type]||'',imOptions('Invoice Category')[r.category]||''];})],'bk_mapping_unmapped.csv');
+            else if(a==='bulk'||a==='stock')bkImportDialog(a==='stock');
+            else if(a==='short')bkDialog('Dealer Short Names',`<p class="cp-muted im-note">Display labels only. Original dealer names and mappings stay intact.</p>${bkDealers().map(d=>`<label class="cp-row im-note"><span>${cpEsc(d)}</span><input class="bk-input" data-short="${cpEsc(d)}" maxlength="50" value="${cpEsc(BK.config.shortNames?.[bkKey(d)]||'')}" placeholder="Short display name"></label>`).join('')}`);
+            else if(a==='preview')bkPreview(b.dataset.stock==='true',document.getElementById('bkPaste').value);
+            else if(a==='apply'){const p=BK.preview;if(!p)throw Error('Validate the file first');b.disabled=true;if(p.stock){const rows=bkParseStock(p.text);await set(ref(db,'users/admin_settings/current_stock'),{rows,uploadedAt:Date.now(),uploadedBy:currentUser.name||currentUser.id,fileName:BK.fileName||'Pasted stock',count:Object.keys(rows).length});}else await bkSave(bkParseMapping(p.text));BK.preview=null;document.getElementById('bkDialog').close();showToast(p.stock?'Fresh stock saved; previous stock replaced':'Location mappings saved');}
+        }catch(err){b.disabled=false;const out=document.getElementById('bkError');if(out&&document.getElementById('bkDialog').open)out.textContent=err.message;else showToast(err.message);}}
+        document.addEventListener('click',bkAction);
+        document.addEventListener('change',async e=>{const el=e.target;try{
+            if(el.dataset.location&&el.dataset.field){if(!imAdmin())return;const name=el.dataset.location,r={...(bkRule(name)||{}),name,[el.dataset.field]:el.value};el.disabled=true;await bkSave({['locations/'+bkKey(name)]:r});}
+            else if(el.dataset.short){if(!imAdmin())return;await bkSave({['shortNames/'+bkKey(el.dataset.short)]:el.value.trim()||null});bkApplyShortNames();}
+            else if(el.id==='bkImportFile'){if(!imAdmin())return;const file=el.files[0];if(!file)return;if(file.size>15*1024*1024)throw Error('File must be under 15 MB');BK.fileName=file.name;const text=await file.text();document.getElementById('bkPaste').value=text;bkPreview(el.dataset.stock==='true',text);}
+        }catch(err){const out=document.getElementById('bkError');if(out)out.textContent=err.message;else showToast('Not saved: '+err.message);}finally{el.disabled=false;}});
+        document.addEventListener('input',e=>{if(e.target.id==='bkSearch'){BK.query=e.target.value;BK.page=1;const pos=e.target.selectionStart;bkRender();const el=document.getElementById('bkSearch');el.focus();el.setSelectionRange(pos,pos);}if(e.target.id==='bkPaste'){BK.preview=null;document.getElementById('bkPreview').innerHTML='';}});
+        const bkNav=document.createElement('button');bkNav.id='navBtn_bkMappingSection';bkNav.className='nav-subitem w-full items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 text-sm hidden';bkNav.innerHTML='<span class="sidebar-text">BK NO. Mapping</span>';bkNav.onclick=()=>window.showAppSection('bkMappingSection');document.getElementById('navSub_mapping').appendChild(bkNav);
+        const stockNav=document.createElement('button');stockNav.id='navBtn_stockSection';stockNav.className=bkNav.className;stockNav.innerHTML='<span class="sidebar-text">Current Stock</span>';stockNav.onclick=()=>window.showAppSection('stockSection');document.getElementById('navSub_manage').appendChild(stockNav);
+        const bkHost=document.getElementById('invoiceMappingSection').parentElement;bkHost.insertAdjacentHTML('beforeend','<section id="bkMappingSection" class="hidden bg-white rounded-xl border border-slate-200 flex-col"><div id="bkRoot" class="bk-panel"></div></section><section id="stockSection" class="hidden bg-white rounded-xl border border-slate-200 flex-col"><div id="stockRoot" class="bk-panel"></div></section><dialog id="bkDialog" class="cp-dialog"></dialog>');
+        const bkBar=document.createElement('div');bkBar.id='bkReportBar';bkBar.className='bk-bar';bkBar.innerHTML='<label>BK NO. / Location<select id="bkReportFilter" onchange="window.bkReportChange()"><option value="all">All Locations</option></select></label><label data-extra-map>Invoice Type<select id="bkReportType" onchange="window.bkReportChange()"><option value="all">All</option></select></label><label data-extra-map>Invoice Category<select id="bkReportCategory" onchange="window.bkReportChange()"><option value="all">All</option></select></label><button class="cp-btn" onclick="window.bkResetFilters()">Reset location filters</button>';
+        document.getElementById('sharedReportFilters').before(bkBar);
+        const locationTab=document.createElement('button');locationTab.id='tabBK';locationTab.className='font-medium text-slate-500 px-2 pb-1';locationTab.textContent='BK NO. Retail';locationTab.onclick=()=>window.bkOpenReport();document.getElementById('tabFinRatio').after(locationTab);
+        document.getElementById('reportFinRatioView').insertAdjacentHTML('afterend','<div id="bkLocationView" class="hidden bk-panel"></div>');
+        window.bkResetFilters=()=>{['bkReportFilter','bkReportType','bkReportCategory'].forEach(id=>document.getElementById(id).value='all');window.bkReportChange();};
+        const bkOldTab=window.switchReportTab;window.switchReportTab=function(tab){BK.locationReport=false;document.getElementById('bkLocationView').classList.add('hidden');locationTab.classList.remove('text-indigo-600','border-b-2');if(!['compare','comptimeline','projection'].includes(tab)){document.getElementById('bkReportType').value='all';document.getElementById('bkReportCategory').value='all';}bkOldTab(tab);document.getElementById('bkReportBar').hidden=tab==='regreport';document.querySelectorAll('[data-extra-map]').forEach(el=>el.hidden=!['compare','comptimeline','projection'].includes(tab));if(!['compare','comptimeline','projection'].includes(tab)){document.getElementById('bkReportType').value='all';document.getElementById('bkReportCategory').value='all';}bkApplyShortNames();};
+        window.bkOpenReport=()=>{window.switchReportTab('summary');BK.locationReport=true;document.getElementById('reportSummaryView').classList.add('hidden');document.getElementById('bkLocationView').classList.remove('hidden');locationTab.classList.add('text-indigo-600','border-b-2');document.getElementById('downloadPendingBtn').classList.add('hidden');bkLocationReport();};
+        const bkOldFilter=window.handleReportFilterChange;window.handleReportFilterChange=function(){bkOldFilter();if(BK.locationReport)bkLocationReport();bkApplyShortNames();};
+        const bkOldShow=window.showAppSection;window.showAppSection=function(id){if(['bkMappingSection','stockSection'].includes(id)&&!imAdmin())return;bkOldShow(id);if(id==='bkMappingSection')bkRender();if(id==='stockSection')bkStockRender();bkRefreshFilters();bkApplyShortNames();};
+        const bkOldLogin=window.imLogin;window.imLogin=()=>{bkOldLogin();[bkNav,stockNav].forEach(el=>{el.classList.toggle('hidden',!imAdmin());el.classList.toggle('flex',imAdmin());});bkRefreshFilters();};
+        const bkOldLogout=window.handleLogout;window.handleLogout=()=>{BK.preview=null;BK.reportRows=[];BK.locationReport=false;document.getElementById('bkDialog').close();document.getElementById('bkRoot').innerHTML='';document.getElementById('stockRoot').innerHTML='';document.getElementById('bkLocationView').innerHTML='';bkOldLogout();};
+        for(const name of ['renderReports','renderFinRatioReport','renderCompareReport','renderTimelineReport','renderProjectionReport']){const original=window[name];window[name]=function(...args){const result=original.apply(this,args);bkApplyShortNames();return result;};}
+        // Collapsible configuration preserves values while giving the report most of the viewport.
+        for(const id of ['reportCompareView','reportCompareTimelineView','reportProjectionView']){const view=document.getElementById(id),controls=view?.firstElementChild;if(!controls)continue;const details=document.createElement('details');details.className='bk-settings';details.open=true;const summary=document.createElement('summary');summary.textContent='Report settings · click to collapse / expand';controls.before(details);details.append(summary,controls);controls.addEventListener('click',e=>{if(e.target.closest('button')?.textContent.includes('Generate'))details.open=false;});}
+        onValue(ref(db,'users/admin_settings/bk_mapping'),snap=>{BK.config=snap.val()||{};BK.loaded=true;bkRefresh();if(IM.loaded)imChanged();},err=>{BK.loaded=false;showToast('BK NO. mapping could not load: '+err.message);});
+        onValue(ref(db,'users/admin_settings/current_stock'),snap=>{BK.stock=snap.val()||{};BK.stockLoaded=true;bkRefresh();},err=>{BK.stockLoaded=false;showToast('Stock could not load: '+err.message);});
+
+        window.imStamp=imStamp;window.imReady=()=>IM.loaded&&BK.loaded;
     </script>
 
 </body>
