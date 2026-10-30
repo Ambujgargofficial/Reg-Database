@@ -8411,7 +8411,7 @@
                 if(period!=='both'&&period!==key)continue;
                 const start=t['d'+n+'_start'],end=t['d'+n+'_end'];
                 if(!bkValidDate(start||'')||!bkValidDate(end||'')||start>end)throw Error(label+' has missing or invalid timeline dates. Update Manage Timeline first.');
-                const values=new Map(f);values.set('source','range');values.set('format','Number');values.set('name',period==='both'?base+' — '+label:base);
+                const values=new FormData();for(const [key,value] of f)values.append(key,value);values.set('source','range');values.set('format','Number');values.set('name',period==='both'?base+' — '+label:base);
                 for(const [side,date] of [['start',start],['end',end]]){values.set('spdate_'+side+'_mode','fixed');values.set('spdate_'+side+'_date',date);}
                 const c=spBuildColumn(values,q);columns.push(c);q.columns[c.id]=c;
             }
