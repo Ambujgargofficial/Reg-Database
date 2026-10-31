@@ -882,7 +882,7 @@
                         <h2 class="text-lg font-semibold">1. Paste Reg Data</h2>
                         <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">Target: Regs</span>
                     </div>
-                    <p class="text-sm text-slate-500 mb-4">Paste Registration Data. Blank rows skipped. <span class="text-indigo-600 font-medium">(Syncs to Firebase)</span></p>
+                    <p class="text-sm text-slate-500 mb-4">Upload even before the invoice. Saved Vahan data will match automatically when the invoice arrives.</p>
                     <textarea id="rawInputUser" class="w-full h-64 sm:h-[420px] p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm font-mono whitespace-pre text-slate-700 resize-none custom-scrollbar" placeholder="Paste data..."></textarea>
                     <button id="extractBtnUser" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-colors">Extract & Save to Cloud</button>
                 </div>
@@ -890,7 +890,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <h2 class="text-lg font-semibold">2. Preview & Export</h2>
-                            <p id="statsTextUser" class="text-sm text-slate-500">Awaiting data...</p>
+                            <div id="vahanPendingStatus" class="mb-2"></div><p id="statsTextUser" class="text-sm text-slate-500">Awaiting data...</p>
                         </div>
                         <div class="flex gap-2">
                             <button id="copyBtnUser" disabled class="disabled:opacity-50 disabled:cursor-not-allowed bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium">Copy</button>
@@ -1550,7 +1550,7 @@
     <!-- FIREBASE AND APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, update, remove, onValue, onChildAdded, onChildChanged, onChildRemoved } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, update, remove, onValue, onChildAdded, onChildChanged, onChildRemoved, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // CONFIGURATION
         const firebaseConfig = {
@@ -1633,6 +1633,7 @@
                 fastTimer=null;
                 const reasons=new Set(fastPending);fastPending.clear();
                 if(!currentUser)return;
+                if(reasons.has('invoices')||reasons.has('registrations'))vhReconcile();
                 const invoices=reasons.has('invoices'), mapping=reasons.has('mapping'), stock=reasons.has('stock'), registrations=reasons.has('registrations');
                 if(invoices||mapping||stock) {
                     if(fastVisible('bkMappingSection'))bkRender();
@@ -1834,6 +1835,7 @@
             onValue(ref(db, 'registrations'), (snapshot) => {
                 const data = snapshot.val();
                 masterRegistrations = data ? Object.entries(data).map(([key, val]) => ({...val, __fbKey: key})) : [];
+                VAHAN.ready=true;
                 fastRefresh('registrations');
             });
 
@@ -2017,6 +2019,7 @@
             if (user) {
                 document.getElementById('loginError').classList.add('hidden');
                 currentUser = user;
+                vhReconcile();
                 window.imLogin?.();
                 if (hypoMappingsLoaded) ensureDefaultHypoMappingsPersisted();
                 document.getElementById('currentUserDisplay').textContent = user.name;
@@ -2482,6 +2485,13 @@
             }, 50);
         });
 
+        const VAHAN={ready:false,busy:false,queued:false,error:''};
+        function vhNorm(value){return String(value||'').replace(/[^a-z0-9]/gi,'').toUpperCase();}
+        function vhFrame(r){return vhNorm(r[sanitizeKey('Chasis No')]||r[sanitizeKey('Chassis No')]||r[sanitizeKey('Chassis Number')]||r[sanitizeKey('Frame #')]);}
+        function vhPlan(invoices,registrations){const frames=new Map(),numbers=new Map();for(const inv of invoices){const key=vhFrame(inv);if(key){if(!frames.has(key))frames.set(key,[]);frames.get(key).push(inv);}}for(const r of registrations){const key=vhFrame(r),no=vhNorm(r[sanitizeKey('Registration No')]);if(key&&no){if(!numbers.has(key))numbers.set(key,new Set());numbers.get(key).add(no);}}return registrations.map(r=>{const key=vhFrame(r),matches=frames.get(key)||[],no=vhNorm(r[sanitizeKey('Registration No')]);let status=!key?'Missing chassis — review':!no?'Missing registration number — review':!matches.length?'Waiting for Invoice':matches.length!==1?'Multiple invoices — review':numbers.get(key)?.size!==1?'Conflicting registrations — review':'Matched';const inv=matches.length===1?matches[0]:null,existing=inv?vhNorm(inv[sanitizeKey('Permanent Reg No')]):'';if(status==='Matched'&&existing&&existing!==no)status='Registration conflict — review';return {r,inv,no,status,fill:status==='Matched'&&!existing};});}
+        function vhRender(){const el=document.getElementById('vahanPendingStatus');if(!el||!currentUser)return;const plan=vhPlan(masterInvoices,masterRegistrations).filter(x=>currentUser.role==='Admin'||window.isRecordOwnedByCurrentUser(null,x.r)),waiting=plan.filter(x=>x.status==='Waiting for Invoice').length,review=plan.filter(x=>x.status.includes('review')).length;el.innerHTML=`<button type="button" class="cp-btn" onclick="window.vhShowPending()">Waiting for Invoice: ${waiting}${review?' · Review: '+review:''}</button><span class="cp-muted"> Saved online · matches when invoices arrive</span>${VAHAN.error?'<p class="cp-error">'+cpEsc(VAHAN.error)+'</p>':''}`;}
+        window.vhShowPending=function(){const rows=vhPlan(masterInvoices,masterRegistrations).filter(x=>x.status!=='Matched'&&(currentUser?.role==='Admin'||window.isRecordOwnedByCurrentUser(null,x.r)));window.openDrillDownModal('Saved Vahan Data · Waiting / Review',rows.length+' records · retained until matching invoice is available',['Chassis','Registration No','Owner','Uploaded By','Upload Date','Status'],rows.map(x=>[vhFrame(x.r),x.no,x.r[sanitizeKey('Owner Name')]||'',x.r[sanitizeKey('Processed By')]||'',x.r[sanitizeKey('Upload Date')]||'',x.status]));};
+        async function vhReconcile(){vhRender();if(VAHAN.busy){VAHAN.queued=true;return;}if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhPlan(masterInvoices,masterRegistrations).filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)setTimeout(vhReconcile,100);}}}
         // USER EXTRACTION (Registrations)
         document.getElementById('extractBtnUser').addEventListener('click', () => {
             const rawText = document.getElementById('rawInputUser').value.trim();
@@ -2489,10 +2499,11 @@
             const lines = rawText.split(/\r?\n/);
             const separator = lines[0].includes('\t') ? '\t' : ',';
             const headers = lines[0].split(separator).map(h => h.trim());
-            const regNoIndex = headers.findIndex(h => h.toLowerCase() === 'registration no');
+            const regNoIndex = headers.findIndex(h => h.toLowerCase().replace(/[^a-z0-9]/g,'') === 'registrationno');
             if (regNoIndex === -1) return showToast("Missing 'Registration No' column");
 
             let regUpdates = {}; let count = 0;
+            const savedFrames=new Map(masterRegistrations.map(r=>[vhFrame(r),r]).filter(([key])=>key));
             const finalRegHeaders = [...headers, "Processed By", "Upload Date"];
             extractedRegDataGlobal = [finalRegHeaders];
             
@@ -2515,20 +2526,25 @@
                     
                     let rowObj = {};
                     finalRegHeaders.forEach((h, idx) => rowObj[sanitizeKey(h)] = cleanRow[idx]);
-                    const chasisIndex = finalRegHeaders.findIndex(h => h.toLowerCase() === 'chasis no');
-                    let safeKey = (chasisIndex !== -1 && cleanRow[chasisIndex]) ? sanitizeKey(cleanRow[chasisIndex]) : `REG_${Date.now()}_${count}`;
-                    regUpdates[safeKey] = rowObj; count++;
+                    const chasisIndex = finalRegHeaders.findIndex(h => ['chasisno','chassisno','chassisnumber','frameno','frame'].includes(h.toLowerCase().replace(/[^a-z0-9]/g,'')));
+                    if(chasisIndex!==-1)rowObj[sanitizeKey('Chasis No')]=vhNorm(cleanRow[chasisIndex]);
+                    rowObj[sanitizeKey('Registration No')]=vhNorm(regNo);
+                    const frame=vhFrame(rowObj),old=frame?savedFrames.get(frame):null;
+                    const safeKey=old?.__fbKey||(frame?sanitizeKey(frame):'REG_'+vhNorm(regNo));
+                    for(const [field,value] of Object.entries(rowObj))if(String(value||'').trim())regUpdates[safeKey+'/'+field]=value;
+                    count++;
                 }
             }
             if(count > 0) {
-                const btn = document.getElementById('extractBtnUser'); btn.textContent = "Syncing...";
+                const btn = document.getElementById('extractBtnUser'); btn.textContent = "Syncing..."; btn.disabled=true;
                 update(ref(db, 'registrations'), regUpdates).then(() => {
                     btn.textContent = "Extract & Save to Cloud"; document.getElementById('rawInputUser').value = '';
-                    showToast(`${count} valid registrations saved`);
+                    showToast(`${count} registrations saved online. Missing invoices will match later.`);
                     renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
                     document.getElementById('downloadBtnUser').disabled = false; document.getElementById('copyBtnUser').disabled = false;
-                    document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved.`;
-                });
+                    document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved online. Invoice not required for saving.`;
+                    vhReconcile();
+                }).catch(err=>{showToast('Upload was not saved. Check connection / access and retry. Your pasted data is retained.');document.getElementById('statsTextUser').textContent='Save failed — retry upload.';}).finally(()=>{btn.disabled=false;btn.textContent='Extract & Save to Cloud';});
             } else {
                 document.getElementById('rawInputUser').value = '';
                 showToast("No new or valid registrations found.");
