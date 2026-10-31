@@ -1633,7 +1633,8 @@
                 fastTimer=null;
                 const reasons=new Set(fastPending);fastPending.clear();
                 if(!currentUser)return;
-                if(reasons.has('invoices')||reasons.has('registrations'))vhReconcile();
+                if(VAHAN.busy){for(const reason of reasons)VAHAN.refresh.add(reason);VAHAN.queued=true;return;}
+                if(reasons.has('invoices')||reasons.has('registrations'))vhSchedule();
                 const invoices=reasons.has('invoices'), mapping=reasons.has('mapping'), stock=reasons.has('stock'), registrations=reasons.has('registrations');
                 if(invoices||mapping||stock) {
                     if(fastVisible('bkMappingSection'))bkRender();
@@ -2485,13 +2486,16 @@
             }, 50);
         });
 
-        const VAHAN={ready:false,busy:false,queued:false,error:''};
+        const VAHAN={ready:false,busy:false,queued:false,error:'',refresh:new Set(),timer:null};
         function vhNorm(value){return String(value||'').replace(/[^a-z0-9]/gi,'').toUpperCase();}
         function vhFrame(r){return vhNorm(r[sanitizeKey('Chasis No')]||r[sanitizeKey('Chassis No')]||r[sanitizeKey('Chassis Number')]||r[sanitizeKey('Frame #')]);}
         function vhPlan(invoices,registrations){const frames=new Map(),numbers=new Map();for(const inv of invoices){const key=vhFrame(inv);if(key){if(!frames.has(key))frames.set(key,[]);frames.get(key).push(inv);}}for(const r of registrations){const key=vhFrame(r),no=vhNorm(r[sanitizeKey('Registration No')]);if(key&&no){if(!numbers.has(key))numbers.set(key,new Set());numbers.get(key).add(no);}}return registrations.map(r=>{const key=vhFrame(r),matches=frames.get(key)||[],no=vhNorm(r[sanitizeKey('Registration No')]);let status=!key?'Missing chassis — review':!no?'Missing registration number — review':!matches.length?'Waiting for Invoice':matches.length!==1?'Multiple invoices — review':numbers.get(key)?.size!==1?'Conflicting registrations — review':'Matched';const inv=matches.length===1?matches[0]:null,existing=inv?vhNorm(inv[sanitizeKey('Permanent Reg No')]):'';if(status==='Matched'&&existing&&existing!==no)status='Registration conflict — review';return {r,inv,no,status,fill:status==='Matched'&&!existing};});}
-        function vhRender(){const el=document.getElementById('vahanPendingStatus');if(!el||!currentUser)return;const plan=vhPlan(masterInvoices,masterRegistrations).filter(x=>currentUser.role==='Admin'||window.isRecordOwnedByCurrentUser(null,x.r)),waiting=plan.filter(x=>x.status==='Waiting for Invoice').length,review=plan.filter(x=>x.status.includes('review')).length;el.innerHTML=`<button type="button" class="cp-btn" onclick="window.vhShowPending()">Waiting for Invoice: ${waiting}${review?' · Review: '+review:''}</button><span class="cp-muted"> Saved online · matches when invoices arrive</span>${VAHAN.error?'<p class="cp-error">'+cpEsc(VAHAN.error)+'</p>':''}`;}
-        window.vhShowPending=function(){const rows=vhPlan(masterInvoices,masterRegistrations).filter(x=>x.status!=='Matched'&&(currentUser?.role==='Admin'||window.isRecordOwnedByCurrentUser(null,x.r)));window.openDrillDownModal('Saved Vahan Data · Waiting / Review',rows.length+' records · retained until matching invoice is available',['Chassis','Registration No','Owner','Uploaded By','Upload Date','Status'],rows.map(x=>[vhFrame(x.r),x.no,x.r[sanitizeKey('Owner Name')]||'',x.r[sanitizeKey('Processed By')]||'',x.r[sanitizeKey('Upload Date')]||'',x.status]));};
-        async function vhReconcile(){vhRender();if(VAHAN.busy){VAHAN.queued=true;return;}if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhPlan(masterInvoices,masterRegistrations).filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)setTimeout(vhReconcile,100);}}}
+        function vhRender(){const el=document.getElementById('vahanPendingStatus');if(!el||!currentUser||!fastVisible('extractorSectionUser'))return;const plan=vhCurrentPlan().filter(x=>currentUser.role==='Admin'||window.isRecordOwnedByCurrentUser(null,x.r)),waiting=plan.filter(x=>x.status==='Waiting for Invoice').length,review=plan.filter(x=>x.status.includes('review')).length;el.innerHTML=`<button type="button" class="cp-btn" onclick="window.vhShowPending()">Waiting for Invoice: ${waiting}${review?' · Review: '+review:''}</button><span class="cp-muted"> Saved online · matches when invoices arrive</span>${VAHAN.error?'<p class="cp-error">'+cpEsc(VAHAN.error)+'</p>':''}`;}
+        window.vhShowPending=function(){const rows=vhCurrentPlan().filter(x=>x.status!=='Matched'&&(currentUser?.role==='Admin'||window.isRecordOwnedByCurrentUser(null,x.r)));window.openDrillDownModal('Saved Vahan Data · Waiting / Review',rows.length+' records · retained until matching invoice is available',['Chassis','Registration No','Owner','Uploaded By','Upload Date','Status'],rows.map(x=>[vhFrame(x.r),x.no,x.r[sanitizeKey('Owner Name')]||'',x.r[sanitizeKey('Processed By')]||'',x.r[sanitizeKey('Upload Date')]||'',x.status]));};
+        document.addEventListener('click',()=>{if(fastVisible('extractorSectionUser'))setTimeout(vhRender,0);});
+        function vhSchedule(){clearTimeout(VAHAN.timer);VAHAN.timer=setTimeout(()=>{VAHAN.timer=null;vhReconcile();},500);}
+        function vhCurrentPlan(){return fastMemo('vahanMatchPlan',[masterInvoices,masterRegistrations],()=>vhPlan(masterInvoices,masterRegistrations));}
+        async function vhReconcile(){if(VAHAN.busy){VAHAN.queued=true;return;}vhRender();if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhCurrentPlan().filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();const refresh=[...VAHAN.refresh];VAHAN.refresh.clear();for(const reason of refresh)fastRefresh(reason);if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)vhSchedule();}}}
         // USER EXTRACTION (Registrations)
         document.getElementById('extractBtnUser').addEventListener('click', () => {
             const rawText = document.getElementById('rawInputUser').value.trim();
@@ -7368,7 +7372,7 @@
                 CP.projects = snap.val() || {}; CP.loaded = true;
                 if(currentReportTab==='dashboard'&&fastVisible('reportsSection'))dashRender();
                 if(CP.selected && !CP.projects[CP.selected]) { CP.selected = null; cpClose(); }
-                if(cpVisible() && !CP.pending) { if(document.activeElement?.dataset.cell) cpRefreshValues(); else cpRender(); }
+                if(cpVisible()) { if(document.activeElement?.dataset.cell) cpRefreshValues(); else cpRender(); }
             }, err => { CP.error = 'Projects could not load: ' + err.message; if(cpVisible()) cpRender(); });
         }
         async function cpWrite(id, patch, deleting = false) {
@@ -7389,9 +7393,9 @@
                     }
                     await update(ref(db, cpPath(id)), {...patch, updatedAt: Date.now()});
                 }
-                CP.saveErrors.delete(saveKey); cpStatus('Saved • Live invoice data');
+                CP.saveErrors.delete(saveKey);
             } catch(err) { CP.saveErrors.set(saveKey, err.message); cpStatus('Save failed — please retry', true); throw err; }
-            finally { CP.pending--; }
+            finally { CP.pending--;cpStatus(CP.saveErrors.size?'Save failed — please retry':CP.pending?'Saving…':'Saved • Live invoice data',!!CP.saveErrors.size); }
         }
         const cpProjectionSources={baseEvent:'Base Event',basePool:'Base Event Total',cytdContrib:'CYTD Contrib %',pytd:'PYTD Count',cytd:'CYTD Count'};
         const cpProjectionDateFields={baseStart:'Base 1 Start',baseEnd:'Base 1 End',pyStart:'Prev YTD Start',pyEnd:'Prev YTD End',cyStart:'Curr YTD Start',cyEnd:'Curr YTD End'};
@@ -7697,7 +7701,7 @@
         }
         async function cpMoveColumn(id,direction) {
             const p=cpProject(),cols=cpCols(p),i=cols.findIndex(c=>c.id===id),j=i+direction;if(!cpEditing()||i<0||j<0||j>=cols.length)return;
-            [cols[i],cols[j]]=[cols[j],cols[i]];const patch={};cols.forEach((c,n)=>patch['columns/'+c.id+'/order']=n+1);await cpWrite(p.id,patch);cpRender();
+            [cols[i],cols[j]]=[cols[j],cols[i]];const patch={};cols.forEach((c,n)=>patch['columns/'+c.id+'/order']=n+1);await cpWrite(p.id,patch);
         }
         function cpRender() {
             const root=document.getElementById('cpRoot'); if(!currentUser) {root.innerHTML='';return;}
@@ -7913,7 +7917,7 @@
             if(e.target.id==='cpProjectModelGroup')view.modelGroup=e.target.value;
             if(e.target.id==='cpLocationView')view.bk=e.target.value;if(e.target.id==='qpProjectDealerGroup')view.dealerGroup=e.target.value;
             if(view.mode==='single'&&!cpDealers().includes(view.dealer))view.dealer=cpDealers()[0]||'';
-            try{if(cpEditable()){await cpWrite(p.id,{dealerView:view});CP.viewOverride=null;}else CP.viewOverride=view;cpRender();}catch(err){cpStatus(err.message,true);}
+            try{if(cpEditable()){CP.viewOverride=null;await cpWrite(p.id,{dealerView:view});}else{CP.viewOverride=view;cpRender();}}catch(err){cpStatus(err.message,true);}
         });
         document.getElementById('cpRoot').addEventListener('change',async e=>{
             const el=e.target,p=cpProject();if(!p||!cpEditing())return;
