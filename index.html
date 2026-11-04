@@ -2345,6 +2345,10 @@
                     const separator = lines[0].includes('\t') ? '\t' : ',';
                     const headers = lines[0].split(separator).map(h => h.trim());
                     
+                    if(!headers.some(h=>h.replace(/^\uFEFF/,'').replace(/^"|"$/g,'').trim().toLowerCase()==='invoice #')){
+                        btn.textContent='Extract & Save to Cloud';btn.disabled=false;
+                        return showToast('Upload rejected: Invoice # column is required. Please upload invoice data, not the stock file.');
+                    }
                     const columnMapping = [];
                     TARGET_COLUMNS.forEach(col => {
                         const cleanCol = col.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -2500,7 +2504,7 @@
         document.addEventListener('click',()=>{if(fastVisible('extractorSectionUser'))setTimeout(vhRender,0);});
         function vhSchedule(){clearTimeout(VAHAN.timer);VAHAN.timer=setTimeout(()=>{VAHAN.timer=null;vhReconcile();},500);}
         function vhCurrentPlan(){return fastMemo('vahanMatchPlan',[masterInvoices,masterRegistrations],()=>vhPlan(masterInvoices,masterRegistrations));}
-        async function vhReconcile(){if(VAHAN.busy){VAHAN.queued=true;return;}vhRender();if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhCurrentPlan().filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();const refresh=[...VAHAN.refresh];VAHAN.refresh.clear();for(const reason of refresh)fastRefresh(reason);if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)vhSchedule();}}}
+        async function vhReconcile(){if(IM.deleting)return;if(VAHAN.busy){VAHAN.queued=true;return;}vhRender();if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhCurrentPlan().filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();const refresh=[...VAHAN.refresh];VAHAN.refresh.clear();for(const reason of refresh)fastRefresh(reason);if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)vhSchedule();}}}
         // USER EXTRACTION (Registrations)
         document.getElementById('extractBtnUser').addEventListener('click', () => {
             const rawText = document.getElementById('rawInputUser').value.trim();
@@ -7948,7 +7952,7 @@
         const cpOriginalLogout=window.handleLogout;
         window.handleLogout=function(){CP.unsubscribe?.();CP.unsubscribe=null;CP.user=null;CP.projects={};CP.selected=null;CP.editing=false;CP.saveErrors.clear();cpClose();document.getElementById('pnDialog')?.close();document.getElementById('cpRoot').innerHTML='';cpOriginalLogout();};
         // Invoice mapping: stable option IDs, dealer defaults and per-invoice overrides.
-        const IM = {config:{},loaded:false,invoicesReady:false,tab:'unmapped',query:'',page:1,busy:false,resync:false,error:'',preview:null,dirty:new Set(),expected:new Map(),allDirty:true,syncTimer:null};
+        const IM = {deleteSelected:new Set(),deleting:false,config:{},loaded:false,invoicesReady:false,tab:'unmapped',query:'',page:1,busy:false,resync:false,error:'',preview:null,dirty:new Set(),expected:new Map(),allDirty:true,syncTimer:null};
         const imFields=['Invoice Type','Invoice Category'];
         const imNorm=v=>String(v||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
         function invoiceRequestingDealer(inv){return String(inv.__requestingDealer??(inv[sanitizeKey('Requesting Dealer')]||inv.Dealer||inv['Dealer Name']||'')).trim();}
@@ -8023,7 +8027,7 @@
         }
         async function imSync() {
             if(!imAdmin()||!IM.loaded||!IM.invoicesReady||!BK.loaded)return;
-            if(IM.busy)return;
+            if(IM.busy||IM.deleting)return;
             const ids=IM.allDirty?Array.from(invoiceRecords.keys()):Array.from(IM.dirty);
             IM.allDirty=false;IM.dirty.clear();
             if(!ids.length)return;
@@ -8079,8 +8083,24 @@
         window.imLogin=()=>{window.syncNavigationGroups('');const nav=document.getElementById('navBtn_invoiceMappingSection');nav.classList.toggle('hidden',!imAdmin());nav.classList.toggle('flex',imAdmin());imScheduleSync();};
         onValue(ref(db,'users/admin_settings/invoice_mapping'),snap=>{IM.config=snap.val()||{};IM.loaded=true;imChanged();},err=>{IM.loaded=false;imNotice('Mapping could not load: '+err.message,true);});
         function imList(unmapped=false){return masterInvoices.filter(inv=>(!unmapped||imFields.some(f=>!imValue(inv,f)))&&(!IM.query||[imDealer(inv),inv[sanitizeKey('Invoice #')],inv[sanitizeKey('Frame #')],qpDseName(inv),...imFields.map(f=>imValue(inv,f))].join(' ').toLowerCase().includes(IM.query.toLowerCase())));}
+        function imUnmappedRows(){return masterInvoices.filter(inv=>inv.__fbKey&&imFields.some(f=>!imValue(inv,f)));}
+        async function imDeleteUnmapped(all){
+            if(!imAdmin()||!IM.loaded||!IM.invoicesReady)throw Error('Wait for invoice data and mapping settings to load.');
+            if(IM.deleting)return;
+            if(IM.busy||VAHAN.busy)throw Error('Background invoice updates are running. Please retry deletion after they finish.');
+            const rows=imUnmappedRows().filter(inv=>all||IM.deleteSelected.has(inv.__fbKey));
+            if(!rows.length)throw Error('Select at least one unmapped invoice.');
+            if(!confirm('Permanently delete '+rows.length+(all?' ALL unmapped invoices (across every page, including rows outside search)':' selected unmapped invoices')+' from the invoice database? Their invoice mapping overrides will also be removed. This cannot be undone.'))return;
+            IM.deleting=true;
+            try{const changes={};for(const inv of rows){changes['invoices/'+inv.__fbKey]=null;changes['users/admin_settings/invoice_mapping/overrides/'+inv.__fbKey]=null;}
+                await update(ref(db),changes);
+                rows.forEach(inv=>{IM.deleteSelected.delete(inv.__fbKey);IM.dirty.delete(inv.__fbKey);IM.expected.delete(inv.__fbKey);});
+                flushInvoiceBatch();imRender();showToast(rows.length+' unmapped invoices deleted.');
+            }finally{IM.deleting=false;imScheduleSync();vhSchedule();}
+        }
         function imRender() {
             const root=document.getElementById('imRoot');if(!imAdmin()){root.innerHTML='<p>Admin access required.</p>';return;}
+            const eligible=new Set(imUnmappedRows().map(inv=>inv.__fbKey));for(const id of IM.deleteSelected)if(!eligible.has(id))IM.deleteSelected.delete(id);
             const all=masterInvoices,unmapped=all.filter(inv=>imFields.some(f=>!imValue(inv,f))).length;
             root.innerHTML=`<div class="cp-row cp-spread"><div><h2 class="text-xl font-bold">Invoice Mapping</h2><p class="cp-muted">Dealer defaults apply to old and new invoices. Manual invoice mapping takes priority.</p></div><div class="cp-row"><button class="cp-btn" data-im="download">${['missingbk','bkdata'].includes(IM.tab)?(IM.tab==='missingbk'?'Download Missing BK CSV':'Download BK CSV'):'Download Unmapped CSV'}</button><button class="cp-btn" data-im="import">${['missingbk','bkdata'].includes(IM.tab)?'Upload BK CSV':'Bulk Upload CSV'}</button></div></div><div class="cp-row im-tabs">${[['unmapped','Unmapped · '+unmapped],['all','All Invoices · '+all.length],['missingbk','Missing BK · '+all.filter(inv=>bkMissing(inv)).length],['bkdata','BK Data'],['rules','Dealer Rules'],['dse','DSE → Category'],['options','Manage Types / Categories']].map(([id,label])=>`<button class="cp-btn ${IM.tab===id?'cp-primary':''}" data-im="tab" data-id="${id}">${label}</button>`).join('')}</div><p id="imNotice" class="cp-muted" role="status">${cpEsc(IM.error||(!IM.loaded?'Loading mapping settings…':'Changes save automatically. Masha categories use DSE rules; manual corrections take priority.'))}</p><div id="imContent"></div>`;
             const content=document.getElementById('imContent');if(!IM.loaded)return;
@@ -8091,7 +8111,7 @@
                 content.innerHTML=`<p class="cp-muted im-note">Changing a dealer rule updates all automatic mappings, including future uploads. Manual invoice overrides stay unchanged. Leave a rule Unmapped when manual selection is required.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Dealer</th><th>Invoice Type</th><th>Invoice Category</th></tr></thead><tbody>${dealers.map(name=>{const rule=imRules()[imNorm(name)]||{};return `<tr><td>${cpEsc(name)}</td>${imFields.map(field=>`<td>${imSelect(field,rule[imFieldKey(field)]||'',`data-rule="${cpEsc(name)}" data-field="${field}"`)}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div>`;return;
             }
             const list=imList(IM.tab==='unmapped'),pages=Math.max(1,Math.ceil(list.length/100));IM.page=Math.min(IM.page,pages);
-            content.innerHTML=`<input id="imSearch" class="cp-input" placeholder="Search Frame, Invoice Number or Dealer" value="${cpEsc(IM.query)}"><p class="cp-muted im-note">${list.length} invoices · Page ${IM.page} / ${pages} · Both Type and Category must be filled to leave Unmapped.</p><div class="im-scroll"><table class="im-table"><thead><tr><th>Frame #</th><th>BK NO.</th><th>Invoice Number</th><th>Dealer</th><th>Assigned To (DSE) Name</th><th>Invoice Type</th><th>Invoice Category</th><th>Mapping</th></tr></thead><tbody>${list.slice((IM.page-1)*100,IM.page*100).map(inv=>`<tr><td>${cpEsc(inv[sanitizeKey('Frame #')]||'—')}</td><td>${cpEsc(bkRawNo(inv)||'—')}</td><td>${cpEsc(inv[sanitizeKey('Invoice #')]||'—')}</td><td>${cpEsc(imDealer(inv)||'Unknown')}</td><td>${cpEsc(qpDseName(inv)||'—')}</td>${imFields.map(field=>{const v=imResolved(inv,field);return `<td>${imSelect(field,v.id,`data-invoice="${cpEsc(inv.__fbKey)}" data-field="${field}"`)}<small class="cp-muted">${cpEsc(v.label&&!v.id?'Imported: '+v.label:v.source)}</small></td>`;}).join('')}<td><button class="cp-btn" data-im="reset" data-id="${cpEsc(inv.__fbKey)}">Use automatic mapping</button></td></tr>`).join('')||'<tr><td colspan="6">No matching invoices.</td></tr>'}</tbody></table></div><div class="cp-row im-note"><button class="cp-btn" data-im="prev" ${IM.page<=1?'disabled':''}>Previous</button><button class="cp-btn" data-im="next" ${IM.page>=pages?'disabled':''}>Next</button></div>`;
+            content.innerHTML=`<input id="imSearch" class="cp-input" placeholder="Search Frame, Invoice Number or Dealer" value="${cpEsc(IM.query)}">${IM.tab==='unmapped'?`<div class="cp-row im-note"><button class="cp-btn" data-im="select-page">Select this page</button><button class="cp-btn" data-im="clear-selection">Clear selection</button><span class="cp-muted">${IM.deleteSelected.size} selected</span><button class="cp-btn" style="color:#dc2626;border-color:#fecaca" data-im="delete-selected" ${!IM.deleteSelected.size||IM.deleting?'disabled':''}>Delete Selected</button><button class="cp-btn" style="color:#dc2626;border-color:#fecaca" data-im="delete-all" ${!unmapped||IM.deleting?'disabled':''}>Delete All Unmapped (${unmapped})</button></div>`:''}<p class="cp-muted im-note">${list.length} invoices · Page ${IM.page} / ${pages} · Both Type and Category must be filled to leave Unmapped.</p><div class="im-scroll"><table class="im-table"><thead><tr>${IM.tab==='unmapped'?'<th>Select</th>':''}<th>Frame #</th><th>BK NO.</th><th>Invoice Number</th><th>Dealer</th><th>Assigned To (DSE) Name</th><th>Invoice Type</th><th>Invoice Category</th><th>Mapping</th></tr></thead><tbody>${list.slice((IM.page-1)*100,IM.page*100).map(inv=>`<tr>${IM.tab==='unmapped'?`<td><input type="checkbox" data-im-delete-row="${cpEsc(inv.__fbKey)}" aria-label="Select invoice ${cpEsc(inv[sanitizeKey('Invoice #')]||inv[sanitizeKey('Frame #')]||'record')}" ${IM.deleteSelected.has(inv.__fbKey)?'checked':''}></td>`:''}<td>${cpEsc(inv[sanitizeKey('Frame #')]||'—')}</td><td>${cpEsc(bkRawNo(inv)||'—')}</td><td>${cpEsc(inv[sanitizeKey('Invoice #')]||'—')}</td><td>${cpEsc(imDealer(inv)||'Unknown')}</td><td>${cpEsc(qpDseName(inv)||'—')}</td>${imFields.map(field=>{const v=imResolved(inv,field);return `<td>${imSelect(field,v.id,`data-invoice="${cpEsc(inv.__fbKey)}" data-field="${field}"`)}<small class="cp-muted">${cpEsc(v.label&&!v.id?'Imported: '+v.label:v.source)}</small></td>`;}).join('')}<td><button class="cp-btn" data-im="reset" data-id="${cpEsc(inv.__fbKey)}">Use automatic mapping</button></td></tr>`).join('')||'<tr><td colspan="6">No matching invoices.</td></tr>'}</tbody></table></div><div class="cp-row im-note"><button class="cp-btn" data-im="prev" ${IM.page<=1?'disabled':''}>Previous</button><button class="cp-btn" data-im="next" ${IM.page>=pages?'disabled':''}>Next</button></div>`;
         }
         const IMBK={dealer:'',query:'',drafts:new Map()};
         function imBKList(){return masterInvoices.filter(inv=>(IM.tab!=='missingbk'||bkMissing(inv))&&(!IMBK.dealer||imNorm(imDealer(inv))===imNorm(IMBK.dealer))&&(!IMBK.query||[imDealer(inv),bkRawNo(inv),inv[sanitizeKey('Invoice #')],inv[sanitizeKey('Frame #')],qpDseName(inv)].join(' ').toLowerCase().includes(IMBK.query.toLowerCase())));}
@@ -8108,6 +8128,7 @@
             if(clean.length>120||/[\x00-\x1f\x7f]/.test(clean))throw Error('Enter a BK number up to 120 characters, on one line.');
             return {[sanitizeKey('BK NO.')]:clean,bkManual:true};
         }
+        document.getElementById('imRoot').addEventListener('change',e=>{const key=e.target.dataset.imDeleteRow;if(!key||!imAdmin())return;if(e.target.checked)IM.deleteSelected.add(key);else IM.deleteSelected.delete(key);imRender();});
         document.getElementById('imRoot').addEventListener('input',e=>{
             if(e.target.matches('[data-bk-entry]')){const row=e.target.closest('[data-bk-record]');IMBK.drafts.set(row.dataset.bkRecord,e.target.value);const pick=row.querySelector('[data-bk-pick]');pick.value=[...pick.options].some(o=>o.value===e.target.value)?e.target.value:'__manual__';}
             if(e.target.id==='imBKSearch'){const pos=e.target.selectionStart;IMBK.query=e.target.value;IM.page=1;imRender();const input=document.getElementById('imBKSearch');input.focus();input.setSelectionRange(pos,pos);}
@@ -8175,6 +8196,10 @@
         function imImportDialog(){IM.preview=null;const d=document.getElementById('imDialog');d.innerHTML='<div class="cp-row cp-spread"><h2 class="font-bold">Bulk Invoice Mapping</h2><button class="cp-btn" data-im="close">Close</button></div><p class="cp-muted im-note">Download Unmapped CSV, fill Type / Category and upload it here. Frame and Invoice Number identify the record. Blank cells do not overwrite mappings.</p><input id="imFile" type="file" accept=".csv,text/csv"><div id="imPreview" class="im-note"></div>';d.showModal();}
         async function imAction(e){const b=e.target.closest('[data-im]');if(!b||!imAdmin())return;const a=b.dataset.im;
             try{
+                if(a==='delete-selected'||a==='delete-all'){await imDeleteUnmapped(a==='delete-all');return;}
+                if(a==='select-page'){imList(true).slice((IM.page-1)*100,IM.page*100).forEach(inv=>IM.deleteSelected.add(inv.__fbKey));imRender();return;}
+                if(a==='clear-selection'){IM.deleteSelected.clear();imRender();return;}
+
                 if(a==='apply-bk-import'){
                     if(!IMBK.preview?.length)throw Error('Validate the BK CSV first.');b.disabled=true;
                     const fresh=imBKPrepare(IMBK.importText),patch={};fresh.forEach(r=>Object.entries(r.patch).forEach(([key,value])=>patch[r.id+'/'+key]=value));
