@@ -2613,9 +2613,23 @@
 
         function vhSchedule(){if(currentUser?.role!=='Admin')return;clearTimeout(VAHAN.timer);VAHAN.timer=setTimeout(()=>{VAHAN.timer=null;vhReconcile();},500);}
         function vhCurrentPlan(){return fastMemo('vahanMatchPlan',[masterInvoices,masterRegistrations],()=>vhPlan(masterInvoices,masterRegistrations));}
-        async function vhReconcile(){if(IM.deleting)return;if(VAHAN.busy){VAHAN.queued=true;return;}vhRender();if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhCurrentPlan().filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();const refresh=[...VAHAN.refresh];VAHAN.refresh.clear();for(const reason of refresh)fastRefresh(reason);if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)vhSchedule();}}}
+        async function vhReconcile(){if(IM.deleting)return;void vhCleanupExisting();if(VAHAN.busy){VAHAN.queued=true;return;}vhRender();if(!VAHAN.ready||!IM.invoicesReady||currentUser?.role!=='Admin')return;const jobs=[...new Map(vhCurrentPlan().filter(x=>x.fill&&x.inv?.__fbKey).map(x=>[x.inv.__fbKey,x])).values()];if(!jobs.length)return;VAHAN.busy=true;VAHAN.error='';try{for(let i=0;i<jobs.length;i+=10){if(currentUser?.role!=='Admin')break;await Promise.all(jobs.slice(i,i+10).map(x=>runTransaction(ref(db,'invoices/'+x.inv.__fbKey+'/'+sanitizeKey('Permanent Reg No')),value=>String(value||'').trim()?undefined:x.no,{applyLocally:false})));}}catch(e){VAHAN.error='Vahan data is saved. Auto-match could not sync; retry after checking connection / access.';}finally{VAHAN.busy=false;vhRender();const refresh=[...VAHAN.refresh];VAHAN.refresh.clear();for(const reason of refresh)fastRefresh(reason);if(VAHAN.queued){VAHAN.queued=false;if(!VAHAN.error)vhSchedule();}}}
+
+        const vhIgnoreRepeat=new Set(['srno','processedby','uploaddate','uploadedby','uploadfordealer']);
+        function vhFields(record){const out={};for(const [key,value] of Object.entries(record||{})){if(key.startsWith('__')||value===null||value===undefined||String(value).trim()==='')continue;out[vhHeaderKey(key)]=String(value).trim();}return out;}
+        function vhIdentity(record){const f=vhFields(record);return {reg:vhNorm(f.registrationno),receipt:vhNorm(f.receiptno),frame:vhFrame(record),dealer:vhNorm(f.uploadfordealer||f.processedby)};}
+        function vhSameValue(key,a,b){if(['registrationno','receiptno','chasisno','transactionno','applicationno'].includes(key))return vhNorm(a)===vhNorm(b);return String(a).trim().replace(/\s+/g,' ').toUpperCase()===String(b).trim().replace(/\s+/g,' ').toUpperCase();}
+        function vhCompatible(a,b){const x=vhIdentity(a),y=vhIdentity(b);if(x.dealer&&y.dealer&&x.dealer!==y.dealer)return false;const fa=vhFields(a),fb=vhFields(b);for(const key of Object.keys(fb))if(!vhIgnoreRepeat.has(key)&&fa[key]&&!vhSameValue(key,fa[key],fb[key]))return false;return true;}
+        function vhIndex(records){const maps={reg:new Map(),receipt:new Map(),frame:new Map()};for(const [key,row] of Object.entries(records||{}))vhIndexAdd(maps,key,row);return maps;}
+        function vhIndexAdd(maps,key,row){const ids=vhIdentity(row);for(const type of ['reg','receipt','frame'])if(ids[type]){if(!maps[type].has(ids[type]))maps[type].set(ids[type],new Set());maps[type].get(ids[type]).add(key);}}
+        function vhMatches(maps,row){const ids=vhIdentity(row),keys=new Set();for(const type of ['reg','receipt','frame'])if(ids[type])for(const key of maps[type].get(ids[type])||[])keys.add(key);return [...keys];}
+        function vhDedupePlan(value){const records={...(value||{})},index={reg:new Map(),receipt:new Map(),frame:new Map()};let removed=0;for(const key of Object.keys(records).sort()){const row=records[key],matches=vhMatches(index,row);const keep=matches.find(k=>vhCompatible(records[k],row));if(keep){const merged={...records[keep]},fields=vhFields(merged);for(const [field,val] of Object.entries(row)){if(field.startsWith('__')||vhIgnoreRepeat.has(vhHeaderKey(field)))continue;if(!fields[vhHeaderKey(field)]&&String(val??'').trim())merged[field]=val;}records[keep]=merged;delete records[key];removed++;vhIndexAdd(index,keep,merged);}else vhIndexAdd(index,key,row);}return {records,removed};}
+        function vhUploadPlan(value,incoming){const records={...(value||{})},index=vhIndex(records),stats={added:0,updated:0,skipped:0,review:0};for(const row of incoming){const matches=vhMatches(index,row);if(matches.length>1){stats.review++;continue;}if(matches.length===1){const key=matches[0],old=records[key];if(!vhCompatible(old,row)){stats.review++;continue;}const existing=vhFields(old),patch={};for(const [field,val] of Object.entries(row)){const normalized=vhHeaderKey(field);if(vhIgnoreRepeat.has(normalized)||field.startsWith('__'))continue;if(!existing[normalized]&&String(val??'').trim())patch[field]=val;}if(!Object.keys(patch).length){stats.skipped++;continue;}records[key]={...old,...patch};vhIndexAdd(index,key,records[key]);stats.updated++;}else{const identity=vhIdentity(row),key='VH_'+(identity.reg||identity.receipt||identity.frame);if(!identity.reg&&!identity.receipt&&!identity.frame||records[key]){stats.review++;continue;}records[key]=row;vhIndexAdd(index,key,row);stats.added++;}}return {records,stats};}
+        let vhCleanupStarted=false;
+        async function vhCleanupExisting(){if(vhCleanupStarted||!VAHAN.ready||currentUser?.role!=='Admin')return;vhCleanupStarted=true;const owner=currentUser;try{let removed=0;await runTransaction(ref(db,'registrations'),value=>{removed=0;if(currentUser!==owner||currentUser?.role!=='Admin')return;const plan=vhDedupePlan(value);removed=plan.removed;if(!removed)return;return plan.records;},{applyLocally:false});if(removed&&currentUser===owner)showToast(removed+' duplicate Vahan records consolidated.');}catch(err){vhCleanupStarted=false;console.warn('Vahan duplicate cleanup failed',err);showToast('Vahan duplicate cleanup could not finish. Please retry at next login.');}}
+
         // USER EXTRACTION (Registrations)
-        document.getElementById('extractBtnUser').addEventListener('click', () => {
+        document.getElementById('extractBtnUser').addEventListener('click', async () => {
             if(!currentUser||currentUser.role==='Viewer')return showToast('Upload access is required.');
             const uploadDealer=currentUser.role==='Admin'?document.getElementById('vhUploadDealer').value:currentUser.name;
             if(currentUser.role==='Admin'&&!vhDealerNames().includes(uploadDealer))return showToast('Select dealer first.');
@@ -2625,8 +2639,7 @@
             let combined;try{combined=vhCombineTables([{name:'Pasted / uploaded data',rows:vhTextRows(rawText)}],false);}catch(err){return showToast(err.message);}
             const headers=combined.headers,regNoIndex=headers.findIndex(h=>vhHeaderKey(h)==='registrationno');
 
-            let regUpdates = {}; let count = 0;
-            const savedFrames=new Map(masterRegistrations.map(r=>[vhFrame(r),r]).filter(([key])=>key));
+            const incoming=[];
             const finalRegHeaders = [...headers, "Processed By", "Upload Date", ...(adminUpload?["Uploaded By", "Upload For Dealer"]:[])];
             extractedRegDataGlobal = [finalRegHeaders];
             
@@ -2650,26 +2663,18 @@
                     const chasisIndex = finalRegHeaders.findIndex(h => ['chasisno','chassisno','chassisnumber','frameno','frame'].includes(h.toLowerCase().replace(/[^a-z0-9]/g,'')));
                     if(chasisIndex!==-1)rowObj[sanitizeKey('Chasis No')]=vhNorm(cleanRow[chasisIndex]);
                     rowObj[sanitizeKey('Registration No')]=vhNorm(regNo);
-                    const frame=vhFrame(rowObj),old=frame?savedFrames.get(frame):null;
-                    const safeKey=old?.__fbKey||(frame?sanitizeKey(frame):'REG_'+vhNorm(regNo));
-                    for(const [field,value] of Object.entries(rowObj))if(String(value||'').trim())regUpdates[safeKey+'/'+field]=value;
-                    count++;
+                    incoming.push(rowObj);
                 }
             }
-            if(count > 0) {
-                const btn = document.getElementById('extractBtnUser'); btn.textContent = "Syncing..."; btn.disabled=true;
-                update(ref(db, 'registrations'), regUpdates).then(() => {
-                    btn.textContent = "Extract & Save to Cloud"; document.getElementById('rawInputUser').value = '';
-                    showToast(`${count} registrations saved online. Missing invoices will match later.`);
-                    renderPreviewTable('previewTableUser', 'tableHeadRowUser', 'tableBodyUser', 'emptyStateUser', extractedRegDataGlobal);
-                    document.getElementById('downloadBtnUser').disabled = false; document.getElementById('copyBtnUser').disabled = false;
-                    document.getElementById('statsTextUser').innerHTML = `<span class="font-bold">${count}</span> rows saved online. Invoice not required for saving.`;
-                    vhReconcile();
-                }).catch(err=>{showToast('Upload was not saved. Check connection / access and retry. Your pasted data is retained.');document.getElementById('statsTextUser').textContent='Save failed — retry upload.';}).finally(()=>{btn.disabled=false;btn.textContent='Extract & Save to Cloud';});
-            } else {
-                document.getElementById('rawInputUser').value = '';
-                showToast("No new or valid registrations found.");
-            }
+            if(!incoming.length)return showToast('No valid registrations found.');
+            const btn=document.getElementById('extractBtnUser'),owner=currentUser;btn.textContent='Checking / Saving…';btn.disabled=true;
+            try{let stats,removed=0;await runTransaction(ref(db,'registrations'),value=>{if(currentUser!==owner)return;const clean=adminUpload?vhDedupePlan(value):{records:value||{},removed:0};removed=clean.removed;const plan=vhUploadPlan(clean.records,incoming);stats=plan.stats;if(!removed&&!stats.added&&!stats.updated)return;return plan.records;},{applyLocally:false});if(currentUser!==owner)return;if(!stats)throw Error('Session changed. Retry upload.');
+                const message=`${stats.added} New · ${stats.updated} Updated · ${stats.skipped} Already Saved / Skipped · ${stats.review} Need Review${removed?' · '+removed+' old duplicates removed':''}`;
+                showToast(message);document.getElementById('statsTextUser').textContent=message+(stats.review?' — Conflicting records were not changed. Correct them in Data Management.':'');
+                if(!stats.review)document.getElementById('rawInputUser').value='';
+                renderPreviewTable('previewTableUser','tableHeadRowUser','tableBodyUser','emptyStateUser',extractedRegDataGlobal);document.getElementById('downloadBtnUser').disabled=false;document.getElementById('copyBtnUser').disabled=false;vhReconcile();
+            }catch(err){showToast('Vahan save failed. Your input is retained. '+err.message);document.getElementById('statsTextUser').textContent='Save failed — retry upload.';}finally{btn.textContent='Extract & Save to Cloud';vhUploadControls();}
+
         });
 
         // CUSTOMER DATA EXTRACTION (Shared)
