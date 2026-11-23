@@ -279,6 +279,20 @@
         #sidebar nav .nav-subitem{padding:6px 7px!important;min-height:30px}
         #sidebar nav .sidebar-icon{max-height:18px}
     </style>
+<style>
+#reportProjectionView > .bg-slate-50{padding:10px!important;gap:9px!important}
+#reportProjectionView > .bg-slate-50 > .flex{gap:8px!important;padding-bottom:8px!important}
+#reportProjectionView > .bg-slate-50 input,#reportProjectionView > .bg-slate-50 select{min-height:30px!important;padding:4px 8px!important;font-size:12px!important}
+#reportProjectionView > .bg-slate-50 button{padding:6px 10px!important;font-size:12px!important;min-height:30px!important}
+#reportProjectionView > .bg-slate-50 .border-l{padding-left:9px!important}
+#reportProjectionView > .bg-slate-50 .w-full.text-sm.font-bold{width:auto!important;font-size:12px!important}
+</style>
+<style>
+.hs-contact.cp-btn{background:linear-gradient(120deg,#4f46e5,#7c3aed);color:#fff;border:0;box-shadow:0 4px 12px #4f46e530;padding:11px 18px;font-weight:700}.hs-contact:hover{filter:brightness(1.08)}
+.hs-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.hs-choice{position:relative;text-align:left;background:linear-gradient(120deg,#eef2ff,#fff);border:1px solid #c7d2fe;border-radius:16px;padding:20px;display:grid;grid-template-columns:44px 1fr;column-gap:14px;row-gap:7px;transition:box-shadow .15s,transform .15s}.hs-choice:hover{box-shadow:0 6px 18px #6366f120;transform:translateY(-2px)}.hs-choice-icon{grid-row:span 3;background:#fff;color:#4f46e5;border-radius:12px;text-align:center;padding:8px;font-size:24px}.hs-choice strong{font-size:16px}.hs-choice small{color:#64748b;font-size:13px}.hs-choice-arrow{color:#4f46e5;font-size:13px;font-weight:600}.hs-idea{background:linear-gradient(120deg,#ecfdf5,#fff);border-color:#a7f3d0}.hs-idea .hs-choice-icon,.hs-idea .hs-choice-arrow{color:#059669}
+.hs-form-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}#hsForm{padding:20px}#hsForm input,#hsForm textarea{display:block;width:100%;max-width:none;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:11px 13px;background:white;font:inherit}#hsForm textarea{min-height:190px;resize:vertical;margin-top:7px}#hsForm label{color:#475569}#hsForm label.flex-1{min-width:240px}
+#hsModal::backdrop{background:#0f172a80;backdrop-filter:blur(3px)}.hs-editor{border:1px solid #c7d2fe;background:#f8faff;border-radius:12px;padding:13px;margin-bottom:18px}.hs-editor summary{cursor:pointer;color:#4f46e5;font-weight:700}.hs-editor form{margin-top:14px}.hs-editor label{display:block;font-size:13px;font-weight:600;color:#475569}.hs-editor input,.hs-editor textarea{display:block;width:100%;max-width:none;box-sizing:border-box;padding:11px 13px;border:1px solid #cbd5e1;border-radius:9px;background:white;font:inherit;margin:6px 0 12px}.hs-editor textarea{min-height:200px;resize:vertical;font-size:14px;line-height:1.6}.hs-editor small{color:#64748b}.hs-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.hs-toolbar button{background:white;border:1px solid #c7d2fe;border-radius:7px;padding:6px 10px;color:#4338ca;font-size:12px}.hs-publish{display:flex;gap:12px;align-items:center;margin-top:12px;font-size:13px}.hs-preview{border:1px solid #e2e8f0;border-radius:14px;padding:20px;background:linear-gradient(135deg,#f8faff,#fff)}.hs-preview-label{font-size:10px;letter-spacing:1.5px;font-weight:700;color:#6366f1;margin-bottom:8px}.hs-preview h3{font-size:21px;font-weight:700;margin-bottom:14px}.hs-notice-line{display:flex;gap:12px;margin:9px 0;line-height:1.6;font-size:14px;overflow-wrap:anywhere}.hs-notice-line>span{color:#6366f1;font-weight:700;flex-shrink:0}.hs-notice-paragraph{font-size:14px;line-height:1.6;overflow-wrap:anywhere;margin:7px 0}@media(max-width:640px){.hs-choice-grid{grid-template-columns:1fr}.hs-choice{padding:16px}}
+</style>
 </head>
 <body class="text-slate-800 h-screen w-screen overflow-hidden flex bg-slate-50 relative">
 
@@ -808,7 +822,7 @@
                 <button id="navGroupBtn_manage" type="button" class="nav-master-button" onclick="window.toggleNavGroup('manage')" aria-expanded="false" aria-controls="navSub_manage" title="Manage">
                     <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 5h6M9 3h6v4H9zM9 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3M8 12h8M8 16h8"/></svg><span class="sidebar-text nav-master-label">Manage</span><svg class="sidebar-text nav-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 5 7 7-7 7"/></svg>
                 </button>
-                <div id="navSub_manage" class="nav-submenu" hidden>
+                <div id="navSub_manage" class="nav-submenu" hidden><button id="navBtn_manageModelsSection" class="nav-subitem w-full flex items-center" onclick="window.showAppSection('manageModelsSection')"><span class="sidebar-icon">▦</span><span class="sidebar-text ml-3">Manage Models</span></button>
             <button id="navBtn_manageDataSection" onclick="window.showAppSection('manageDataSection')" class="nav-subitem hidden w-full items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-colors group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
                 <span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap transition-opacity duration-200">Manage Data</span>
@@ -1052,6 +1066,9 @@
             </section>
 
             <!-- MODEL GROUPS SECTION (Admin Only) -->
+<section id="loginLogsSection" class="hidden bg-white rounded-xl border border-slate-200 p-4 flex-col gap-3"><h2 class="text-lg font-bold">Login Logs</h2><p class="text-xs text-slate-500">Successful logins recorded from this update onwards · Times in IST</p><div id="llControls"></div><div id="llResults"></div></section>
+<section id="helpSection" class="hidden bg-white rounded-xl border border-slate-200 p-4 flex-col gap-4"><div class="flex items-center justify-between gap-2 flex-wrap"><div><h2 class="text-lg font-bold">Help / Suggestion</h2><p class="text-xs text-slate-500">Share an issue or an idea. Track the response here.</p></div><button class="cp-btn hs-contact" onclick="window.hsSupport()">ⓘ Contact Admin</button></div><div id="hsCompose"></div><div id="hsTickets"></div></section>
+<section id="manageModelsSection" class="hidden bg-white rounded-xl border border-slate-200 p-4 flex-col gap-3"><h2 class="text-lg font-bold">Manage Models</h2><p class="text-xs text-slate-500">Future projections use today's date. From the discontinued date, projection moves to the replacement model. Historical sales stay unchanged.</p><div id="manageModelsRoot"></div></section>
             <section id="modelGroupsSection" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-col transition-all duration-300">
                 <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
                     <div>
@@ -1246,7 +1263,7 @@
                         <div class="flex flex-wrap justify-between items-center gap-3">
                             <div>
                                 <div class="fin-title"><h3 class="text-base font-bold text-slate-800">Finance Ratio by Hypothecation</h3><span id="finRatioDateLabel" class="text-xs text-slate-500">All invoice dates</span></div>
-                                <label class="cp-row text-sm">View by <select id="finRatioViewBy" class="im-select" onchange="window.renderFinRatioReport()"><option value="dealer">Dealer</option><option value="type">Invoice Type</option><option value="category">Invoice Category</option><option value="bk">BK NO.</option></select></label>
+                                <label class="cp-row text-sm">View by <select id="finRatioViewBy" class="im-select" onchange="window.renderFinRatioReport()"><option value="dealer">Dealer</option><option value="type">Invoice Type</option><option value="category">Invoice Category</option><option value="bk">BK NO.</option><option value="contribution">Contribution %</option></select></label>
                                 
                             </div>
                             <div class="flex gap-2">
@@ -1477,7 +1494,7 @@
                                         <option value="" disabled selected>Select Timeline...</option>
                                         <option value="CUSTOM">Custom Dates</option>
                                     </select>
-                                </div>
+                                </div><div><label class="block text-xs font-medium text-slate-700 mb-1">Projection based on</label><select id="projCountBase" class="im-select" onchange="window.renderProjectionReport()"><option value="base1" selected>Base 1 Date</option><option value="base2">Base 2 Date</option><option value="sum">Base 1 + Base 2</option></select></div><div><label class="block text-xs font-medium text-slate-700 mb-1">Model allocation</label><select id="projAllocationMode" class="im-select" onchange="window.renderProjectionReport()"><option value="growth" selected>Growth %</option><option value="cytd">CYTD Contrib %</option></select></div>
                                 <div class="flex flex-wrap gap-2 items-end border-l pl-4 border-slate-300">
                                     <div class="flex gap-2 items-center">
                                         <span class="text-xs font-bold text-slate-500 bg-white px-2 py-1 rounded shadow-sm border border-slate-200">Base 1 Date</span>
@@ -1571,14 +1588,14 @@
                                         <th class="px-4 py-3 font-semibold border-b w-1/4">Dealer Name</th>
                                         <th class="px-4 py-3 font-semibold border-b w-1/4">Model Name</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">CYTD Contrib %</th>
-                                        <th class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">Overall Model Contribution</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-slate-600">PYTD Count</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-slate-600">CYTD Count</th>
                                         <th class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">Growth %</th>
-                                        <th id="projBase1Header" class="px-4 py-3 font-semibold border-b text-right text-slate-600">Base Event (Last Yr)</th>
-                                        <th id="projBase2Header" class="hidden px-4 py-3 font-semibold border-b text-right text-slate-600">Base2 Event (Last Yr)</th>
-                                        <th id="projBaseTotalHeader" class="hidden px-4 py-3 font-semibold border-b text-right text-slate-600">Base Total (Last Yr)</th>
+                                        <th id="projBase1Header" class="px-4 py-3 font-semibold border-b text-right text-slate-600">Base Event</th>
+                                        <th id="projBase2Header" class="hidden px-4 py-3 font-semibold border-b text-right text-slate-600">Base2 Event</th>
+                                        <th id="projBaseTotalHeader" class="hidden px-4 py-3 font-semibold border-b text-right text-slate-600">Base Total</th>
                                         <th id="projProjectionHeader" class="px-4 py-3 font-bold border-b text-right text-emerald-800 bg-yellow-200">Projection Count</th>
+                                        <th id="projContributionHeader" class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">Projection Contrib</th>
                                     </tr>
                                 </thead>
                                 <tbody id="projTableBody" class="divide-y divide-slate-200">
@@ -1604,7 +1621,7 @@
     <!-- FIREBASE AND APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, update, remove, onValue, onChildAdded, onChildChanged, onChildRemoved, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, update, remove, get, query, orderByKey, startAt, endAt, serverTimestamp, onValue, onChildAdded, onChildChanged, onChildRemoved, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // CONFIGURATION
         const firebaseConfig = {
@@ -1838,15 +1855,23 @@
             loginBtn.textContent = "Connecting to Servers...";
             loginUsernameInput.innerHTML = '<option value="" disabled selected>Connecting to Servers...</option>';
 
-            const connectionTimeout = setTimeout(() => {
-                if(!currentUser && usersDB.length === 0) {
-                    showFatalError("Connection Timed Out. Please check your internet or Firebase Rules.");
-                }
-            }, 8000);
+            let connectionTimeout, loginRetryTimer, usersUnsubscribe, loginRetryCount=0, loginUsersReady=false;
+            function retryLoginConnection(error){
+                if(currentUser||loginUsersReady)return;
+                clearTimeout(connectionTimeout);clearTimeout(loginRetryTimer);
+                const denied=/permission|denied|unauthorized/i.test(String(error?.code||error?.message||error||''));
+                if(denied||loginRetryCount>=3){showFatalError(denied?'Database access denied. Please contact Admin.':'Connection unavailable. Check internet and refresh to retry.');return;}
+                if(navigator.onLine===false){loginBtn.textContent='Waiting for internet…';loginError.classList.add('hidden');return;}
+                loginRetryCount++;
+                loginBtn.disabled=true;loginBtn.textContent='Reconnecting… ('+loginRetryCount+'/3)';
+                loginError.classList.add('hidden');loginError.textContent='';
+                loginRetryTimer=setTimeout(connectLoginUsers,loginRetryCount*1500);
+            }
+            window.addEventListener('online',()=>{if(!currentUser&&!loginUsersReady){loginRetryCount=0;retryLoginConnection();}});
 
             onValue(ref(db, '.info/connected'), (snap) => {
                 if (snap.val() === true) {
-                    if(!currentUser) {
+                    if(!currentUser&&!loginUsersReady) {
                         loginBtn.textContent = "Fetching Database...";
                         loginError.classList.add('hidden');
                         loginError.innerHTML = '';
@@ -1854,7 +1879,16 @@
                 }
             });
 
-            onValue(ref(db, 'users'), (snapshot) => {
+            function connectLoginUsers(){
+                clearTimeout(connectionTimeout);clearTimeout(loginRetryTimer);
+                if(usersUnsubscribe)usersUnsubscribe();
+                connectionTimeout=setTimeout(()=>retryLoginConnection('timeout'),12000);
+                usersUnsubscribe=onValue(ref(db, 'users'), (snapshot) => {
+                loginUsersReady=true;loginRetryCount=0;
+                clearTimeout(loginRetryTimer);
+                loginError.classList.add('hidden');loginError.textContent='';
+                loginBtn.classList.remove('bg-red-600');loginBtn.classList.add('bg-indigo-600');
+                loginBtn.disabled=false;loginBtn.textContent='Sign In';
                 clearTimeout(connectionTimeout);
                 const nextUsers=[];
                 snapshot.forEach(child=>{
@@ -1882,8 +1916,11 @@
                 loginBtn.classList.remove('opacity-50');
             }, (error) => {
                 clearTimeout(connectionTimeout);
-                showFatalError("Database Blocked: " + error.message);
+                loginUsersReady=false;
+                retryLoginConnection(error);
             });
+            }
+            connectLoginUsers();
 
             const invoiceRef=ref(db,'invoices');
             const invoiceError=error=>showToast('Invoices could not load: '+error.message);
@@ -2007,7 +2044,7 @@
         initCompareDates();
 
 
-        const navGroupSections={mapping:['bkMappingSection','hypoMappingSection','modelGroupsSection','invoiceMappingSection'],manage:['stockSection','manageDataSection','usersSection','manageTimelinesSection']};
+        const navGroupSections={mapping:['bkMappingSection','hypoMappingSection','modelGroupsSection','invoiceMappingSection'],manage:['manageModelsSection','stockSection','manageDataSection','usersSection','manageTimelinesSection']};
         function navSetExpanded(group,expanded){document.getElementById('navSub_'+group).hidden=!expanded;document.getElementById('navGroupBtn_'+group).setAttribute('aria-expanded',String(expanded));}
         window.toggleNavGroup=function(group){if(currentUser?.role!=='Admin'||!navGroupSections[group])return;const sidebar=document.getElementById('sidebar');const collapsed=sidebar.classList.contains('sidebar-collapsed');if(collapsed){sidebar.classList.remove('sidebar-collapsed');sidebar.classList.add('sidebar-expanded');}const open=collapsed||document.getElementById('navSub_'+group).hidden;Object.keys(navGroupSections).forEach(key=>navSetExpanded(key,key===group&&open));};
         window.syncNavigationGroups=function(sectionId){Object.entries(navGroupSections).forEach(([key,ids])=>{const isAdmin=currentUser?.role==='Admin',active=isAdmin&&ids.includes(sectionId);document.getElementById('navGroup_'+key).classList.toggle('hidden',!isAdmin);document.getElementById('navGroupBtn_'+key).classList.toggle('nav-master-active',active);navSetExpanded(key,active);});};
@@ -2018,7 +2055,7 @@
         };
 
         window.showAppSection = function(sectionId) {
-            ['rcHsrpReportSection','bkMappingSection','stockSection','areaMarketingSection','invoiceMappingSection', 'customProjectSection', 'searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'hypoMappingSection', 'manageTimelinesSection'].forEach(id => {
+            ['loginLogsSection','helpSection','manageModelsSection','rcHsrpReportSection','bkMappingSection','stockSection','areaMarketingSection','invoiceMappingSection', 'customProjectSection', 'searchSection', 'extractorSection', 'extractorSectionUser', 'extractorCusSection', 'usersSection', 'reportsSection', 'manageDataSection', 'modelGroupsSection', 'hypoMappingSection', 'manageTimelinesSection'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
                 
@@ -2081,6 +2118,10 @@
             if (user) {
                 document.getElementById('loginError').classList.add('hidden');
                 currentUser = user;
+                window.llRecordLogin?.(user);
+                document.getElementById("navBtn_loginLogsSection")?.classList.toggle("hidden",user.role!=="Admin");
+                document.getElementById('summaryViewBy').value=user.role==='Admin'?'dealer':'model';
+                document.getElementById('reportUserFilter').value='All';
                 vhReconcile();
                 window.imLogin?.();
                 if (hypoMappingsLoaded) ensureDefaultHypoMappingsPersisted();
@@ -4338,11 +4379,11 @@
             };
             const splitHeaders = splitColumns.map(column => `<th data-proj-split-header="true" class="px-4 py-3 font-semibold border-b text-right text-indigo-700 bg-indigo-50/50">${escapeProjectionHtml(column.name)}</th>`).join('');
             document.querySelectorAll('[data-proj-split-header="true"]').forEach(header => header.remove());
-            document.getElementById('projProjectionHeader')?.insertAdjacentHTML('afterend', splitHeaders);
+            document.getElementById('projContributionHeader')?.insertAdjacentHTML('afterend', splitHeaders);
             const base1Header = document.getElementById('projBase1Header');
             const base2Header = document.getElementById('projBase2Header');
             const baseTotalHeader = document.getElementById('projBaseTotalHeader');
-            if (base1Header) base1Header.textContent = useBase2 ? 'Base1 Event (Last Yr)' : 'Base Event (Last Yr)';
+            if (base1Header) base1Header.textContent = useBase2 ? 'Base1 Event' : 'Base Event';
             if (base2Header) base2Header.classList.toggle('hidden', !useBase2);
             if (baseTotalHeader) baseTotalHeader.classList.toggle('hidden', !useBase2);
             const columnCount = (useBase2 ? 11 : 9) + splitColumns.length;
@@ -4410,6 +4451,11 @@
             const ps = getD(pysVal, false); const pe = getD(pyeVal, true);
             const cs = getD(cysVal, false); const ce = getD(cyeVal, true);
             const targetGrowth = parseFloat(growthInput) || 0;
+            const countBaseSelect=document.getElementById('projCountBase');
+            countBaseSelect.querySelector('option[value="base2"]').disabled=!useBase2;
+            if(!useBase2&&countBaseSelect.value==='base2')countBaseSelect.value='base1';
+            const projectionBase=(obj,dealer=false)=>countBaseSelect.value==='sum'?(dealer?obj.baseTotal:obj.base):countBaseSelect.value==='base2'?(dealer?obj.base2Total:obj.base2):(dealer?obj.base1Total:obj.base1);
+
             const targetProjectionValue = document.getElementById('projTargetProjection')?.value.trim() || '';
             const targetProjectionNumber = Number(targetProjectionValue);
             const targetProjection = targetProjectionValue !== '' && Number.isFinite(targetProjectionNumber)
@@ -4434,7 +4480,7 @@
                 } else {
                     if (dealerFilter !== 'All' && d !== dealerFilter) return;
                 }
-                if (modelFilter !== 'All' && m !== modelFilter) return;
+                if (modelFilter !== 'All' && m !== modelFilter && mlDestination(m) !== modelFilter) return;
 
                 let parsed = parseStandardDate(inv[sanitizeKey('Invoice Date')]);
                 if (!parsed || isNaN(parsed)) return;
@@ -4553,12 +4599,14 @@
                 return manualProjectionByDealerModel.get(dealer)?.get(model) || 0;
             };
 
+            const useCYTDAllocation=document.getElementById('projAllocationMode')?.value==='cytd';
+            if(!ML.ready){tbody.innerHTML='<tr><td colspan="'+columnCount+'" class="p-4">'+(ML.error||'Loading model settings…')+'</td></tr>';return;}
             const projectionByDealer = new Map();
             let grandProj = 0;
             Object.keys(dealersData).sort().forEach(dealer => {
                 const dObj = dealersData[dealer];
                 const modelProjArr = Object.keys(dObj.models)
-                    .filter(model => dObj.models[model].base > 0 || dObj.models[model].cy > 0)
+                    .filter(model => dObj.models[model].base > 0 || dObj.models[model].py > 0 || dObj.models[model].cy > 0)
                     .sort()
                     .map(model => {
                         const mObj = dObj.models[model];
@@ -4567,7 +4615,9 @@
                             : (dObj.baseTotal > 0 ? mObj.base / dObj.baseTotal : 0);
                         const modelGrowth = mObj.py > 0 ? ((mObj.cy - mObj.py) / mObj.py) * 100 : null;
                         const appliedGrowth = modelGrowth === null ? targetGrowth : modelGrowth;
-                        const rawProjection = mObj.base * (1 + (appliedGrowth / 100));
+                        const rawProjection = useCYTDAllocation
+                            ? Math.max(0,Math.round(projectionBase(dObj,true)*(1+targetGrowth/100)))*ratio
+                            : projectionBase(mObj) * (1 + (appliedGrowth / 100));
                         const modelProj = targetProjection === null
                             ? Math.round(rawProjection)
                             : getManualModelProjection(dealer, model);
@@ -4575,8 +4625,16 @@
                     });
                 let dealerProjTotal = modelProjArr.reduce((sum, model) => sum + model.proj, 0);
 
-                if (targetProjection === null) {
-                    const targetDealerTotal = Math.round(dObj.baseTotal * (1 + (targetGrowth / 100)));
+                if(targetProjection===null&&useCYTDAllocation){
+                    const targetTotal=Math.max(0,Math.round(projectionBase(dObj,true)*(1+targetGrowth/100)));
+                    modelProjArr.forEach(m=>m.proj=Math.floor(m.rawProjection));
+                    let remaining=targetTotal-modelProjArr.reduce((sum,m)=>sum+m.proj,0);
+                    const ranked=modelProjArr.slice().sort((a,b)=>(b.rawProjection-Math.floor(b.rawProjection))-(a.rawProjection-Math.floor(a.rawProjection))||a.name.localeCompare(b.name));
+                    for(const m of ranked){if(remaining<=0)break;m.proj++;remaining--;}
+                    dealerProjTotal=modelProjArr.reduce((sum,m)=>sum+m.proj,0);
+                }
+                if (targetProjection === null && !useCYTDAllocation) {
+                    const targetDealerTotal = Math.round(projectionBase(dObj,true) * (1 + (targetGrowth / 100)));
                     let roundingDifference = targetDealerTotal - dealerProjTotal;
                     while (roundingDifference !== 0 && modelProjArr.length > 0) {
                         const direction = roundingDifference > 0 ? 1 : -1;
@@ -4594,6 +4652,7 @@
                     }
                 }
 
+                mlTransfer(modelProjArr,dObj);
                 projectionByDealer.set(dealer, { models: modelProjArr, total: dealerProjTotal });
                 grandProj += dealerProjTotal;
             });
@@ -4639,12 +4698,12 @@
                             <td class="px-4 py-2.5 text-sm font-semibold text-slate-800">${dealer === 'ALL COMBINED' ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">ALL COMBINED</span>' : dealer}</td>
                             <td class="px-4 py-2.5 text-sm font-medium text-slate-700">${m.name}</td>
                             <td class="px-4 py-2.5 text-sm text-right font-medium text-indigo-600 bg-indigo-50/30">${m.ratio.toFixed(1)}%</td>
-                            <td class="px-4 py-2.5 text-sm text-right font-medium text-indigo-700 bg-indigo-50/30">${overallModelContribution}</td>
                             <td class="px-4 py-2.5 text-sm text-right text-slate-600">${m.py}</td>
                             <td class="px-4 py-2.5 text-sm text-right text-slate-600">${m.cy}</td>
                             <td class="px-4 py-2.5 text-sm text-right font-semibold text-indigo-600">${growthLabel}</td>
                             ${projectionBaseCells(m.base1, m.base2, m.base, 'px-4 py-2.5 text-sm text-right text-slate-600 font-bold')}
                             <td class="px-4 py-2.5 text-sm text-right font-bold text-emerald-800 bg-yellow-50">${projectionCountCell(dealer, m.name, m.proj, 'bg-yellow-50')}</td>
+                            <td class="px-4 py-2.5 text-sm text-right font-medium text-indigo-700 bg-indigo-50/30">${overallModelContribution}</td>
                             ${projectionSplitCells(m.proj, m.base1, m.base2, m.appliedGrowth)}
                         </tr>
                     `;
@@ -4666,12 +4725,12 @@
                         <td class="px-4 py-3 text-sm font-bold text-slate-800">${dealer === 'ALL COMBINED' ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-200 text-indigo-900">ALL COMBINED</span>' : dealer}</td>
                         <td class="px-4 py-3 text-sm font-bold text-slate-800">${grandTotalLabel}</td>
                         <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700 bg-indigo-50/50">100%</td>
-                        <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700 bg-indigo-50/50">${dealerOverallContribution}</td>
                         <td class="px-4 py-3 text-sm text-right text-slate-800 font-bold">${dObj.pyTotal}</td>
                         <td class="px-4 py-3 text-sm text-right text-slate-800 font-bold">${dObj.cyTotal}</td>
                         <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700">${dealerGrowthLabel}</td>
                         ${projectionBaseCells(dObj.base1Total, dObj.base2Total, dObj.baseTotal, 'px-4 py-3 text-sm text-right text-slate-800 font-extrabold')}
                         <td class="px-4 py-3 text-sm text-right font-extrabold text-emerald-900 bg-yellow-200">${dealerProjTotal}</td>
+                        <td class="px-4 py-3 text-sm text-right font-bold text-indigo-700 bg-indigo-50/50">${dealerOverallContribution}</td>
                         ${projectionSplitCells(dealerProjTotal, dObj.base1Total, dObj.base2Total, dealerAppliedGrowth)}
                     </tr>
                 `;
@@ -4706,7 +4765,7 @@
 
                 let combinedProjTotal = Object.values(combinedModels).reduce((sum, model) => sum + model.proj, 0);
                 let combModelArr = [];
-                Object.keys(combinedModels).filter(model => combinedModels[model].base > 0 || combinedModels[model].cy > 0).sort().forEach(model => {
+                Object.keys(combinedModels).filter(model => (combinedModels[model].base > 0 || combinedModels[model].py > 0 || combinedModels[model].cy > 0 || combinedModels[model].proj > 0)).sort().forEach(model => {
                     let mObj = combinedModels[model];
                     let ratio = 0;
                     if (combinedCYTotal > 0) ratio = mObj.cy / combinedCYTotal;
@@ -4733,12 +4792,12 @@
                             <td class="px-4 py-2 text-sm font-bold text-indigo-700">ALL COMBINED</td>
                             <td class="px-4 py-2 text-sm font-semibold text-slate-800">${m.name}</td>
                             <td class="px-4 py-2 text-sm text-right font-medium text-indigo-600 bg-indigo-100/40">${m.ratio.toFixed(1)}%</td>
-                            <td class="px-4 py-2 text-sm text-right font-medium text-indigo-700 bg-indigo-100/40">${overallModelContribution}</td>
                             <td class="px-4 py-2 text-sm text-right text-slate-700">${m.py}</td>
                             <td class="px-4 py-2 text-sm text-right text-slate-700">${m.cy}</td>
                             <td class="px-4 py-2 text-sm text-right font-semibold text-indigo-600">${growthLabel}</td>
                             ${projectionBaseCells(m.base1, m.base2, m.base, 'px-4 py-2 text-sm text-right text-slate-700 font-bold')}
                             <td class="px-4 py-2 text-sm text-right font-bold text-indigo-900 bg-amber-100">${m.proj}</td>
+                            <td class="px-4 py-2 text-sm text-right font-medium text-indigo-700 bg-indigo-100/40">${overallModelContribution}</td>
                             ${projectionSplitCells(m.proj, m.base1, m.base2, m.appliedGrowth)}
                         </tr>
                     `;
@@ -4753,12 +4812,12 @@
                         <td class="px-4 py-2.5 text-sm font-extrabold text-indigo-900">ALL COMBINED</td>
                         <td class="px-4 py-2.5 text-sm font-extrabold text-indigo-900">COMBINED GRAND TOTAL</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800 bg-indigo-200/50">100%</td>
-                        <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800 bg-indigo-200/50">${combinedOverallContribution}</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-slate-900">${combinedPYTotal}</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-slate-900">${combinedCYTotal}</td>
                         <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800">${combinedGrowthLabel}</td>
                         ${projectionBaseCells(combinedBase1Total, combinedBase2Total, combinedBaseTotal, 'px-4 py-2.5 text-sm text-right font-extrabold text-slate-900')}
                         <td class="px-4 py-2.5 text-sm text-right font-black text-indigo-950 bg-amber-200">${combinedProjTotal}</td>
+                        <td class="px-4 py-2.5 text-sm text-right font-extrabold text-indigo-800 bg-indigo-200/50">${combinedOverallContribution}</td>
                         ${projectionSplitCells(combinedProjTotal, combinedBase1Total, combinedBase2Total, combinedAppliedGrowth)}
                     </tr>
                 `;
@@ -4767,12 +4826,12 @@
             fastRowsHTML += `
                 <tr class="bg-slate-300 font-extrabold border-t-4 border-slate-400">
                     <td colspan="3" class="px-4 py-4 uppercase text-slate-900 tracking-wide text-right">OVERALL SYSTEM TOTAL</td>
-                    <td class="px-4 py-4 text-right text-sm text-indigo-800">${getProjectionContribution(grandProj)}</td>
                     <td class="px-4 py-4 text-right text-sm text-slate-900">${grandPY}</td>
                     <td class="px-4 py-4 text-right text-sm text-slate-900">${grandCY}</td>
                     <td class="px-4 py-4 text-right text-sm text-indigo-800">${grandPY > 0 ? `${(((grandCY - grandPY) / grandPY) * 100).toFixed(1)}%` : 'N/A'}</td>
                     ${projectionBaseCells(grandBase1, grandBase2, grandBase, 'px-4 py-4 text-right text-base text-slate-900')}
                     <td class="px-4 py-4 text-right text-base text-emerald-900 bg-yellow-300 rounded-br-lg">${grandProj}</td>
+                    <td class="px-4 py-4 text-right text-sm text-indigo-800">${getProjectionContribution(grandProj)}</td>
                     ${projectionSplitCells(grandProj, grandBase1, grandBase2, grandPY > 0 ? ((grandCY - grandPY) / grandPY) * 100 : targetGrowth)}
                 </tr>
             `;
@@ -4818,13 +4877,13 @@
                     document.getElementById(`projSplitName${index + 1}`)?.value.trim() || `Projection Part ${index + 1}`
                 );
                 let csv = useBase2
-                    ? [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'Overall Model Contribution', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base1 Event (Last Yr)', 'Base2 Event (Last Yr)', 'Base Total (Last Yr)', 'Projection Count']]
-                    : [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'Overall Model Contribution', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base Event (Last Yr)', 'Projection Count']];
+                    ? [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base1 Event', 'Base2 Event', 'Base Total', 'Projection Count', 'Projection Contrib']]
+                    : [['Dealer Name', 'Model Name', 'CYTD Contrib %', 'PYTD Count', 'CYTD Count', 'Growth %', 'Base Event', 'Projection Count', 'Projection Contrib']];
                 csv[0].push(...splitNames);
                 window.__lastProjectionData.forEach(r => {
                     const row = useBase2
-                        ? [r[0], r[1], r[2], r[10], r[3], r[4], r[5], r[6], r[7], r[8], r[9]]
-                        : [r[0], r[1], r[2], r[10], r[3], r[4], r[5], r[6], r[9]];
+                        ? [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10]]
+                        : [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[9], r[10]];
                     row.push(...r.slice(11, 11 + splitCount));
                     csv.push(row);
                 });
@@ -5003,6 +5062,18 @@
                 const totalB = Array.from(pivot.get(b).values()).reduce((sum, count) => sum + count, 0);
                 return totalB - totalA || a.localeCompare(b);
             });
+            if(viewBy==='contribution'){
+                BK.finDetails=[];
+                currentFinRatioExport=[['Hypothecation','Contribution %']];
+                head.innerHTML='<tr><th class="px-3 py-2.5 text-left">Hypothecation</th><th class="px-3 py-2.5 text-right">Contribution %</th></tr>';
+                if(!grandTotal){body.innerHTML='<tr><td colspan="2" class="px-4 py-8 text-center text-sm text-slate-500">No invoice data found for the selected filters.</td></tr>';return;}
+                body.innerHTML=hypoRows.map(hypo=>{
+                    const count=[...pivot.get(hypo).values()].reduce((sum,n)=>sum+n,0),percent=(count/grandTotal*100).toFixed(2)+'%';
+                    currentFinRatioExport.push([hypo||'Cash',percent]);
+                    return `<tr class="hover:bg-slate-50"><td class="px-3 py-2 font-medium whitespace-nowrap">${esc(hypo||'Cash')}</td><td class="px-3 py-2 text-right tabular-nums">${percent}</td></tr>`;
+                }).join('')+'<tr class="bg-slate-100 font-bold"><td class="px-3 py-2">Total</td><td class="px-3 py-2 text-right">100.00%</td></tr>';
+                currentFinRatioExport.push(['Total','100.00%']);return;
+            }
             const showGrandTotal=dealers.length>1;
             const tableHeaders = ['Hypothecation', ...dealers, ...(showGrandTotal?['Grand Total']:[])];
             head.innerHTML = `<tr>${tableHeaders.map((label, index) => `<th class="px-3 py-2.5 text-${index ? 'right' : 'left'} text-xs font-bold uppercase tracking-wide whitespace-nowrap border-b border-indigo-400">${esc(label)}</th>`).join('')}</tr>`;
@@ -8790,7 +8861,7 @@
         let modelRetailExport=[];
         function renderModelRetailReport(){if(!currentUser)return;document.getElementById('mrViewByContainer').classList.remove('hidden');document.getElementById('mrViewBy').value=MRVIEW.view;imFillFilters();const base=bkReportInvoices().filter(imMatchReport),select=document.getElementById('reportUserFilter'),previous=select.value,dealers=[...new Set(base.map(r=>invoiceRequestingDealer(r)||'Unknown Dealer'))].sort();select.innerHTML='<option value="All">All Dealers</option>'+dealers.map(d=>`<option value="${cpEsc(d)}">${cpEsc(d)}</option>`).join('');select.value=dealers.includes(previous)?previous:'All';document.getElementById('reportUserFilterLabel').textContent='Filter by Dealer';const start=document.getElementById('reportStartDate').value,end=document.getElementById('reportEndDate').value,query=(document.getElementById('reportSearch')?.value||'').trim().toLowerCase(),rows=base.filter(r=>{const date=dashInvoiceDate(r),dealer=invoiceRequestingDealer(r)||'Unknown Dealer';return (!start||date&&date>=start)&&(!end||date&&date<=end)&&(select.value==='All'||dealer===select.value)&&(!query||(dealer+' '+cpModel(r)).toLowerCase().includes(query));}),fullMatrix=modelRetailMatrix(rows,MRVIEW.view),matrix=modelRetailVisible(fullMatrix);modelRetailExport=[matrix.headers,...matrix.body,matrix.total];document.getElementById('reportModelRetailView').innerHTML=`<div class="cp-row cp-spread" style="margin:10px 0"><h3 class="font-semibold">Model-wise Retail <small class="cp-muted">${cpEsc(cpDisplayDate(start))} → ${cpEsc(cpDisplayDate(end))}</small></h3><button class="cp-btn" id="modelRetailDownload">Download CSV</button></div>${modelRetailControls(fullMatrix.headers.slice(1,-1))}<div class="cp-table-wrap"><table class="cp-table"><thead><tr>${matrix.headers.map((h,i)=>`<th class="${i?'cp-numeric':'cp-model'}">${cpEsc(h)}</th>`).join('')}</tr></thead><tbody>${matrix.body.map(row=>`<tr>${row.map((v,i)=>i?`<td class="cp-numeric">${v}</td>`:`<th class="cp-model">${cpEsc(v)}</th>`).join('')}</tr>`).join('')||`<tr><td colspan="${matrix.headers.length}" class="cp-empty">No retail invoices for this selection.</td></tr>`}</tbody><tfoot><tr>${matrix.total.map((v,i)=>`<th class="${i?'cp-numeric':'cp-model'}">${cpEsc(v)}</th>`).join('')}</tr></tfoot></table></div>`;document.getElementById('modelRetailDownload').onclick=()=>exportCSV(modelRetailExport,'model_wise_retail_'+cpToday()+'.csv');}
         function reportDefaultMTD(tab){if(!['summary','regreport','finratio','modelretail'].includes(tab))return;const today=cpToday();document.getElementById('reportStartDate').value=today.slice(0,7)+'-01';document.getElementById('reportEndDate').value=today;}
-        const dashOldTab=window.switchReportTab;window.switchReportTab=function(tab){document.getElementById('reportDashboardView').classList.add('hidden');dashTab.classList.remove('text-indigo-600','border-b-2','border-indigo-600');if(tab!=='dashboard'){reportDefaultMTD(tab);dashOldTab(tab);return;}dashSetMTD();document.getElementById('summaryViewBy').value='dealer';const skip=window.__fastSkipReportRender;window.__fastSkipReportRender=true;try{dashOldTab('summary');}finally{window.__fastSkipReportRender=skip;}currentReportTab='dashboard';document.getElementById('reportSummaryView').classList.add('hidden');document.getElementById('summaryViewByContainer').classList.add('hidden');document.getElementById('downloadPendingBtn').classList.add('hidden');document.getElementById('tabSummary').classList.remove('text-indigo-600','border-b-2','border-indigo-600');dashTab.classList.add('text-indigo-600','border-b-2','border-indigo-600');document.getElementById('reportDashboardView').classList.remove('hidden');dashRender();};
+        const dashOldTab=window.switchReportTab;window.switchReportTab=function(tab){document.getElementById('reportDashboardView').classList.add('hidden');dashTab.classList.remove('text-indigo-600','border-b-2','border-indigo-600');if(tab!=='dashboard'){reportDefaultMTD(tab);dashOldTab(tab);return;}dashSetMTD();document.getElementById('summaryViewBy').value=currentUser?.role==='Admin'?'dealer':'model';const skip=window.__fastSkipReportRender;window.__fastSkipReportRender=true;try{dashOldTab('summary');}finally{window.__fastSkipReportRender=skip;}currentReportTab='dashboard';document.getElementById('reportSummaryView').classList.add('hidden');document.getElementById('summaryViewByContainer').classList.add('hidden');document.getElementById('downloadPendingBtn').classList.add('hidden');document.getElementById('tabSummary').classList.remove('text-indigo-600','border-b-2','border-indigo-600');dashTab.classList.add('text-indigo-600','border-b-2','border-indigo-600');document.getElementById('reportDashboardView').classList.remove('hidden');dashRender();};
         const dashOldRender=window.renderReports;window.renderReports=function(...args){if(window.__fastSkipReportRender)return;return currentReportTab==='dashboard'?dashRender():dashOldRender.apply(this,args);};
         document.getElementById('reportDashboardView').addEventListener('change',e=>{if(e.target.id==='dashSplit'){DASH.split=e.target.value;dashRender();}});
         document.getElementById('reportDashboardView').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.dashPeriod){const now=cpToday().split('-').map(Number),y=now[0],m=now[1],fmt=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');document.getElementById('reportStartDate').value=fmt(new Date(y,m-(b.dataset.dashPeriod==='last'?2:1),1));document.getElementById('reportEndDate').value=b.dataset.dashPeriod==='last'?fmt(new Date(y,m-1,0)):cpToday();dashRender();return;}const index=dashRegistrationIndex(),headers=['Invoice #','Invoice Date','Dealer','Master Group Name','BK Location','Registration No'];const data=rows=>rows.map(r=>[r[sanitizeKey('Invoice #')]||'',r[sanitizeKey('Invoice Date')]||'',invoiceRequestingDealer(r),cpModel(r),bkNo(r)||'Unmapped',dashReg(r,index)||'Pending']);if(b.hasAttribute('data-dash-export')){exportCSV([headers,...data(DASH.rows)],'dashboard_'+cpToday()+'.csv');return;}if(b.dataset.dashDrill!==undefined){const group=DASH.groups[Number(b.dataset.dashDrill)];if(group)window.openDrillDownModal(group.name,group.rows.length+' invoices · current dashboard selection',headers,data(group.rows));}});
@@ -8800,11 +8871,11 @@
         function rcrDate(value,format='dmy'){const text=String(value||'').trim(),m=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);if(m){let a=+m[1],b=+m[2],y=+m[3];if(y<100)y+=2000;const month=a>12?b:b>12?a:format==='mdy'?a:b,day=a>12?a:b>12?b:format==='mdy'?b:a;const d=new Date(y,month-1,day);return d.getFullYear()===y&&d.getMonth()===month-1&&d.getDate()===day?dashDateKey(d):'';}const d=parseStandardDate(text);return d&&!isNaN(d)?dashDateKey(d):'';}
         function rcrRecords(){const vehicles=new Map(),norm=x=>String(x||'').replace(/[^a-z0-9]/gi,'').toUpperCase();for(const [kind,list] of [['inv',masterInvoices],['reg',masterRegistrations]])for(const [i,r] of list.entries()){const chassis=rcrValue(r,'Frame #','Chasis No','Chassis No'),key=norm(chassis)||kind+':'+(r.__fbKey||i);if(!vehicles.has(key))vehicles.set(key,{inv:[],reg:[],chassis});vehicles.get(key)[kind].push(r);}return [...vehicles.values()].filter(v=>currentUser?.role==='Admin'||v.inv.some(i=>window.isRecordOwnedByCurrentUser(i,null))||(!v.inv.length&&v.reg.some(r=>window.isRecordOwnedByCurrentUser(null,r)))).map(v=>{const all=[...v.inv,...v.reg],pick=(...keys)=>{for(const r of all){const value=rcrValue(r,...keys);if(value!=='')return value;}return '';},dealer=v.inv.length?invoiceRequestingDealer(v.inv[0]):String(pick('Requesting Dealer','Dealer Name','Dealer')||'Unlinked registration');return {...v,pick,dealer,regNo:pick('Permanent Reg No','Registration No'),invoiceDate:pick('Invoice Date'),registrationDate:pick('Regn Date','Registration Date')||getRegistrationDate(v.reg[0])||'',name:pick('Customer Name','Owner Name'),mobile:pick('Mobile No','Mobile'),model:v.inv.length?cpModel(v.inv[0]):cpMasterName(pick('Model Name'))};});}
         function rcrState(v,type){const label=type.toUpperCase(),p=(...k)=>v.pick(...k),yes=value=>value===true||value===1||String(value).toLowerCase()==='true',handed=yes(p(type+'_handed_over'))||p(label+' Status')==='Delivered',received=handed||yes(p(type+'_received'))||p(label+' Status')==='Received';return {received,handed,status:handed?'Handed to customer':received?'In showroom':'Not received',receivedDate:p(type+'_received_date',label+' Received Date'),receivedBy:p(type+'_received_by',label+' Received By'),handedDate:p(type+'_handed_date',label+' Handover Date'),handedBy:p(type+'_handed_by',label+' Handover By'),receiver:p(type+'_handed_to',label+' Receiver Name'),phone:p(type+'_handed_mobile',label+' Receiver Mobile'),remark:p(type+'_handed_notes',label+' Remark')};}
-        function rcrMetrics(rows,type,start,end,basis,format){const within=value=>{const d=rcrDate(value,format);return !!d&&(!start||d>=start)&&(!end||d<=end);},items=rows.map(v=>({v,s:rcrState(v,type)})),cohort=items.filter(x=>basis==='activity'||basis==='invoice'&&within(x.v.invoiceDate)||basis==='registration'&&!!x.v.regNo&&within(x.v.registrationDate)||basis==='received'&&x.s.received&&within(x.s.receivedDate)||basis==='handover'&&x.s.handed&&within(x.s.handedDate));return [cohort.filter(x=>x.v.inv.length&&(basis!=='activity'||within(x.v.invoiceDate))),cohort.filter(x=>x.v.regNo&&(basis!=='activity'||within(x.v.registrationDate))),cohort.filter(x=>x.s.received&&(basis!=='activity'||within(x.s.receivedDate))),cohort.filter(x=>x.s.handed&&(basis!=='activity'||within(x.s.handedDate))),cohort.filter(x=>x.s.received&&!x.s.handed),cohort.filter(x=>!x.s.received),cohort.filter(x=>x.s.received&&!rcrDate(x.s.receivedDate,format)||x.s.handed&&!rcrDate(x.s.handedDate,format))].map(a=>a.map(x=>x.v));}
+        function rcrMetrics(rows,type,start,end,basis,format){const within=value=>{const d=rcrDate(value,format);return !!d&&(!start||d>=start)&&(!end||d<=end);},items=rows.map(v=>({v,s:rcrState(v,type)})),cohort=items.filter(x=>basis==='activity'||basis==='invoice'&&within(x.v.invoiceDate)||basis==='registration'&&!!x.v.regNo&&within(x.v.registrationDate)||basis==='received'&&x.s.received&&within(x.s.receivedDate)||basis==='handover'&&x.s.handed&&within(x.s.handedDate));return [cohort.filter(x=>x.v.inv.length&&(basis!=='activity'||within(x.v.invoiceDate))),cohort.filter(x=>x.v.regNo&&(basis!=='activity'||within(x.v.registrationDate))),cohort.filter(x=>x.s.received&&(basis!=='activity'||within(x.s.receivedDate))),cohort.filter(x=>x.s.handed&&(basis!=='activity'||within(x.s.handedDate))),cohort.filter(x=>x.s.received&&!x.s.handed&&(basis!=='activity'||x.v.inv.length&&within(x.v.invoiceDate))),cohort.filter(x=>!x.s.received&&(basis!=='activity'||x.v.inv.length&&within(x.v.invoiceDate))),cohort.filter(x=>x.s.received&&!rcrDate(x.s.receivedDate,format)||x.s.handed&&!rcrDate(x.s.handedDate,format))].map(a=>a.map(x=>x.v));}
         function rcrCount(rows,type,label){const id=RCR.groups.push({rows,type,label})-1;return `<button class="bk-count" data-rcr-detail="${id}">${rows.length.toLocaleString('en-IN')}</button>`;}
         function rcrDetails(g){const headers=['Dealer','Invoice #','Invoice Date','Registration No','Registration Date','Frame / Chassis','Customer','Mobile','Master Model','Document','Status','Received Date','Received By','Handover Date','Handed By','Receiver Name','Receiver Mobile','Remark'];return {headers,rows:g.rows.map(v=>{const s=rcrState(v,g.type);return [v.dealer,v.pick('Invoice #'),v.invoiceDate,v.regNo,v.registrationDate,v.chassis,v.name,v.mobile,v.model,g.type.toUpperCase(),s.status,s.receivedDate,s.receivedBy,s.handedDate,s.handedBy,s.receiver,s.phone,s.remark];})};}
         function rcrRender(){if(!currentUser)return;const get=id=>document.getElementById(id).value,start=get('rcrStart'),end=get('rcrEnd'),basis=get('rcrBasis'),format=get('rcrDateFormat'),all=rcrRecords(),dealerEl=document.getElementById('rcrDealer'),selected=dealerEl.value,names=[...new Set(all.map(v=>v.dealer))].sort();dealerEl.innerHTML='<option value="all">All Dealers</option>'+names.map(n=>`<option value="${cpEsc(n)}">${cpEsc(n)}</option>`).join('');dealerEl.value=names.includes(selected)?selected:'all';const grouping=get('rcrGroup'),groupLabel=document.getElementById('rcrGroup').selectedOptions[0].textContent,rows=all.filter(v=>dealerEl.value==='all'||v.dealer===dealerEl.value),types=get('rcrType')==='both'?['rc','hsrp']:[get('rcrType')],labels=['Invoice vehicles','Registered vehicles','Total received','Handover to customer','In showroom now','Not received now','Missing event dates'];RCR.groups=[];RCR.data=[];const root=document.getElementById('rcrResult');if(start&&end&&start>end){root.innerHTML='<p class="cp-error">End date must be on or after start date.</p>';return;}
-            document.getElementById('rcrNote').textContent=basis==='activity'?'Activity dates: invoices, registrations, receiving and handovers each use their own date. In showroom / Not received are current balances across all dates. One vehicle per chassis; click counts for saved details.':'Selected date basis chooses the vehicle cohort; counts show its current RC / HSRP status. One vehicle per chassis. Click any count for saved details.';
+            document.getElementById('rcrNote').textContent=basis==='activity'?'Activity dates: invoices, registrations, receiving and handovers each use their own date. In showroom / Not received show current status only for invoices within the selected date range. One vehicle per chassis; click counts for saved details.':'Selected date basis chooses the vehicle cohort; counts show its current RC / HSRP status. One vehicle per chassis. Click any count for saved details.';
             root.innerHTML=types.map(type=>{const groupKey=v=>{const state=rcrState(v,type);return (grouping==='dealer'?v.dealer:grouping==='model'?v.model:grouping==='receivedDay'?rcrDate(state.receivedDate,format):grouping==='handedDay'?rcrDate(state.handedDate,format):state[grouping])||'Not recorded';},totals=rcrMetrics(rows,type,start,end,basis,format),groups=[...new Set(rows.map(groupKey))].sort();return `<section class="rcr-block"><h3>${type==='rc'?'RC':'HSRP'} Report</h3><div class="im-scroll"><table class="im-table"><thead><tr><th>${cpEsc(groupLabel)}</th>${labels.map(l=>`<th>${l}</th>`).join('')}</tr></thead><tbody>${groups.map(dealer=>{const metrics=rcrMetrics(rows.filter(v=>groupKey(v)===dealer),type,start,end,basis,format);RCR.data.push([type.toUpperCase(),dealer,...metrics.map(a=>a.length)]);return `<tr><th>${cpEsc(dealer)}</th>${metrics.map((a,i)=>`<td>${rcrCount(a,type,dealer+' · '+labels[i])}</td>`).join('')}</tr>`;}).join('')||'<tr><td colspan="8">No accessible vehicle records</td></tr>'}</tbody><tfoot><tr><th>Grand Total</th>${totals.map((a,i)=>`<th>${rcrCount(a,type,labels[i])}</th>`).join('')}</tr></tfoot></table></div></section>`;}).join('');RCR.headers=['Document',groupLabel,...labels];}
         const rcrNav=document.createElement('button');rcrNav.id='navBtn_rcHsrpReportSection';rcrNav.className='w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600 transition-colors';rcrNav.innerHTML='<span class="sidebar-icon" aria-hidden="true">▤</span><span class="ml-3 font-medium text-sm sidebar-text whitespace-nowrap">RC &amp; HSRP Report</span>';rcrNav.onclick=()=>window.showAppSection('rcHsrpReportSection');document.getElementById('navBtn_reportsSection').after(rcrNav);
         document.getElementById('reportsSection').insertAdjacentHTML('afterend',`<section id="rcHsrpReportSection" class="hidden flex-col bg-white rounded-xl border border-slate-200 rcr-panel"><div class="cp-row cp-spread"><h2>RC &amp; HSRP Report</h2><button class="cp-btn" data-rcr="export">Export Summary CSV</button></div><div class="cp-toolbar"><label>Start<input class="cp-input" type="date" id="rcrStart"></label><label>End<input class="cp-input" type="date" id="rcrEnd"></label><label>Document<select class="im-select" id="rcrType"><option value="both">RC + HSRP</option><option value="rc">RC</option><option value="hsrp">HSRP</option></select></label><label>View dates by<select class="im-select" id="rcrBasis"><option value="activity">Activity — each event date</option><option value="invoice">Invoice date</option><option value="registration">Registration date</option><option value="received">Receiving date</option><option value="handover">Customer handover date</option></select></label><label>Group by<select class="im-select" id="rcrGroup"><option value="dealer">Dealer</option><option value="receivedBy">Received by staff</option><option value="handedBy">Handed by staff</option><option value="receivedDay">Receiving day</option><option value="handedDay">Handover day</option><option value="model">Master Model</option></select></label><label>Dealer<select class="im-select" id="rcrDealer"><option value="all">All Dealers</option></select></label><label>Saved slash-date format<select class="im-select" id="rcrDateFormat"><option value="dmy">DD/MM/YYYY</option><option value="mdy">MM/DD/YYYY</option></select></label><button class="cp-btn" data-rcr="mtd">This Month</button><button class="cp-btn" data-rcr="last">Last Month</button><button class="cp-btn" data-rcr="refresh">Refresh</button></div><p class="cp-muted" id="rcrNote"></p><div id="rcrResult"></div></section>`);
@@ -8865,6 +8936,38 @@
             const allowed=new Set(list.map(i=>i.__fbKey));for(const id of LM.selected)if(!allowed.has(id))LM.selected.delete(id);const pages=Math.max(1,Math.ceil(list.length/50));LM.page=Math.min(LM.page,pages);const master=bulkActive?Object.entries(LM.catalog.master||{}).sort((a,b)=>a[1].locality.localeCompare(b[1].locality)):[];
             res.innerHTML=`<div class="cp-row lm-assign" ${bulkActive?'':'style="display:none"'}><button class="cp-btn" data-lm="select-page">Select page</button><button class="cp-btn" data-lm="select-filtered">Select all filtered (${list.length})</button><button class="cp-btn" data-lm="clear">Clear</button><span id="lmSelected">${LM.selected.size} selected</span><input id="lmPick" class="cp-input" list="lmChoices" placeholder="Search Locality · Area Location · Urban/Rural" autocomplete="off"><datalist id="lmChoices">${master.map(([,a])=>`<option value="${cpEsc(lmLabel(a))}"></option>`).join('')}</datalist><button class="cp-btn cp-primary" data-lm="assign" ${LM.busy?'disabled':''}>Save / Update selected</button><button class="cp-btn" style="color:#dc2626" data-lm="remove-selected">Remove selected mapping</button></div><p class="cp-muted">${list.length} invoices · Page ${LM.page} / ${pages}</p><div class="am-scroll"><table class="am-table lm-invoice-table"><thead><tr><th ${bulkActive?'':'style="display:none"'}>Select</th><th>Invoice date</th><th>Invoice / Frame</th><th>Model Group</th><th>Address</th><th>Saved Locality · Area Location · Type</th><th>Actions</th></tr></thead><tbody>${list.slice((LM.page-1)*50,LM.page*50).map(i=>`<tr><td ${bulkActive?'':'style="display:none"'}><input type="checkbox" data-lm-invoice="${cpEsc(i.__fbKey)}" ${LM.selected.has(i.__fbKey)?'checked':''}></td><td>${cpEsc(cpDisplayDate(dashInvoiceDate(i)))}</td><td>${cpEsc(lmVal(i,'Invoice #'))}<small>${cpEsc(lmVal(i,'Frame #'))}</small></td><td>${cpEsc(cpModel(i))}</td><td>${cpEsc([lmVal(i,'Address Line 1'),lmVal(i,'Address Line 2'),lmVal(i,'City')].filter(Boolean).join(', '))}</td><td>${cpEsc(lmAssigned(i)?lmLabel(lmAssigned(i)):'Unfilled')}</td><td><button class="cp-btn" data-lm="edit-invoice-mapping" data-id="${cpEsc(i.__fbKey)}">${LM.assignments[i.__fbKey]?'Edit':'Fill'}</button>${LM.assignments[i.__fbKey]?` <button class="cp-btn" style="color:#dc2626" data-lm="remove-invoice-mapping" data-id="${cpEsc(i.__fbKey)}">Remove</button>`:''}</td></tr>`).join('')||'<tr><td colspan="7">No invoices for these filters.</td></tr>'}</tbody></table></div><div class="cp-row"><button class="cp-btn" data-lm="prev" ${LM.page===1?'disabled':''}>Previous</button><button class="cp-btn" data-lm="next" ${LM.page===pages?'disabled':''}>Next</button></div>`;
         }
+        function lmTemplateBytes(locations){
+            const xml=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+            const cell=(ref,value)=>`<c r="${ref}" t="inlineStr"><is><t>${xml(value)}</t></is></c>`;
+            const ns='http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+            const files={
+                '[Content_Types].xml':'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>',
+                '_rels/.rels':'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
+                'xl/workbook.xml':`<workbook xmlns="${ns}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Locality Master" sheetId="1" r:id="rId1"/><sheet name="Available Locations" sheetId="2" r:id="rId2"/></sheets><definedNames><definedName name="AreaLocations">'Available Locations'!$A$2:$A$${locations.length+1}</definedName></definedNames></workbook>`,
+                'xl/_rels/workbook.xml.rels':'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/></Relationships>',
+                'xl/worksheets/sheet1.xml':`<worksheet xmlns="${ns}"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="2" width="36" customWidth="1"/><col min="3" max="3" width="18" customWidth="1"/></cols><sheetData><row r="1">${cell('A1','Locality')+cell('B1','Area Location')+cell('C1','Area Type')}</row></sheetData><dataValidations count="2"><dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="stop" errorTitle="Choose an available area" error="Select an Area Location from the list." sqref="B2:B1048576"><formula1>AreaLocations</formula1></dataValidation><dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="stop" errorTitle="Choose Urban or Rural" error="Select Urban or Rural." sqref="C2:C1048576"><formula1>"Urban,Rural"</formula1></dataValidation></dataValidations></worksheet>`,
+                'xl/worksheets/sheet2.xml':`<worksheet xmlns="${ns}"><cols><col min="1" max="1" width="50" customWidth="1"/></cols><sheetData><row r="1">${cell('A1','Available Area Location')}</row>${locations.map((n,i)=>`<row r="${i+2}">${cell('A'+(i+2),n)}</row>`).join('')}</sheetData></worksheet>`
+            };
+            const enc=new TextEncoder(),parts=[],central=[];let offset=0;
+            const crc=data=>{let c=0xffffffff;for(const b of data){c^=b;for(let i=0;i<8;i++)c=(c>>>1)^((c&1)?0xedb88320:0);}return (c^0xffffffff)>>>0;};
+            const header=(size)=>{const a=new Uint8Array(size);return [a,new DataView(a.buffer)];};
+            for(const [path,text] of Object.entries(files)){
+                const name=enc.encode(path),data=enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+text),sum=crc(data);
+                const [local,l]=header(30);l.setUint32(0,0x04034b50,true);l.setUint16(4,20,true);l.setUint32(14,sum,true);l.setUint32(18,data.length,true);l.setUint32(22,data.length,true);l.setUint16(26,name.length,true);
+                parts.push(local,name,data);
+                const [entry,c]=header(46);c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint32(16,sum,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,offset,true);central.push(entry,name);offset+=local.length+name.length+data.length;
+            }
+            const centralSize=central.reduce((n,a)=>n+a.length,0),[end,e]=header(22);e.setUint32(0,0x06054b50,true);e.setUint16(8,6,true);e.setUint16(10,6,true);e.setUint32(12,centralSize,true);e.setUint32(16,offset,true);
+            const all=[...parts,...central,end],out=new Uint8Array(offset+centralSize+22);let pos=0;for(const part of all){out.set(part,pos);pos+=part.length;}return out;
+        }
+        async function lmDownloadTemplate(){
+            if(!currentUser)throw Error('Sign in first.');
+            const snap=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{stop();reject(Error('Connection timeout. Please retry.'));},15000);const stop=onValue(ref(db,lmCatalog),s=>{clearTimeout(timer);resolve(s);},e=>{clearTimeout(timer);reject(e);},{onlyOnce:true});});LM.catalog=snap.val()||{};const locations=lmLocations();
+            if(!locations.length)throw Error('First add an Area Location, then download the template.');
+            const url=URL.createObjectURL(new Blob([lmTemplateBytes(locations)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+            const a=document.createElement('a');a.href=url;a.download='Locality-Master-Template.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+        }
+
         function lmMaster(content){const master=Object.entries(LM.catalog.master||{}).sort((a,b)=>a[1].locality.localeCompare(b[1].locality)),locations=lmLocations(),editing=LM.catalog.master?.[LM.editLocality],draft=editing||{};content.innerHTML=`${!locations.length?'<p class="cp-muted">First add your areas in Area Location Master.</p>':''}<form id="lmNewForm" class="am-toolbar"><label>Unique Locality<input name="locality" value="${cpEsc(draft.locality||'')}" required maxlength="120" placeholder="Locality name"></label><label>Area Location<input name="location" value="${cpEsc(draft.location||'')}" required list="lmLocations" autocomplete="off" placeholder="Search available block / location"></label><datalist id="lmLocations">${locations.map(n=>`<option value="${cpEsc(n)}"></option>`).join('')}</datalist><label>Area Type<select name="areaType" required><option value="">Choose</option>${lmOptions([['Urban','Urban'],['Rural','Rural']],draft.areaType)}</select></label><button class="cp-btn cp-primary" type="submit">${editing?'Save changes':lmAdmin()?'Add to Master':'Submit for Approval'}</button>${editing?'<button type="button" class="cp-btn" data-lm="cancel-edit">Cancel</button>':''}</form><div class="cp-row im-note"><button class="cp-btn" data-lm="template">Download Excel template</button><label class="cp-btn">Bulk Excel / CSV<input id="lmFile" type="file" accept=".xlsx,.xls,.csv" style="max-width:220px"></label></div><div id="lmImport"></div><p class="cp-muted">${master.length} approved localities · ${lmAdmin()?'Admin additions are approved immediately.':'New localities become selectable after admin approval.'}</p><div class="am-scroll"><table class="am-table"><thead><tr><th>Locality</th><th>Area Location</th><th>Area Type</th>${lmAdmin()?'<th>Actions</th>':''}</tr></thead><tbody>${master.map(([id,a])=>`<tr><td>${cpEsc(a.locality)}</td><td>${cpEsc(a.location)}</td><td>${cpEsc(a.areaType)}</td>${lmAdmin()?`<td><button class="cp-btn" data-lm="edit-locality" data-id="${cpEsc(id)}">Edit</button> <button class="cp-btn" data-lm="delete-locality" data-id="${cpEsc(id)}">Delete</button></td>`:''}</tr>`).join('')||'<tr><td colspan="4">Add localities or import the master to begin.</td></tr>'}</tbody></table></div>`;}
         function lmAreaMaster(content){const rows=Object.entries(LM.catalog.areas||{}).sort((a,b)=>a[1].name.localeCompare(b[1].name)),editing=LM.catalog.areas?.[LM.editArea];content.innerHTML=`${lmAdmin()?`<form id="lmAreaForm" class="am-toolbar"><label>Area Location<input name="name" required maxlength="120" placeholder="Enter your area name" value="${cpEsc(editing?.name||'')}"></label><button class="cp-btn cp-primary" type="submit">${editing?'Save changes':'Add Area'}</button>${editing?'<button class="cp-btn" type="button" data-lm="cancel-edit">Cancel</button>':''}</form>`:''}<p class="cp-muted">${rows.length} areas · Only manually added areas appear in locality choices.</p><div class="am-scroll"><table class="am-table"><thead><tr><th>Area Location</th><th>Localities</th>${lmAdmin()?'<th>Actions</th>':''}</tr></thead><tbody>${rows.map(([id,a])=>`<tr><td>${cpEsc(a.name)}</td><td>${Object.values(LM.catalog.master||{}).filter(m=>m.location===a.name).length}</td>${lmAdmin()?`<td><button class="cp-btn" data-lm="edit-area" data-id="${cpEsc(id)}">Edit</button> <button class="cp-btn" data-lm="delete-area" data-id="${cpEsc(id)}">Delete</button></td>`:''}</tr>`).join('')||'<tr><td colspan="3">No areas yet. Admin can add an Area Location above.</td></tr>'}</tbody></table></div>`;}
         async function lmLoadLatest(){
@@ -8947,7 +9050,7 @@
         async function lmReadImport(file){if(!file)return;if(file.size>10*1024*1024)throw Error('Maximum file size is 10 MB.');let rows;if(/\.csv$/i.test(file.name))rows=imParseCSV(await file.text());else{if(!window.XLSX)throw Error('Excel reader is loading. Please retry.');const book=XLSX.read(await file.arrayBuffer(),{type:'array'});rows=XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]],{header:1,defval:''});}const headers=(rows.shift()||[]).map(lmNorm),indices=['locality','area location','area type'].map(h=>headers.indexOf(h));if(indices.some(i=>i<0))throw Error('Required headers: Locality, Area Location, Area Type.');const out=[];for(let n=0;n<rows.length;n++){const r=rows[n];if(r.every(v=>!String(v).trim()))continue;try{out.push(lmValidate({locality:r[indices[0]],location:r[indices[1]],areaType:r[indices[2]]}));}catch(e){throw Error('Row '+(n+2)+': '+e.message);}}if(!out.length)throw Error('No localities found.');lmEnsureUnique(out,LM.catalog.master);return out;}
         function lmMessage(message){LM.error=message;const el=document.getElementById('lmStatus');if(el){el.textContent=message;el.style.cssText='padding:10px 12px;border:1px solid #c7d2fe;border-radius:8px;background:#eef2ff;color:#1e3a8a;font-weight:600';}}
         document.getElementById('areaMarketingRoot').addEventListener('click',async e=>{const b=e.target.closest('[data-lm]');if(!b||LM.busy)return;const action=b.dataset.lm;try{if(['select-page','select-filtered','assign','remove-selected'].includes(action)&&!(LM.query||'').trim())throw Error('Search an address first to use bulk actions.');if(action==='edit-area'||action==='edit-locality'){if(!lmAdmin())throw Error('Admin only.');LM[action==='edit-area'?'editArea':'editLocality']=b.dataset.id;lmRender();return;}if(action==='cancel-edit'){LM.editArea='';LM.editLocality='';lmRender();return;}if(action==='tab'){LM.editArea='';LM.editLocality='';LM.tab=b.dataset.id;LM.error='';LM.draft=[];if(LM.tab==='report')LM.status='all';lmRender();return;}if(action==='today'){LM.start=LM.end=cpToday();LM.page=1;LM.selected.clear();lmRender();return;}if(action==='prev'||action==='next'){LM.page+=action==='prev'?-1:1;lmRender();return;}if(['select-page','select-filtered','clear'].includes(action)){if(action==='clear')LM.selected.clear();else (action==='select-page'?lmInvoices().slice((LM.page-1)*50,LM.page*50):lmInvoices()).forEach(i=>LM.selected.add(i.__fbKey));lmSyncSelection();return;}if(action==='request-all'||action==='request-clear'){LM.requestSelected.clear();if(action==='request-all')lmRequests().forEach(([id])=>LM.requestSelected.add(id));lmRender();return;}
-                if(action==='template'){if(!window.XLSX)throw Error('Excel reader is loading.');const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Locality','Area Location','Area Type']]),'Locality Master');XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Available Area Location'],...lmLocations().map(n=>[n])]),'Available Locations');XLSX.writeFile(wb,'Locality-Master-Template.xlsx');return;}
+                if(action==='template'){await lmDownloadTemplate();return;}
                 LM.busy=true;b.disabled=true;if(action==='delete-area'||action==='delete-locality'){const deleted=await lmCrud(action,b.dataset.id);LM.error=deleted?'Deleted successfully.':'Deletion not performed.';lmRender();return;}else if(['assign','edit-invoice-mapping','remove-invoice-mapping','remove-selected'].includes(action)){LM.error=action==='assign'?await lmAssign():await lmChangeMapping(action==='remove-selected'?[...LM.selected]:[b.dataset.id],action==='edit-invoice-mapping'?undefined:null);lmRender();return;}else if(['approve','disapprove','delete-requests'].includes(action))await lmDecide(action);else if(action==='import-save'){if(!LM.draft.length)throw Error('Validate a file first.');await lmAdd(LM.draft);LM.draft=[];}LM.error='';lmRender();
             }catch(err){lmMessage(err.message);}finally{LM.busy=false;b.disabled=false;const save=document.querySelector('[data-lm="assign"]');if(save)save.disabled=false;}});
         document.getElementById('areaMarketingRoot').addEventListener('submit',async e=>{if(!['lmNewForm','lmAreaForm'].includes(e.target.id))return;e.preventDefault();if(LM.busy)return;const form=e.target,data=new FormData(form),button=form.querySelector('button');try{LM.busy=true;button.disabled=true;const row={locality:data.get('locality'),location:data.get('location'),areaType:data.get('areaType')};if(form.id==='lmAreaForm')await lmCrud('save-area',LM.editArea,{name:data.get('name')});else if(LM.editLocality)await lmCrud('save-locality',LM.editLocality,row);else await lmAdd([row]);form.reset();LM.error=lmAdmin()?'Saved.':'Request sent for admin approval.';lmRender();}catch(err){lmMessage(err.message);}finally{LM.busy=false;button.disabled=false;}});
@@ -8964,6 +9067,102 @@
         });
         document.getElementById('areaMarketingRoot').addEventListener('change',async e=>{const el=e.target;if(el.dataset.lmFilter){if(el.dataset.lmFilter==='query'){clearTimeout(lmSearchTimer);if(LM.query===el.value)return;}LM[el.dataset.lmFilter]=el.value;LM.page=1;LM.selected.clear();LM.requestSelected.clear();lmRender();return;}if(el.dataset.lmInvoice){el.checked?LM.selected.add(el.dataset.lmInvoice):LM.selected.delete(el.dataset.lmInvoice);document.getElementById('lmSelected').textContent=LM.selected.size+' selected';return;}if(el.dataset.lmRequest){el.checked?LM.requestSelected.add(el.dataset.lmRequest):LM.requestSelected.delete(el.dataset.lmRequest);document.getElementById('lmRequestCount').textContent=LM.requestSelected.size+' selected';return;}if(el.id==='lmFile'){LM.draft=[];const preview=document.getElementById('lmImport');try{LM.draft=await lmReadImport(el.files[0]);preview.innerHTML=`<p>${LM.draft.length} valid unique localities</p><div class="am-scroll"><table class="am-table"><tbody>${LM.draft.slice(0,20).map(a=>`<tr><td>${cpEsc(a.locality)}</td><td>${cpEsc(a.location)}</td><td>${cpEsc(a.areaType)}</td></tr>`).join('')}</tbody></table></div><button class="cp-btn cp-primary" data-lm="import-save">${lmAdmin()?'Add to Master':'Submit for Approval'}</button>`;}catch(err){preview.textContent=err.message;}}});
         window.areaMarketingRefresh=lmSchedule;const lmOldShow=window.showAppSection;window.showAppSection=function(id){lmOldShow(id);if(id==='areaMarketingSection')lmRender();};const lmOldLogin=window.imLogin;window.imLogin=()=>{lmOldLogin();lmNav.classList.remove('hidden');};const lmOldLogout=window.handleLogout;window.handleLogout=()=>{LM.unsubs.forEach(f=>f());clearTimeout(LM.timer);Object.assign(LM,{catalog:{},assignments:{},directory:{},connected:false,ready:false,loaded:0,error:'',unsubs:[],start:'',end:'',model:'all',dealer:'all',district:'all',query:'',status:'unfilled',requestUser:'all',requestStatus:'pending',editArea:'',editLocality:'',tab:'invoices',page:1});LM.selected.clear();LM.requestSelected.clear();LM.draft=[];lmNav.classList.add('hidden');document.getElementById('areaMarketingRoot').innerHTML='';lmOldLogout();};
+        const ML={rules:{},ready:false,error:''};
+        const mlPath='users/admin_settings/model_lifecycle';
+        const mlKey=name=>Array.from(new TextEncoder().encode(name),b=>b.toString(16).padStart(2,'0')).join('');
+        function mlNames(){return [...new Set([...Object.values(modelGroupsDB).map(x=>x.group),...Object.values(ML.rules).map(x=>x.name)].filter(Boolean))].sort();}
+        function mlDestination(name,rules=ML.rules,today=cpToday()){
+            const seen=new Set();let next=name;
+            while(true){if(seen.has(next))return name;seen.add(next);const r=rules[mlKey(next)];if(!r||r.status!=='discontinued'||!r.date||r.date>today||!r.target)return next;next=r.target;}
+        }
+        function mlTransfer(models,dObj){
+            for(const row of [...models]){const target=mlDestination(row.name);if(target===row.name)continue;
+                let recipient=models.find(x=>x.name===target);
+                if(!recipient){recipient={name:target,base1:0,base2:0,base:0,py:0,cy:0,proj:0,rawProjection:0,growth:null,appliedGrowth:0,ratio:0};models.push(recipient);}
+                recipient.proj+=row.proj;row.proj=0;
+                if(!dObj.models[target])dObj.models[target]={base1:0,base2:0,base:0,py:0,cy:0};
+            }
+            // Keep discontinued rows for historical retail; their projection is zero.
+            models.sort((a,b)=>a.name.localeCompare(b.name));
+        }
+        function mlRender(){if(currentUser?.role!=='Admin')return;const root=document.getElementById('manageModelsRoot');
+            if(!ML.ready){root.textContent=ML.error||'Loading model settings…';return;}
+            const names=mlNames();root.innerHTML='<div class="im-scroll"><table class="im-table"><thead><tr><th>Model Group</th><th>Status</th><th>Discontinued Date</th><th>Transfer Projection To</th><th></th></tr></thead><tbody>'+names.map(name=>{const key=mlKey(name),r=ML.rules[key]||{};return `<tr data-ml-row="${key}"><th>${cpEsc(name)}</th><td><select class="im-select" data-ml-status><option value="active">Active</option><option value="discontinued" ${r.status==='discontinued'?'selected':''}>Discontinued</option></select></td><td><input class="im-select" data-ml-date type="date" value="${cpEsc(r.date||'')}"></td><td><select class="im-select" data-ml-target><option value="">Choose replacement model</option>${names.filter(n=>n!==name&&ML.rules[mlKey(n)]?.status!=='discontinued').map(n=>`<option value="${cpEsc(n)}" ${r.target===n?'selected':''}>${cpEsc(n)}</option>`).join('')}${r.target&&!names.filter(n=>n!==name&&ML.rules[mlKey(n)]?.status!=='discontinued').includes(r.target)?`<option selected value="${cpEsc(r.target)}">${cpEsc(r.target)} (Discontinued)</option>`:''}</select></td><td><button class="cp-btn" data-ml-save="${key}">Save</button></td></tr>`;}).join('')+'</tbody></table></div>';
+        }
+        document.getElementById('manageModelsRoot').addEventListener('click',async e=>{
+            const button=e.target.closest('[data-ml-save]');if(!button||currentUser?.role!=='Admin'||!ML.ready)return;
+            const key=button.dataset.mlSave,name=mlNames().find(n=>mlKey(n)===key),row=button.closest('tr'),status=row.querySelector('[data-ml-status]').value,date=row.querySelector('[data-ml-date]').value,target=row.querySelector('[data-ml-target]').value;
+            if(!name)return;if(status==='discontinued'&&(!date||!target))return showToast('Choose discontinued date and replacement model.');
+            button.disabled=true;button.textContent='Saving…';
+            try{const names=mlNames(),actor=currentUser.name;let reason='Settings changed. Please retry.';
+                const result=await runTransaction(ref(db,mlPath),value=>{if(currentUser?.role!=='Admin')return;const rules=value||{};
+                    if(status==='discontinued'){
+                        if(target===name||!names.includes(target)||rules[mlKey(target)]?.status==='discontinued'){reason='Choose an active replacement model.';return;}
+                        const seen=new Set([name]);let n=target;while(n){if(seen.has(n)){reason='Circular transfers are not allowed.';return;}seen.add(n);const r=rules[mlKey(n)];n=r?.status==='discontinued'?r.target:null;}
+                    }
+                    return {...rules,[key]:{name,status,date:status==='discontinued'?date:'',target:status==='discontinued'?target:'',updatedBy:actor,updatedAt:Date.now()}};
+                },{applyLocally:false});
+                if(!result.committed)throw Error(reason);ML.rules=result.snapshot.val()||{};mlRender();showToast('Model settings saved.');
+                if(currentReportTab==='projection')window.renderProjectionReport();
+            }catch(err){showToast('Could not save: '+err.message);}finally{button.disabled=false;button.textContent='Save';}
+        });
+        onValue(ref(db,mlPath),snap=>{ML.rules=snap.val()||{};ML.ready=true;ML.error='';if(currentUser?.role==='Admin'&&fastVisible('manageModelsSection'))mlRender();if(currentUser&&currentReportTab==='projection'&&fastVisible('reportsSection'))window.renderProjectionReport();},err=>{ML.ready=false;ML.error='Model settings could not load. Please check connection / access.';if(fastVisible('manageModelsSection'))mlRender();});
+        const mlOldShow=window.showAppSection;window.showAppSection=function(id){if(id==='manageModelsSection'&&currentUser?.role!=='Admin')return;mlOldShow(id);if(id==='manageModelsSection')mlRender();};
+
+
+        // Help centre: separate, lazy subscriptions; no invoice/report scans.
+        const HS={data:{},off:null,owner:'',loaded:false,filter:'all',user:'all'};
+        const hsRoot='users/admin_settings/help_center/tickets',hsNoticePath='users/admin_settings/help_center/notice';
+        const hsAdmin=()=>currentUser?.role==='Admin';
+        const hsOwner=()=>currentUser?mlKey(String(currentUser.id??currentUser.name)):'';
+        const hsStatuses=['Open','In Process','Resolved'];
+        function hsStop(){if(HS.off)HS.off();HS.off=null;HS.owner='';HS.data={};HS.loaded=false;}
+        function hsRows(){const rows=hsAdmin()?Object.entries(HS.data).flatMap(([owner,items])=>Object.entries(items||{}).map(([id,t])=>({...t,id,owner}))):Object.entries(HS.data).map(([id,t])=>({...t,id,owner:hsOwner()}));return rows.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));}
+        function hsConnect(){const owner=hsOwner();if(!owner)return;if(HS.off&&HS.owner===owner)return;hsStop();HS.owner=owner;HS.off=onValue(ref(db,hsAdmin()?hsRoot:hsRoot+'/'+owner),snap=>{if(hsOwner()!==owner)return;HS.data=snap.val()||{};HS.loaded=true;hsRenderTickets();},err=>{document.getElementById('hsTickets').textContent='Could not load tickets: '+err.message;});}
+        function hsCompose(kind){if(!kind){document.getElementById('hsCompose').innerHTML=`<div class="hs-choice-grid"><button class="hs-choice" onclick="window.hsChoose('Help')"><span class="hs-choice-icon">☏</span><strong>Raise a Help Ticket</strong><small>Something not working? Tell us what happened.</small><span class="hs-choice-arrow">Get help →</span></button><button class="hs-choice hs-idea" onclick="window.hsChoose('Suggestion')"><span class="hs-choice-icon">✦</span><strong>Raise a Suggestion Request</strong><small>Suggest a report, feature or an easier way to work.</small><span class="hs-choice-arrow">Share an idea →</span></button></div>`;return;}document.getElementById('hsCompose').innerHTML=`<form id="hsForm" class="bg-slate-50 rounded-xl border border-slate-200 p-3"><div class="hs-form-title"><strong>${kind==='Help'?'Raise a Help Ticket':'Raise a Suggestion Request'}</strong><button type="button" class="cp-btn" onclick="window.hsChoose()">← Back</button></div><div class="flex gap-3 flex-wrap"><label class="text-sm">Request type<select name="kind" required class="im-select block"><option value="">Choose request type</option><option value="Help" ${kind==='Help'?'selected':''}>Raise a Help Ticket</option><option value="Suggestion" ${kind==='Suggestion'?'selected':''}>Raise a Suggestion Request</option></select></label><label class="text-sm flex-1">Subject<input name="subject" required maxlength="120" class="im-select block w-full" placeholder="Issue, report or feature name"></label></div><label class="text-sm block mt-3">Details<textarea name="body" required maxlength="4000" rows="7" class="im-select block w-full" placeholder="Help: describe the issue and steps. Suggestion: explain what would make your work easier."></textarea></label><div class="flex gap-3 items-center mt-2"><button type="submit" class="cp-btn cp-primary">Send to Admin</button><span id="hsFeedback" role="status" class="text-sm"></span></div></form>`;
+        document.getElementById('hsForm').onsubmit=async e=>{e.preventDefault();if(!currentUser)return;const form=e.currentTarget,f=new FormData(form),kind=f.get('kind'),subject=String(f.get('subject')||'').trim(),body=String(f.get('body')||'').trim();if(!['Help','Suggestion'].includes(kind)||!subject||!body)return;const btn=form.querySelector('button'),feedback=document.getElementById('hsFeedback');btn.disabled=true;feedback.textContent='Sending…';const owner=hsOwner();try{await set(ref(db,hsRoot+'/'+owner+'/'+cpId()),{kind,subject,body,status:'Open',createdAt:Date.now(),createdBy:String(currentUser.id??currentUser.name),name:currentUser.name||'',dealer:currentUser.dealer||currentUser.dealership||currentUser.name||'',reply:''});if(hsOwner()!==owner)return;form.reset();feedback.textContent='Sent. Track your ticket below.';}catch(err){feedback.textContent='Not sent: '+err.message;}finally{btn.disabled=false;}};}
+        window.hsChoose=kind=>hsCompose(kind);
+        function hsRenderTickets(){const root=document.getElementById('hsTickets');if(!currentUser||!fastVisible('helpSection'))return;if(!HS.loaded){root.textContent='Loading tickets…';return;}const all=hsRows(),filtered=all.filter(t=>(HS.filter==='all'||t.status===HS.filter)&&(HS.user==='all'||t.owner===HS.user));const users=[...new Map(all.map(t=>[t.owner,t.name])).entries()];
+        root.innerHTML=`<div class="flex items-center gap-2 flex-wrap mb-3"><h3 class="font-semibold mr-2">${hsAdmin()?'All Requests':'My Requests'}</h3><select class="im-select" id="hsStatusFilter"><option value="all">All statuses (${all.length})</option>${hsStatuses.map(st=>`<option ${HS.filter===st?'selected':''}>${st}</option>`).join('')}</select>${hsAdmin()?`<select class="im-select" id="hsUserFilter"><option value="all">All users</option>${users.map(([id,n])=>`<option value="${id}" ${HS.user===id?'selected':''}>${cpEsc(n)}</option>`).join('')}</select>`:''}<span class="text-xs text-slate-500">Ongoing: ${all.filter(t=>t.status!=='Resolved').length} · Resolved: ${all.filter(t=>t.status==='Resolved').length}</span></div><div class="space-y-2">${filtered.length?filtered.map(t=>`<details class="border border-slate-200 rounded-lg p-3"><summary class="cursor-pointer flex gap-2 flex-wrap items-center"><span class="text-xs rounded-full px-2 py-1 ${t.status==='Resolved'?'bg-emerald-50 text-emerald-700':'bg-indigo-50 text-indigo-700'}">${cpEsc(t.status)}</span><span class="text-xs text-slate-500">${cpEsc(t.kind)}</span><strong class="text-sm flex-1">${cpEsc(t.subject)}</strong><span class="text-xs text-slate-500">${cpEsc(t.name)} · ${new Date(t.createdAt).toLocaleDateString('en-IN')}</span></summary><div class="mt-3 text-sm whitespace-pre-wrap break-words">${cpEsc(t.body)}</div>${t.reply?`<div class="mt-3 p-3 bg-slate-50 rounded-lg text-sm whitespace-pre-wrap break-words"><strong>Admin response</strong>\n${cpEsc(t.reply)}</div>`:''}${hsAdmin()?`<form data-hs-id="${cpEsc(t.id)}" data-hs-owner="${cpEsc(t.owner)}" class="mt-3 flex gap-2 flex-wrap"><select name="status" class="im-select">${hsStatuses.map(st=>`<option ${st===t.status?'selected':''}>${st}</option>`).join('')}</select><input name="reply" maxlength="2000" class="im-select flex-1" placeholder="Response / resolution note" value="${cpEsc(t.reply||'')}"><button class="cp-btn" type="submit">Update</button><span role="status" class="text-xs"></span></form>`:''}</details>`).join(''):'<p class="text-sm text-slate-500 py-4">No requests in this view.</p>'}</div>`;
+        document.getElementById('hsStatusFilter').onchange=e=>{HS.filter=e.target.value;hsRenderTickets();};const uf=document.getElementById('hsUserFilter');if(uf)uf.onchange=e=>{HS.user=e.target.value;hsRenderTickets();};
+        root.querySelectorAll('form[data-hs-id]').forEach(form=>form.onsubmit=async e=>{e.preventDefault();if(!hsAdmin())return;const f=new FormData(form),status=f.get('status');if(!hsStatuses.includes(status))return;const button=form.querySelector('button'),message=form.querySelector('[role=status]');button.disabled=true;try{await update(ref(db,hsRoot+'/'+form.dataset.hsOwner+'/'+form.dataset.hsId),{status,reply:String(f.get('reply')||'').trim(),updatedAt:Date.now(),updatedBy:currentUser.name});showToast('Ticket updated.');}catch(err){message.textContent='Could not save: '+err.message;}finally{button.disabled=false;}});
+        }
+        function hsModal(title,body){document.getElementById('hsModal')?.remove();const d=document.createElement('dialog');d.id='hsModal';d.className='rounded-2xl p-0 shadow-xl';d.style.cssText='width:min(620px,94vw);max-height:88vh;color:#1e293b';d.innerHTML=`<div class="p-5"><div class="flex justify-between items-center gap-3 mb-4"><h2 class="text-xl font-bold">${title}</h2><button class="cp-btn" aria-label="Close" data-hs-close>✕</button></div>${body}</div>`;document.body.appendChild(d);d.querySelector('[data-hs-close]').onclick=()=>d.close();d.addEventListener('close',()=>d.remove(),{once:true});d.showModal();return d;}
+        window.hsSupport=()=>{if(!currentUser)return;hsModal('Contact Admin',`<div class="text-center text-emerald-600 text-4xl mb-4">ⓘ</div><div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 mb-4"><div class="text-xs font-bold text-emerald-600">DEVELOPED BY</div><strong class="text-xl">Ambuj Garg</strong></div><div class="space-y-4 text-base"><a class="block" href="tel:7017024586">☎ &nbsp; 7017024586</a><a class="block" href="mailto:smsales@shrimasha.com">✉ &nbsp; smsales@shrimasha.com</a><a class="block" href="https://www.instagram.com/Ambujgarg_official/" target="_blank" rel="noopener noreferrer">◎ &nbsp; @Ambujgarg_official</a></div>`);};
+        const hsDefaultNotice={title:'What’s New in REG DATA',body:'Available now\n• Help / Suggestion: send requests and track Open, In Process and Resolved status.\n• Manage Models: retain historical retail and transfer discontinued-model projections to a replacement.\n• Locality Master Excel: Area Location and Urban / Rural dropdowns.\n• Retail Projection: Base 1 / Base 2 / combined base and CYTD contribution options.\n• Area Marketing Map: manual locality mapping and approval workflow.\n• Finance Ratio — Contribution %: see the share of Cash and each financier in the selected total retail.\n• Dashboard, custom projects and RC & HSRP tracking.\n\nHave an idea for a new report or improvement? Send a Suggestion. Admin will share upcoming updates here.'};
+
+        function hsNoticeMarkup(body){return String(body||'').split('\n').map(line=>{const m=line.match(/^\s*([•→✓★✦◆]|\d+\.)\s*(.*)$/);if(!line.trim())return '<div style="height:10px"></div>';return m?`<div class="hs-notice-line"><span>${cpEsc(m[1])}</span><div>${cpEsc(m[2])}</div></div>`:`<p class="hs-notice-paragraph">${cpEsc(line)}</p>`;}).join('');}
+        function hsStyleText(text,marker,auto=false){let i=0;return text.split('\n').map(line=>{if(!line.trim())return '';const clean=line.replace(/^\s*(?:[•→✓★✦◆-]|\d+\.)\s*/, '');if(auto&&(/:$/.test(clean)||clean.length<32&&!/[.!?]/.test(clean)))return clean;return (marker==='number'?`${++i}.`:marker)+' '+clean;}).join('\n');}
+        window.hsWhatsNew=async()=>{if(!currentUser)return;const owner=hsOwner(),d=hsModal('✦ What’s New','<div id="hsNoticeContent">Loading updates…</div>');d.style.width='min(900px,94vw)';let notice;try{notice=await new Promise((resolve,reject)=>{let off;const timer=setTimeout(()=>{off?.();reject(Error('Connection timeout. Please try again.'));},12000);off=onValue(ref(db,hsNoticePath),snap=>{clearTimeout(timer);resolve(snap.val()||hsDefaultNotice);},err=>{clearTimeout(timer);reject(err);},{onlyOnce:true});});}catch(err){if(d.isConnected)d.querySelector('#hsNoticeContent').textContent='Could not load updates: '+err.message;return;}if(!d.isConnected||owner!==hsOwner())return;
+        // Add the release note to the original starter notice, without changing custom notices.
+        if(String(notice.body).startsWith('Available now\n• Help / Suggestion:')&&!String(notice.body).includes('Finance Ratio'))notice={...notice,body:notice.body.replace('• Dashboard,','• Finance Ratio — Contribution %: see the share of Cash and each financier in the selected total retail.\n• Dashboard,')};
+        const root=d.querySelector('#hsNoticeContent');root.innerHTML=`${hsAdmin()?`<details class="hs-editor"><summary>Edit notice board</summary><form id="hsNoticeForm"><label>Notice title<input name="title" required maxlength="150" value="${cpEsc(notice.title)}"></label><div class="hs-toolbar"><button type="button" data-style="•">• Bullets</button><button type="button" data-style="→">→ Arrows</button><button type="button" data-style="✓">✓ Checks</button><button type="button" data-style="✦">✦ Stars</button><button type="button" data-style="number">1. Numbers</button><button type="button" data-style="auto">✨ Auto Style</button></div><label>Notice text<textarea name="body" required maxlength="12000" rows="8">${cpEsc(notice.body)}</textarea></label><small>Select lines to style them, or apply to the whole notice. Preview updates as you type.</small><div class="hs-publish"><button type="submit" class="cp-btn cp-primary">Publish notice</button><span role="status"></span></div></form></details>`:''}<div class="hs-preview"><div class="hs-preview-label">${hsAdmin()?'LIVE PREVIEW':'REG DATA · UPDATES'}</div><h3 id="hsPreviewTitle"></h3><div id="hsPreviewBody"></div></div>`;
+        const titleEl=root.querySelector('#hsPreviewTitle'),bodyEl=root.querySelector('#hsPreviewBody');const preview=(title,body)=>{titleEl.textContent=title;bodyEl.innerHTML=hsNoticeMarkup(body);};preview(notice.title,notice.body);const form=root.querySelector('form');if(!form)return;const title=form.elements.title,body=form.elements.body;
+        form.oninput=()=>preview(title.value,body.value);form.querySelectorAll('[data-style]').forEach(button=>button.onclick=()=>{const start=body.selectionStart,end=body.selectionEnd,hasSelection=start!==end;let from=hasSelection?body.value.lastIndexOf('\n',Math.max(0,start-1))+1:0,to=hasSelection?body.value.indexOf('\n',end):body.value.length;if(to<0)to=body.value.length;const style=button.dataset.style,newText=hsStyleText(body.value.slice(from,to),style==='auto'?'✦':style,style==='auto');if(body.value.length-(to-from)+newText.length>12000)return showToast('Notice is too long.');body.setRangeText(newText,from,to,'select');preview(title.value,body.value);body.focus();});
+        form.onsubmit=async e=>{e.preventDefault();if(!hsAdmin())return;const name=title.value.trim(),text=body.value.trim();if(!name||!text)return;const button=form.querySelector('[type=submit]'),message=form.querySelector('[role=status]');button.disabled=true;message.textContent='Publishing…';try{await set(ref(db,hsNoticePath),{title:name,body:text,updatedAt:Date.now(),updatedBy:currentUser.name});message.textContent='Published — visible to all users.';preview(name,text);}catch(err){message.textContent='Not published: '+err.message;}finally{button.disabled=false;}};
+        };
+        const hsWelcomeClose=window.closeWelcomeModal;let hsWelcomeTimer;
+        window.closeWelcomeModal=function(){const wasOpen=!document.getElementById('welcomeModal').classList.contains('hidden');hsWelcomeClose();if(!wasOpen)return;clearTimeout(hsWelcomeTimer);const owner=hsOwner();hsWelcomeTimer=setTimeout(()=>{if(currentUser&&hsOwner()===owner)window.hsWhatsNew();},330);};
+        const hsNav=document.createElement('button');hsNav.id='navBtn_helpSection';hsNav.className='w-full flex items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600';hsNav.innerHTML='<span class="sidebar-icon">☏</span><span class="ml-3 sidebar-text">Help / Suggestion</span>';hsNav.onclick=()=>window.showAppSection('helpSection');document.getElementById('navBtn_rcHsrpReportSection').after(hsNav);
+        const hsNews=document.createElement('button');hsNews.className='w-full flex items-center p-3 rounded-lg text-indigo-700';hsNews.style.cssText='background:linear-gradient(110deg,#eef2ff,#ecfdf5);border:1px solid #c7d2fe';hsNews.innerHTML='<span class="sidebar-icon">✦</span><span class="ml-3 sidebar-text font-semibold">What’s New <span class="text-xs text-emerald-700">• Updates</span></span>';hsNews.onclick=window.hsWhatsNew;hsNav.after(hsNews);
+        const hsPreviousShow=window.showAppSection;window.showAppSection=function(id){hsPreviousShow(id);if(id==='helpSection'&&currentUser){HS.filter='all';HS.user='all';hsCompose();hsConnect();hsRenderTickets();}else hsStop();};
+        const hsPreviousLogout=window.handleLogout;window.handleLogout=function(){clearTimeout(hsWelcomeTimer);hsStop();document.getElementById('hsModal')?.close();document.getElementById('hsCompose').innerHTML='';document.getElementById('hsTickets').innerHTML='';hsPreviousLogout();};
+
+
+        const LL={rows:[],page:0,token:0,from:'',to:'',dealer:'all'},llPath='users/admin_settings/login_activity';
+        function llDay(timestamp){return new Date(timestamp+19800000).toISOString().slice(0,10);}
+        function llAggregate(rows){const result=new Map();for(const row of rows){const day=llDay(row.at);if(!result.has(day))result.set(day,{day,count:0,users:new Set()});const group=result.get(day);group.count++;group.users.add(row.userId);}return [...result.values()].sort((a,b)=>b.day.localeCompare(a.day));}
+        function llServerOffset(){return new Promise(resolve=>{let off,done=false;const finish=value=>{if(done)return;done=true;clearTimeout(timer);off?.();resolve(value);};const timer=setTimeout(()=>finish(0),3000);try{off=onValue(ref(db,'.info/serverTimeOffset'),snap=>finish(Number(snap.val())||0),()=>finish(0),{onlyOnce:true});if(done)off?.();}catch{finish(0);}});}
+        window.llRecordLogin=async user=>{const record={userId:String(user.id??user.name),name:user.name||'',dealer:user.dealer||user.dealership||user.name||'',role:user.role||'User',at:serverTimestamp()},id=cpId();const offset=await llServerOffset(),day=llDay(Date.now()+offset),target=ref(db,llPath+'/'+day+'/'+id);for(let attempt=0;attempt<3;attempt++){try{await set(target,record);LL.saveError='';return;}catch(err){const denied=/permission|denied|unauthorized/i.test(String(err.code||err.message));if(denied||attempt===2){LL.saveError=String(err.message||err);console.warn('Login activity was not saved:',LL.saveError);if(currentUser===user)showToast('Login log not saved: '+(denied?'Database permission denied.':LL.saveError));return;}await new Promise(resolve=>setTimeout(resolve,1000*(attempt+1)));}}};
+        const llNav=document.createElement('button');llNav.id='navBtn_loginLogsSection';llNav.className='hidden flex w-full text-left justify-start items-center p-3 rounded-lg hover:bg-indigo-50 text-slate-600';llNav.innerHTML='<span class="sidebar-icon">◷</span><span class="ml-3 sidebar-text">Login Logs</span>';llNav.onclick=()=>window.showAppSection('loginLogsSection');hsNews.parentElement.appendChild(llNav);
+        function llOpen(){if(!hsAdmin())return;const today=llDay(Date.now());if(!LL.from){LL.from=today.slice(0,8)+'01';LL.to=today;}
+        document.getElementById('llControls').innerHTML=`<div class="flex gap-2 flex-wrap items-end bg-slate-50 border rounded-lg p-3"><label class="text-xs">From<input id="llFrom" type="date" class="im-select block" value="${LL.from}"></label><label class="text-xs">To<input id="llTo" type="date" class="im-select block" value="${LL.to}"></label><label class="text-xs">Dealer / User<select id="llDealer" class="im-select block"><option value="all">All Dealers / Users</option></select></label><button id="llApply" class="cp-btn cp-primary">Apply / Refresh</button><button id="llToday" class="cp-btn">Today</button></div>`;
+        document.getElementById('llApply').onclick=llLoad;document.getElementById('llToday').onclick=()=>{document.getElementById('llFrom').value=today;document.getElementById('llTo').value=today;llLoad();};document.getElementById('llDealer').onchange=e=>{LL.dealer=e.target.value;LL.page=0;llRender();};llLoad();}
+        async function llLoad(){if(!hsAdmin())return;const from=document.getElementById('llFrom').value,to=document.getElementById('llTo').value;if(!from||!to||from>to)return showToast('Choose a valid date range.');LL.from=from;LL.to=to;const token=++LL.token,owner=hsOwner(),root=document.getElementById('llResults'),button=document.getElementById('llApply');button.disabled=true;root.textContent='Loading login activity…';try{const snap=await get(query(ref(db,llPath),orderByKey(),startAt(from),endAt(to)));if(token!==LL.token||!hsAdmin()||hsOwner()!==owner)return;LL.rows=Object.values(snap.val()||{}).flatMap(day=>Object.values(day||{})).filter(r=>Number.isFinite(r.at)&&llDay(r.at)>=from&&llDay(r.at)<=to).sort((a,b)=>b.at-a.at);LL.page=0;
+        const select=document.getElementById('llDealer'),dealers=[...new Set(LL.rows.map(r=>r.dealer))].sort();if(!dealers.includes(LL.dealer))LL.dealer='all';select.innerHTML='<option value="all">All Dealers / Users</option>'+dealers.map(dealer=>`<option value="${cpEsc(dealer)}">${cpEsc(dealer)}</option>`).join('');select.value=LL.dealer;llRender();}catch(err){if(token===LL.token)root.textContent='Could not load logs: '+err.message+' — use Apply / Refresh to retry.';}finally{if(token===LL.token)button.disabled=false;}}
+        function llRender(){if(!hsAdmin())return;const rows=LL.rows.filter(r=>LL.dealer==='all'||r.dealer===LL.dealer),days=llAggregate(rows),pages=Math.max(1,Math.ceil(rows.length/100));LL.page=Math.min(LL.page,pages-1);document.getElementById('llResults').innerHTML=`<div class="flex gap-4 flex-wrap py-2 text-sm"><strong>${rows.length} Logins</strong><span>${new Set(rows.map(r=>r.userId)).size} Users</span><span>${days.length} Active days</span></div><details open class="border rounded-lg p-3 mb-3"><summary class="font-semibold cursor-pointer">Date-wise count</summary><div class="im-scroll" style="max-height:240px"><table class="im-table"><thead><tr><th>Date</th><th style="text-align:right">Login Count</th><th style="text-align:right">Users</th></tr></thead><tbody>${days.map(g=>`<tr><td>${cpEsc(g.day)}</td><td style="text-align:right">${g.count}</td><td style="text-align:right">${g.users.size}</td></tr>`).join('')||'<tr><td colspan="3">No logins in this date range.</td></tr>'}</tbody></table></div></details><h3 class="font-semibold mb-2">Login Details</h3><div class="im-scroll"><table class="im-table"><thead><tr><th>Date</th><th>Time (IST)</th><th>User</th><th>Dealer</th><th>Role</th></tr></thead><tbody>${rows.slice(LL.page*100,(LL.page+1)*100).map(r=>`<tr><td style="white-space:nowrap">${llDay(r.at)}</td><td style="white-space:nowrap">${new Date(r.at).toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit'})}</td><td>${cpEsc(r.name)}</td><td>${cpEsc(r.dealer)}</td><td>${cpEsc(r.role)}</td></tr>`).join('')||'<tr><td colspan="5">No login records found.</td></tr>'}</tbody></table></div><div class="flex gap-3 items-center mt-3 text-xs"><button id="llPrev" class="cp-btn" ${LL.page===0?'disabled':''}>Previous</button><span>Page ${LL.page+1} / ${pages}</span><button id="llNext" class="cp-btn" ${LL.page>=pages-1?'disabled':''}>Next</button></div>`;document.getElementById('llPrev').onclick=()=>{LL.page--;llRender();};document.getElementById('llNext').onclick=()=>{LL.page++;llRender();};}
+        const llPreviousShow=window.showAppSection;window.showAppSection=function(id){if(id==='loginLogsSection'&&!hsAdmin())return;if(id!=='loginLogsSection')LL.token++;llPreviousShow(id);if(id==='loginLogsSection')llOpen();};
+        const llPreviousLogout=window.handleLogout;window.handleLogout=function(){LL.token++;LL.rows=[];LL.from='';LL.to='';LL.dealer='all';llNav.classList.add('hidden');document.getElementById('llResults').textContent='';llPreviousLogout();};
         window.imStamp=imStamp;window.imReady=()=>IM.loaded&&BK.loaded&&IM.invoicesReady;
     </script>
 
