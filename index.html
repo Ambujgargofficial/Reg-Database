@@ -8519,6 +8519,33 @@
         const bkOriginalLabels=new WeakMap();
         function bkApplyShortNames(){shApplyReportNames();} // Only explicitly selected short-location views.
         function bkLocationReport(){const root=document.getElementById('bkLocationView');if(!root||!currentUser)return;const from=document.getElementById('reportStartDate').value,to=document.getElementById('reportEndDate').value,dealer=document.getElementById('reportUserFilter').value||'All',start=from?parseStandardDate(from):null,end=to?parseStandardDate(to):null;if(end)end.setHours(23,59,59,999);const groups=new Map();bkReportInvoices().filter(imMatchReport).forEach(inv=>{const date=parseStandardDate(inv[sanitizeKey('Invoice Date')]);if((start||end)&&!date)return;if(start&&date<start||end&&date>end||dealer!=='All'&&imDealer(inv)!==dealer)return;const name=bkNo(inv)||'Unmapped',key=JSON.stringify([name,cpModel(inv)]);if(!groups.has(key))groups.set(key,{name,model:cpModel(inv),rows:[]});groups.get(key).rows.push(inv);});BK.reportRows=[...groups.values()].sort((a,b)=>a.name.localeCompare(b.name)||a.model.localeCompare(b.model));root.innerHTML=`<div class="cp-row cp-spread"><h3 class="font-semibold">Retail by BK NO. / Master Group</h3><button class="cp-btn" data-bk="export-retail">Export CSV</button></div><div class="im-scroll"><table class="im-table"><thead><tr><th>BK NO.</th><th>Master Group Name</th><th>Dealer</th><th>Retail Count</th></tr></thead><tbody>${BK.reportRows.map((g,i)=>`<tr><td>${cpEsc(g.name)}</td><td>${cpEsc(g.model)}</td><td>${cpEsc([...new Set(g.rows.map(imDealer))].map(bkShort).join(', '))}</td><td><button class="bk-count" data-bk="retail-drill" data-index="${i}">${g.rows.length}</button></td></tr>`).join('')||'<tr><td colspan="4">No matching invoices.</td></tr>'}</tbody><tfoot><tr><th colspan="3">Total</th><th>${BK.reportRows.reduce((a,g)=>a+g.rows.length,0)}</th></tr></tfoot></table></div>`;}
+        async function bkApplyPreview(button){
+            if(BK.saving)return;
+            const preview=BK.preview,owner=currentUser,dialog=document.getElementById('bkDialog');
+            if(!preview)throw Error('Validate the file first');
+            const payload=preview.stock?{rows:bkParseStock(preview.text),uploadedAt:Date.now(),uploadedBy:owner.name||owner.id,fileName:BK.fileName||'Pasted stock'}:bkParseMapping(preview.text);
+            if(preview.stock)payload.count=Object.keys(payload.rows).length;
+            const label=button.textContent,controls=[...dialog.querySelectorAll('input,textarea,button')].filter(el=>el.dataset.bk!=='close'),states=controls.map(el=>el.disabled);
+            let status=document.getElementById('bkSaveStatus');
+            if(!status){status=document.createElement('p');status.id='bkSaveStatus';status.setAttribute('role','status');button.after(status);}
+            const error=document.getElementById('bkError');if(error)error.textContent='';
+            BK.saving=true;controls.forEach(el=>el.disabled=true);button.textContent='Saving to cloud…';button.setAttribute('aria-busy','true');status.textContent='Please wait for server confirmation.';
+            const slow=setTimeout(()=>{button.removeAttribute('aria-busy');button.textContent='Awaiting server confirmation';status.textContent='Connection is taking longer than expected. You can close this window; the pending save will continue. Do not upload again yet.';},15000);
+            try{
+                if(preview.stock)await set(ref(db,'users/admin_settings/current_stock'),payload);
+                else await bkSave(payload);
+                if(currentUser!==owner)return;
+                if(BK.preview===preview){BK.preview=null;if(dialog.open)dialog.close();}
+                showToast(preview.stock?payload.count+' vehicles saved successfully; previous stock replaced.':'Location mappings saved');
+            }catch(err){
+                if(currentUser===owner){status.textContent='Save failed: '+(err.message||String(err))+'. Your preview is retained; please retry.';showToast(status.textContent);}
+            }finally{
+                clearTimeout(slow);BK.saving=false;button.removeAttribute('aria-busy');button.textContent=label;
+                controls.forEach((el,i)=>el.disabled=states[i]);
+                // Let the completed dialog paint before recalculating stock-based reports.
+                if(preview.stock)requestAnimationFrame(()=>setTimeout(()=>fastRefresh('stock'),0));
+            }
+        }
         async function bkAction(e){const b=e.target.closest('[data-bk]');if(!b)return;try{const a=b.dataset.bk;
             if(a==='close'){BK.preview=null;document.getElementById('bkDialog').close();return;}
             if(a==='stock-drill'){const rows=bkStockRows().filter(r=>cpMasterName(bkField(r,'MODEL NAME'))===b.dataset.model&&(bkNo(r)||'Unmapped')===b.dataset.location),t=bkStockTable(rows);window.openDrillDownModal('Stock · '+b.dataset.model,b.dataset.location+' · '+bkStockStamp(),t.headers,t.rows);return;}
@@ -8530,10 +8557,10 @@
             else if(a==='invoice-bk'){IM.tab='missingbk';IM.page=1;IMBK.dealer='';window.showAppSection('invoiceMappingSection');}
             else if(a==='add'){const name=prompt('BK NO. / Location name');if(name?.trim()){if(name.trim().length>120)throw Error('Location name must be at most 120 characters');if(bkRule(name))throw Error('Location already exists');await bkSave({['locations/'+bkKey(name)]:{name:name.trim(),dealer:'',type:'',category:''}});}}
             else if(a==='download')exportCSV([['BK NO.','Dealer','Invoice Type','Invoice Category'],...bkLocations().filter(n=>!bkComplete(bkRule(n))).map(n=>{const r=bkRule(n)||{};return [n,r.dealer||'',imOptions('Invoice Type')[r.type]||'',imOptions('Invoice Category')[r.category]||''];})],'bk_mapping_unmapped.csv');
-            else if(a==='bulk'||a==='stock')bkImportDialog(a==='stock');
+            else if(a==='bulk'||a==='stock'){if(BK.saving){showToast('An upload is still awaiting server confirmation. Please wait.');return;}bkImportDialog(a==='stock');}
             else if(a==='short')bkDialog('Dealer Short Names',`<p class="cp-muted im-note">Display labels only. Original dealer names and mappings stay intact.</p>${bkDealers().map(d=>`<label class="cp-row im-note"><span>${cpEsc(d)}</span><input class="bk-input" data-short="${cpEsc(d)}" maxlength="50" value="${cpEsc(BK.config.shortNames?.[bkKey(d)]||'')}" placeholder="Short display name"></label>`).join('')}`);
             else if(a==='preview')bkPreview(b.dataset.stock==='true',document.getElementById('bkPaste').value);
-            else if(a==='apply'){const p=BK.preview;if(!p)throw Error('Validate the file first');b.disabled=true;if(p.stock){const rows=bkParseStock(p.text);await set(ref(db,'users/admin_settings/current_stock'),{rows,uploadedAt:Date.now(),uploadedBy:currentUser.name||currentUser.id,fileName:BK.fileName||'Pasted stock',count:Object.keys(rows).length});}else await bkSave(bkParseMapping(p.text));BK.preview=null;document.getElementById('bkDialog').close();showToast(p.stock?'Fresh stock saved; previous stock replaced':'Location mappings saved');}
+            else if(a==='apply')await bkApplyPreview(b);
         }catch(err){b.disabled=false;const out=document.getElementById('bkError');if(out&&document.getElementById('bkDialog').open)out.textContent=err.message;else showToast(err.message);}}
         document.addEventListener('click',bkAction);
         document.addEventListener('change',async e=>{const el=e.target;try{
@@ -8570,7 +8597,7 @@
         });
 
         onValue(ref(db,'users/admin_settings/bk_mapping'),snap=>{const next=snap.val()||{},locationsChanged=JSON.stringify(next.locations||{})!==JSON.stringify(BK.config.locations||{});BK.config=next;BK.loaded=true;fastRefresh('mapping');if(locationsChanged||IM.allDirty)imScheduleSync(true);},err=>{BK.loaded=false;showToast('BK NO. mapping could not load: '+err.message);});
-        onValue(ref(db,'users/admin_settings/current_stock'),snap=>{BK.stock=snap.val()||{};BK.stockLoaded=true;fastRefresh('stock');},err=>{BK.stockLoaded=false;showToast('Stock could not load: '+err.message);});
+        onValue(ref(db,'users/admin_settings/current_stock'),snap=>{BK.stock=snap.val()||{};BK.stockLoaded=true;if(!BK.saving)fastRefresh('stock');},err=>{BK.stockLoaded=false;showToast('Stock could not load: '+err.message);});
 
         // Project rules v2: independent dealer/category overrides, reusable ratios, and pivot.
         function cpScopeKey(p){if(!p._scope)return 'combined';return (cpView(p).mode==='custom'?'custom_'+qpLevels(p).join('_'):cpScopeField(p)?cpView(p).mode:'dealer')+'_'+Array.from(new TextEncoder().encode(p._scope||'')).map(b=>b.toString(16).padStart(2,'0')).join('');}
